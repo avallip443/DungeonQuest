@@ -20,85 +20,36 @@ def draw_panel(screen, panel_img, knight, bandit_list):
         )
 
 
-def draw_text(screen, text, x, y, colour=RED):
+def draw_text(screen, text, x, y, colour):
     img = FONT.render(text, False, colour)
     img_rect = img.get_rect(center=(x, y))
     screen.blit(img, img_rect)
-
-
-def draw_character_options(
-    screen, characters, selected_index, hovered_index, animations
-):
-    screen.fill((0, 0, 0))
-    y_offset = 150
-    animate_char = False
-
-    draw_text(screen, "Select Your Character", WIDTH // 2, y_offset // 2, "white")
-
-    for index, character in enumerate(characters):
-        if index == selected_index:
-            color = (255, 255, 0)  # highlight selected char with diff color
-        elif index == hovered_index:
-            color = (255, 255, 255)  # highlight hovered char
-        else:
-            color = (100, 100, 100)
-
-        draw_text(screen, character["name"], 200, y_offset, color)
-        y_offset += 50
-
-    if selected_index != -1 and (hovered_index == selected_index or hovered_index == -1):
-        selected_character = CHARACTERS[selected_index]["name"]
-        animate_char = True
-    elif hovered_index != -1 and hovered_index != selected_index:
-        selected_character = CHARACTERS[hovered_index]["name"]
-        animate_char = True
-    else:
-        animate_char = False
-        
-    if animate_char:
-        current_animation = animations[selected_character]["idle"]
-
-        scale = 4 if selected_character == 'Brute' else 4.5
-        current_frame = current_animation.get_current_frame(scale=scale)
-
-        frame_width = current_frame.get_width()
-        frame_height = current_frame.get_height()
-        x_pos = WIDTH // 2 + 100 - frame_width // 2
-        y_pos = HEIGHT // 2 - frame_height + 150
-
-        screen.blit(current_frame, (x_pos, y_pos))
-
-    pygame.display.flip()
 
 
 def character_selection_screen():
     selected_index = -1  # initially no char selected
     hovered_index = -1
 
-    # Load the animations
     animations = load_character_animations()
 
     while True:
         mouse_pos = pygame.mouse.get_pos()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    selected_index = hovered_index
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                selected_index = hovered_index
 
         hovered_index = -1
         y_offset = 150
-        font_height = FONT.get_height()
 
         # update hovered index based on mouse pos
         for index, character in enumerate(CHARACTERS):
             text_rect = FONT.render(character["name"], True, (100, 100, 100)).get_rect(
                 center=(200, y_offset)
             )
-            # draw_text(screen, character["name"], 200, y_offset, color)
             if text_rect.collidepoint(mouse_pos):
                 hovered_index = index
             y_offset += 50
@@ -108,5 +59,55 @@ def character_selection_screen():
         )
         CLOCK.tick(FPS)
 
+
+def draw_character_options(
+    screen, characters, selected_index, hovered_index, animations
+):
+    screen.fill((0, 0, 0))
+    y_offset = 150
+
+    draw_text(screen, "Select Your Character", WIDTH // 2, y_offset // 2, "white")
+
+    for index, character in enumerate(characters):
+        color = (
+            (255, 255, 0)
+            if index == selected_index
+            else (255, 255, 255)
+            if index == hovered_index
+            else (100, 100, 100)
+        )
+        draw_text(screen, character["name"], 200, y_offset, color)
+        y_offset += 50
+
+    if selected_index != -1:
+        selected_character = CHARACTERS[selected_index]["name"]
+        
+        if hovered_index == selected_index or hovered_index == -1:
+            animate_character(screen, animations, selected_character, scale=4 if selected_character == 'Brute' else 4.5)
+
+    if hovered_index != -1 and hovered_index != selected_index:
+        selected_character = CHARACTERS[hovered_index]["name"]
+        animate_character(
+            screen,
+            animations,
+            selected_character,
+            scale=4 if selected_character == "Brute" else 4.5,
+        )
+    
+    pygame.display.flip()
+
+
+def animate_character(screen, animations, name, scale):
+    current_animation = animations[name]["idle"]
+    current_frame = current_animation.get_current_frame(scale=scale)
+    
+    scale_adjustment = 12 if name == 'brute' else 0
+
+    frame_width = current_frame.get_width()
+    frame_height = current_frame.get_height()
+    x_pos = WIDTH // 2 + 100 - frame_width // 2
+    y_pos = HEIGHT // 2 - frame_height + 150 + scale_adjustment
+
+    screen.blit(current_frame, (x_pos, y_pos))
 
 character_selection_screen()
