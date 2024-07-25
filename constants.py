@@ -1,0 +1,92 @@
+import pygame
+
+# GAME VARS
+
+pygame.init()
+
+# colours
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+
+# screen dimensions
+WIDTH = 800
+HEIGHT = 550
+PANEL_HEIGHT = 150
+
+# graphics settings
+FONT = pygame.font.SysFont("Times New Roman", 26)
+
+# settings
+FPS = 60
+CLOCK = pygame.time.Clock()
+
+# game settings
+ACTION_WAIT_TIME = 90
+POTION_EFFECT = 15
+
+#  initalize pygame
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("DungeonQUEST")
+
+# images
+BACKGROUND = pygame.image.load("graphics/backgrounds/background.png").convert_alpha()
+PANEL = pygame.image.load("graphics/Icons/panel.png").convert_alpha()
+SWORD = pygame.image.load("graphics/Icons/sword.png").convert_alpha()
+POTION = pygame.image.load("graphics/Icons/potion.png").convert_alpha()
+VICTORY = pygame.image.load("graphics/Icons/victory.png").convert_alpha()
+DEFEAT = pygame.image.load("graphics/Icons/defeat.png").convert_alpha()
+RESTART = pygame.image.load("graphics/Icons/restart.png").convert_alpha()
+
+# character stats
+CHARACTERS = [
+    {
+        "name": "Warrior",
+        "description": "Strong, tough, well-rounded fighter.",
+        "max_hp": 100,
+        "strength": 20,
+        "critical_chance": 2,
+        "double_hit_chance": 2,
+        "potion_drop_chance": 50,
+        "potions": 3,
+    },
+    {
+        "name": "Rouge",
+        "description": "Quick and nimble, effective at landing critical attacks.",
+        "max_hp": 85,
+        "strength": 15,
+        "critical_chance": 10,
+        "double_hit_chance": 2,
+        "potion_drop_chance": 55,
+        "potions": 3,
+    },
+    {
+        "name": "Berserker",
+        "description": "Powerful and reckless, but lacks armour.",
+        "max_hp": 75,
+        "strength": 30,
+        "critical_chance": 5,
+        "double_hit_chance": 10,
+        "potion_drop_chance": 60,
+        "potions": 3,
+    },
+    {
+        "name": "Brute",
+        "description": "Hard-to-kill, but packs a weak punch.",
+        "max_hp": 130,
+        "strength": 15,
+        "critical_chance": 2,
+        "double_hit_chance": 2,
+        "potion_drop_chance": 50,
+        "potions": 3,
+    },
+    {
+        "name": "Huntress",
+        "description": "Precise ranged attacker, often lands multiple hits.",
+        "max_hp": 85,
+        "strength": 10,
+        "critical_chance": 10,
+        "double_hit_chance": 25,
+        "potion_drop_chance": 45,
+        "potions": 3,
+    },
+]
