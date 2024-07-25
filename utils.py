@@ -1,4 +1,4 @@
-from constants import FONT, WIDTH, HEIGHT, PANEL_HEIGHT, RED, SCREEN, CHARACTERS
+from constants import FONT, WIDTH, HEIGHT, PANEL_HEIGHT, RED, SCREEN, CHARACTERS, CLOCK, FPS
 import pygame
 from animations import load_character_animations
 
@@ -27,10 +27,11 @@ def draw_text(screen, text, x, y, colour=RED):
 
 
 def draw_character_options(
-    screen, characters, selected_index, hovered_index, animations, scale=1.5
+    screen, characters, selected_index, hovered_index, animations
 ):
     screen.fill((0, 0, 0))
     y_offset = 150
+    animate_char = False
 
     draw_text(screen, "Select Your Character", WIDTH // 2, y_offset // 2, "white")
 
@@ -45,23 +46,26 @@ def draw_character_options(
         draw_text(screen, character["name"], 200, y_offset, color)
         y_offset += 50
 
-    if hovered_index != -1:
+    if selected_index != -1 and (hovered_index == selected_index or hovered_index == -1):
+        selected_character = CHARACTERS[selected_index]["name"]
+        animate_char = True
+    elif hovered_index != -1 and hovered_index != selected_index:
         selected_character = CHARACTERS[hovered_index]["name"]
+        animate_char = True
+    else:
+        animate_char = False
+        
+    if animate_char:
         current_animation = animations[selected_character]["idle"]
 
         scale = 4 if selected_character == 'Brute' else 4.5
-        
         current_frame = current_animation.get_current_frame(scale=scale)
-
-        
 
         frame_width = current_frame.get_width()
         frame_height = current_frame.get_height()
-
         x_pos = WIDTH // 2 + 100 - frame_width // 2
         y_pos = HEIGHT // 2 - frame_height + 150
 
-        # Blit the frame onto the {screen using the calculated position
         screen.blit(current_frame, (x_pos, y_pos))
 
     pygame.display.flip()
@@ -70,13 +74,11 @@ def draw_character_options(
 def character_selection_screen():
     selected_index = -1  # initially no char selected
     hovered_index = -1
-    run = True
-    clock = pygame.time.Clock()
 
     # Load the animations
     animations = load_character_animations()
 
-    while run:
+    while True:
         mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -94,16 +96,17 @@ def character_selection_screen():
         # update hovered index based on mouse pos
         for index, character in enumerate(CHARACTERS):
             text_rect = FONT.render(character["name"], True, (100, 100, 100)).get_rect(
-                center=(200, y_offset + font_height // 2)
+                center=(200, y_offset)
             )
+            # draw_text(screen, character["name"], 200, y_offset, color)
             if text_rect.collidepoint(mouse_pos):
                 hovered_index = index
             y_offset += 50
 
         draw_character_options(
-            SCREEN, CHARACTERS, selected_index, hovered_index, animations, scale=1
+            SCREEN, CHARACTERS, selected_index, hovered_index, animations
         )
-        clock.tick(60)  # Limit to 60 FPS
+        CLOCK.tick(FPS)
 
 
 character_selection_screen()
