@@ -14,7 +14,9 @@ HEIGHT = 550
 PANEL_HEIGHT = 150
 
 # graphics settings
+FONT_SM = pygame.font.SysFont("Times New Roman", 18)
 FONT = pygame.font.SysFont("Times New Roman", 26)
+FONT_LG = pygame.font.SysFont("Times New Roman", 36)
 
 # settings
 FPS = 60
@@ -41,9 +43,9 @@ RESTART = pygame.image.load("graphics/Icons/restart.png").convert_alpha()
 CHARACTERS = [
     {
         "name": "Warrior",
-        "description": "Strong, tough, well-rounded fighter.",
+        "description": "Strong, tough, and good with \na sword. Well-rounded fighter.",
         "max_hp": 100,
-        "strength": 20,
+        "attack": 20,
         "critical_chance": 2,
         "double_hit_chance": 2,
         "potion_drop_chance": 50,
@@ -51,9 +53,9 @@ CHARACTERS = [
     },
     {
         "name": "Rouge",
-        "description": "Quick and nimble, effective at landing critical attacks.",
+        "description": "Quick and nimble, effective \nat landing critical attacks.",
         "max_hp": 85,
-        "strength": 15,
+        "attack": 15,
         "critical_chance": 10,
         "double_hit_chance": 2,
         "potion_drop_chance": 55,
@@ -61,9 +63,9 @@ CHARACTERS = [
     },
     {
         "name": "Berserker",
-        "description": "Powerful and reckless, but lacks armour.",
+        "description": "Powerful and reckless, but \nlacks armour.",
         "max_hp": 75,
-        "strength": 30,
+        "attack": 30,
         "critical_chance": 5,
         "double_hit_chance": 10,
         "potion_drop_chance": 60,
@@ -71,9 +73,9 @@ CHARACTERS = [
     },
     {
         "name": "Brute",
-        "description": "Hard-to-kill, but packs a weak punch.",
+        "description": "Hard-to-kill fighter, but packs \na weak punch.",
         "max_hp": 130,
-        "strength": 15,
+        "attack": 15,
         "critical_chance": 2,
         "double_hit_chance": 2,
         "potion_drop_chance": 50,
@@ -81,9 +83,9 @@ CHARACTERS = [
     },
     {
         "name": "Huntress",
-        "description": "Precise ranged attacker, often lands multiple hits.",
+        "description": "Precise ranged attacker, often \nlands multiple hits.",
         "max_hp": 85,
-        "strength": 10,
+        "attack": 10,
         "critical_chance": 10,
         "double_hit_chance": 25,
         "potion_drop_chance": 45,

@@ -1,6 +1,18 @@
-from constants import FONT, WIDTH, HEIGHT, PANEL_HEIGHT, RED, SCREEN, CHARACTERS, CLOCK, FPS
+from constants import (
+    FONT,
+    FONT_SM,
+    FONT_LG,
+    WIDTH,
+    HEIGHT,
+    PANEL_HEIGHT,
+    SCREEN,
+    CHARACTERS,
+    CLOCK,
+    FPS,
+)
 import pygame
 from animations import load_character_animations
+from health_bar import HealthBar
 
 
 def draw_bg(screen, background_img):
@@ -20,10 +32,27 @@ def draw_panel(screen, panel_img, knight, bandit_list):
         )
 
 
-def draw_text(screen, text, x, y, colour):
-    img = FONT.render(text, False, colour)
-    img_rect = img.get_rect(center=(x, y))
-    screen.blit(img, img_rect)
+def draw_text(screen, text, x, y, colour, size="med", position="center"):
+    if size == "sm":
+        font = FONT_SM
+    elif size == "med":
+        font = FONT
+    elif size == "lg":
+        font = FONT_LG
+
+    lines = text.split("\n")
+    y_offset = 0
+    for i, line in enumerate(lines):
+        img = font.render(line, False, colour)
+        img_rect = img.get_rect()
+
+        if position == "center":
+            img_rect.center = (x, y + y_offset)
+        elif position == "topleft":
+            img_rect.topleft = (x, y + y_offset)
+
+        screen.blit(img, img_rect)
+        y_offset += 20
 
 
 def character_selection_screen():
@@ -34,7 +63,7 @@ def character_selection_screen():
 
     while True:
         mouse_pos = pygame.mouse.get_pos()
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -48,7 +77,7 @@ def character_selection_screen():
         # update hovered index based on mouse pos
         for index, character in enumerate(CHARACTERS):
             text_rect = FONT.render(character["name"], True, (100, 100, 100)).get_rect(
-                center=(200, y_offset)
+                center=(130, y_offset)
             )
             if text_rect.collidepoint(mouse_pos):
                 hovered_index = index
@@ -66,7 +95,7 @@ def draw_character_options(
     screen.fill((0, 0, 0))
     y_offset = 150
 
-    draw_text(screen, "Select Your Character", WIDTH // 2, y_offset // 2, "white")
+    draw_text(screen, "Select Your Character", WIDTH // 2, y_offset // 2, "white", size="lg")
 
     for index, character in enumerate(characters):
         color = (
@@ -76,14 +105,20 @@ def draw_character_options(
             if index == hovered_index
             else (100, 100, 100)
         )
-        draw_text(screen, character["name"], 200, y_offset, color)
+        draw_text(screen, character["name"], 130, y_offset, color)
         y_offset += 50
 
     if selected_index != -1:
         selected_character = CHARACTERS[selected_index]["name"]
-        
+
         if hovered_index == selected_index or hovered_index == -1:
-            animate_character(screen, animations, selected_character, scale=4 if selected_character == 'Brute' else 4.5)
+            animate_character(
+                screen,
+                animations,
+                selected_character,
+                scale=3.7 if selected_character == "Brute" else 4.5,
+            )
+            draw_character_stats(screen, selected_index)
 
     if hovered_index != -1 and hovered_index != selected_index:
         selected_character = CHARACTERS[hovered_index]["name"]
@@ -91,23 +126,74 @@ def draw_character_options(
             screen,
             animations,
             selected_character,
-            scale=4 if selected_character == "Brute" else 4.5,
+            scale=3.7 if selected_character == "Brute" else 4.5,
         )
-    
+        draw_character_stats(screen, hovered_index)
+
     pygame.display.flip()
 
 
 def animate_character(screen, animations, name, scale):
     current_animation = animations[name]["idle"]
     current_frame = current_animation.get_current_frame(scale=scale)
-    
-    scale_adjustment = 12 if name == 'brute' else 0
+
+    scale_adjustment = 8 if name == "brute" else 0
 
     frame_width = current_frame.get_width()
     frame_height = current_frame.get_height()
-    x_pos = WIDTH // 2 + 100 - frame_width // 2
-    y_pos = HEIGHT // 2 - frame_height + 150 + scale_adjustment
+    x_pos = WIDTH // 2 - frame_width // 1.75
+    y_pos = HEIGHT // 2 - frame_height + 120 + scale_adjustment
 
     screen.blit(current_frame, (x_pos, y_pos))
+
+
+def draw_character_stats(screen, index):
+    hp = HealthBar(WIDTH * 0.69, 235, CHARACTERS[index]["max_hp"], 130)
+    atk = HealthBar(WIDTH * 0.69, 265, CHARACTERS[index]["attack"], 30)
+    
+    draw_text(
+        screen, CHARACTERS[index]["description"], WIDTH * 0.75, 160, "white", "sm"
+    )
+    draw_text(
+        screen,
+        "HP:",
+        WIDTH * 0.62,
+        230,
+        "white",
+        "sm",
+        "topleft",
+    )
+    hp.draw(screen, CHARACTERS[index]["max_hp"], base='blue', secondary='white', width=140, height=10)
+    
+    draw_text(
+        screen,
+        "ATK:",
+        WIDTH * 0.62,
+        260,
+        "white",
+        "sm",
+        "topleft",
+    )
+    atk.draw(screen, CHARACTERS[index]["attack"], base='blue', secondary='white', width=140, height=10)
+    
+    draw_text(
+        screen,
+        "Critial hit:  " + str(CHARACTERS[index]["critical_chance"]) + "%",
+        WIDTH * 0.62,
+        290,
+        "white",
+        "sm",
+        "topleft",
+    )
+    draw_text(
+        screen,
+        "Double hit:  " + str(CHARACTERS[index]["double_hit_chance"]) + "%",
+        WIDTH * 0.62,
+        320,
+        "white",
+        "sm",
+        "topleft",
+    )
+
 
 character_selection_screen()
