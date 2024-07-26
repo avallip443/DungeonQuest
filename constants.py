@@ -1,7 +1,5 @@
 import pygame
 
-# GAME VARS
-
 pygame.init()
 
 # colours
@@ -30,17 +28,24 @@ POTION_EFFECT = 15
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("DungeonQUEST")
 
-# images
+# IMAGES
 BACKGROUND = pygame.image.load("graphics/backgrounds/background.png").convert_alpha()
 PANEL = pygame.image.load("graphics/Icons/panel.png").convert_alpha()
 SWORD = pygame.image.load("graphics/Icons/sword.png").convert_alpha()
 POTION = pygame.image.load("graphics/Icons/potion.png").convert_alpha()
 VICTORY = pygame.image.load("graphics/Icons/victory.png").convert_alpha()
 DEFEAT = pygame.image.load("graphics/Icons/defeat.png").convert_alpha()
+
+# BUTTONS
 RESTART = pygame.image.load("graphics/Icons/restart.png").convert_alpha()
 PLAY = pygame.image.load('Buttons/Play.png').convert_alpha()
+CONTINUE = pygame.image.load("Buttons/Continue.png").convert_alpha()
+TUTORIAL = pygame.image.load("Buttons/Tutorial.png").convert_alpha()
+BACK = pygame.image.load("Buttons/Back.png").convert_alpha()
+EXIT = pygame.image.load("Buttons/Exit.png").convert_alpha()
+QUIT = pygame.image.load("Buttons/Quit.png").convert_alpha()
 
-# character stats
+# STATS
 CHARACTERS = [
     {
         "name": "Warrior",

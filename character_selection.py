@@ -8,6 +8,7 @@ from constants import (
     CLOCK,
     FPS,
     PLAY,
+    BACK
 )
 from animations import load_character_animations
 from health_bar import HealthBar
@@ -16,11 +17,14 @@ from utils import draw_text
 
 
 def character_selection_screen():
+    from game import start_menu
+    
     selected_index = -1  # initially no char selected
     hovered_index = -1
 
     animations = load_character_animations()
     play_button = Button(SCREEN, WIDTH // 2, HEIGHT * 0.85, PLAY, 92 * 2, 28 * 2)
+    back_button = Button(SCREEN, 50, 50, BACK, 31 * 1.5, 35 * 1.5)
 
     while True:
         mouse_pos = pygame.mouse.get_pos()
@@ -32,8 +36,10 @@ def character_selection_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if play_button.rect.collidepoint(mouse_pos):
                     return selected_index 
+                elif back_button.rect.collidepoint(event.pos):
+                    start_menu()
                 selected_index = hovered_index
-
+                
         hovered_index = -1
         y_offset = 170
 
@@ -47,20 +53,21 @@ def character_selection_screen():
             y_offset += 50
 
         draw_character_options(
-            SCREEN, CHARACTERS, selected_index, hovered_index, animations, play_button
+            SCREEN, CHARACTERS, selected_index, hovered_index, animations, play_button, back_button
         )
 
         CLOCK.tick(FPS)
 
 
 def draw_character_options(
-    screen, characters, selected_index, hovered_index, animations, play_button
+    screen, characters, selected_index, hovered_index, animations, play_button, back_button
 ):
     screen.fill((0, 0, 0))
     y_offset = 170
     selected = False
 
     draw_text(screen, "Select Your Character", WIDTH // 2, 75, "white", size="lg")
+    back_button.draw()
 
     for index, character in enumerate(characters):
         color = (
