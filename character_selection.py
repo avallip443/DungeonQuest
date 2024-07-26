@@ -17,7 +17,7 @@ from utils import draw_text
 
 
 def character_selection_screen():
-    from game import start_menu
+    from main import start_menu
     
     selected_index = -1  # initially no char selected
     hovered_index = -1
