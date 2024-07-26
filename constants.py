@@ -38,6 +38,7 @@ POTION = pygame.image.load("graphics/Icons/potion.png").convert_alpha()
 VICTORY = pygame.image.load("graphics/Icons/victory.png").convert_alpha()
 DEFEAT = pygame.image.load("graphics/Icons/defeat.png").convert_alpha()
 RESTART = pygame.image.load("graphics/Icons/restart.png").convert_alpha()
+PLAY = pygame.image.load('Buttons/Play.png').convert_alpha()
 
 # character stats
 CHARACTERS = [
