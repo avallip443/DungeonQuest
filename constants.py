@@ -29,28 +29,28 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("DungeonQUEST")
 
 # BACKGROUNDS
-FOREST1 = pygame.image.load("Backgrounds/forest1.png").convert_alpha()
-FOREST2 = pygame.image.load("Backgrounds/forest2.png").convert_alpha()
-CASTLE1 = pygame.image.load("Backgrounds/castle1.png").convert_alpha()
-CASTLE2 = pygame.image.load("Backgrounds/casle2.png").convert_alpha()
-CASTLE3 = pygame.image.load("Backgrounds/casle3.png").convert_alpha()
+FOREST1 = pygame.image.load("graphics/backgrounds/forest1.png").convert_alpha()
+FOREST2 = pygame.image.load("graphics/backgrounds/forest2.png").convert_alpha()
+CASTLE1 = pygame.image.load("graphics/backgrounds/castle1.jpg").convert_alpha()
+CASTLE2 = pygame.image.load("graphics/backgrounds/castle2.jpg").convert_alpha()
+CASTLE3 = pygame.image.load("graphics/backgrounds/castle3.jpg").convert_alpha()
 
 
 # ICONS
-PANEL = pygame.image.load("Icons/panel.png").convert_alpha()
-SWORD = pygame.image.load("Icons/sword.png").convert_alpha()
-POTION = pygame.image.load("Icons/potion.png").convert_alpha()
-VICTORY = pygame.image.load("Icons/victory.png").convert_alpha()
-DEFEAT = pygame.image.load("Icons/defeat.png").convert_alpha()
+PANEL = pygame.image.load("graphics/icons/panel.png").convert_alpha()
+SWORD = pygame.image.load("graphics/icons/sword.png").convert_alpha()
+POTION = pygame.image.load("graphics/icons/potion.png").convert_alpha()
+VICTORY = pygame.image.load("graphics/icons/victory.png").convert_alpha()
+DEFEAT = pygame.image.load("graphics/icons/defeat.png").convert_alpha()
 
 # BUTTONS
-RESTART = pygame.image.load("Icons/restart.png").convert_alpha()
-PLAY = pygame.image.load('Buttons/Play.png').convert_alpha()
-CONTINUE = pygame.image.load("Buttons/Continue.png").convert_alpha()
-TUTORIAL = pygame.image.load("Buttons/Tutorial.png").convert_alpha()
-BACK = pygame.image.load("Buttons/Back.png").convert_alpha()
-EXIT = pygame.image.load("Buttons/Exit.png").convert_alpha()
-QUIT = pygame.image.load("Buttons/Quit.png").convert_alpha()
+RESTART = pygame.image.load("graphics/icons/restart.png").convert_alpha()
+PLAY = pygame.image.load("graphics/buttons/play.png").convert_alpha()
+CONTINUE = pygame.image.load("graphics/buttons/continue.png").convert_alpha()
+TUTORIAL = pygame.image.load("graphics/buttons/tutorial.png").convert_alpha()
+BACK = pygame.image.load("graphics/buttons/back.png").convert_alpha()
+EXIT = pygame.image.load("graphics/buttons/exit.png").convert_alpha()
+QUIT = pygame.image.load("graphics/buttons/quit.png").convert_alpha()
 
 # STATS
 CHARACTERS = [

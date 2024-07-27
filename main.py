@@ -72,4 +72,4 @@ def game():
 
 
 if __name__ == "__main__":
-    character_selection_screen()
+    start_menu()

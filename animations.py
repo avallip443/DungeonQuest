@@ -8,7 +8,7 @@ class Animation:
         self.frame_width = frame_width
         self.frame_height = frame_height
         self.current_frame = 0
-        self.animation_speed = 10  # Frames per second
+        self.animation_speed = 10  # fps
         self.clock = pygame.time.Clock()
 
     def get_current_frame(self, scale=1):
@@ -26,142 +26,141 @@ def load_character_animations():
     frame_width, frame_height = 250, 300 
     animations = {}
 
-    # Load sprite sheets
+    # load sprite sheets
     berserker_attack = Spritesheet(
-        "Characters/Berserker/Berserker_Attack.png", frame_width, frame_height
+        "graphics/characters/berserker/berserker_attack.png", frame_width, frame_height
     )
     berserker_death = Spritesheet(
-        "Characters/Berserker/Berserker_Death.png", frame_width, frame_height
+        "graphics/characters/berserker/berserker_death.png", frame_width, frame_height
     )
     berserker_hurt = Spritesheet(
-        "Characters/Berserker/Berserker_Hurt.png", frame_width, frame_height
+        "graphics/characters/berserker/berserker_hurt.png", frame_width, frame_height
     )
     berserker_idle = Spritesheet(
-        "Characters/Berserker/Berserker_Idle.png", frame_width, frame_height
+        "graphics/characters/berserker/berserker_idle.png", frame_width, frame_height
     )
     berserker_special = Spritesheet(
-        "Characters/Berserker/Berserker_Special.png", frame_width, frame_height
+        "graphics/characters/berserker/berserker_special.png", frame_width, frame_height
     )
 
     brute_attack = Spritesheet(
-        "Characters/Brute/Brute_Attack.png", frame_width, frame_height
+        "graphics/characters/brute/brute_attack.png", frame_width, frame_height
     )
     brute_death = Spritesheet(
-        "Characters/Brute/Brute_Death.png", frame_width, frame_height
+        "graphics/characters/brute/brute_death.png", frame_width, frame_height
     )
     brute_hurt = Spritesheet(
-        "Characters/Brute/Brute_hurt.png", frame_width, frame_height
+        "graphics/characters/brute/brute_hurt.png", frame_width, frame_height
     )
     brute_idle = Spritesheet(
-        "Characters/Brute/Brute_Idle.png", frame_width, frame_height
+        "graphics/characters/brute/brute_idle.png", frame_width, frame_height
     )
     brute_special = Spritesheet(
-        "Characters/Brute/Brute_Special.png", frame_width, frame_height
+        "graphics/characters/brute/brute_special.png", frame_width, frame_height
     )
 
     huntress_attack = Spritesheet(
-        "Characters/Huntress/Huntress_Attack.png", frame_width, frame_height
+        "graphics/characters/huntress/huntress_attack.png", frame_width, frame_height
     )
     huntress_death = Spritesheet(
-        "Characters/Huntress/Huntress_Death.png", frame_width, frame_height
+        "graphics/characters/huntress/huntress_death.png", frame_width, frame_height
     )
     huntress_hurt = Spritesheet(
-        "Characters/Huntress/Huntress_Hurt.png", frame_width, frame_height
+        "graphics/characters/huntress/huntress_hurt.png", frame_width, frame_height
     )
     huntress_idle = Spritesheet(
-        "Characters/Huntress/Huntress_Idle.png", frame_width, frame_height
+        "graphics/characters/huntress/huntress_idle.png", frame_width, frame_height
     )
     huntress_special = Spritesheet(
-        "Characters/Huntress/Huntress_Attack.png", frame_width, frame_height
+        "graphics/characters/huntress/huntress_attack.png", frame_width, frame_height
     )
 
     rouge_attack = Spritesheet(
-        "Characters/Rouge/Rouge_Attack.png", frame_width, frame_height
+        "graphics/characters/rouge/rouge_attack.png", frame_width, frame_height
     )
     rouge_death = Spritesheet(
-        "Characters/Rouge/Rouge_Death.png", frame_width, frame_height
+        "graphics/characters/rouge/rouge_death.png", frame_width, frame_height
     )
     rouge_hurt = Spritesheet(
-        "Characters/Rouge/Rouge_Hurt.png", frame_width, frame_height
+        "graphics/characters/rouge/rouge_hurt.png", frame_width, frame_height
     )
     rouge_idle = Spritesheet(
-        "Characters/Rouge/Rouge_Idle.png", frame_width, frame_height
+        "graphics/characters/rouge/rouge_idle.png", frame_width, frame_height
     )
     rouge_special = Spritesheet(
-        "Characters/Rouge/Rouge_Special.png", frame_width, frame_height
+        "graphics/characters/rouge/rouge_special.png", frame_width, frame_height
     )
 
     warrior_attack = Spritesheet(
-        "Characters/Warrior/Warrior_Attack.png", frame_width, frame_height
+        "graphics/characters/warrior/warrior_attack.png", frame_width, frame_height
     )
     warrior_death = Spritesheet(
-        "Characters/Warrior/Warrior_Death.png", frame_width, frame_height
+        "graphics/characters/warrior/warrior_death.png", frame_width, frame_height
     )
     warrior_hurt = Spritesheet(
-        "Characters/Warrior/Warrior_Hurt.png", frame_width, frame_height
+        "graphics/characters/warrior/warrior_hurt.png", frame_width, frame_height
     )
     warrior_idle = Spritesheet(
-        "Characters/Warrior/Warrior_Idle.png", frame_width, frame_height
+        "graphics/characters/warrior/warrior_idle.png", frame_width, frame_height
     )
     warrior_special = Spritesheet(
-        "Characters/Warrior/Warrior_Special.png", frame_width, frame_height
+        "graphics/characters/warrior/warrior_special.png", frame_width, frame_height
     )
     
     wizard1_attack = Spritesheet(
-        "Enemies/Wizard1/wizard1_attack.png", frame_width, frame_height
+        "graphics/enemies/wizard1/wizard1_attack.png", frame_width, frame_height
     )
     wizard1_death = Spritesheet(
-        "Enemies/Wizard1/wizard1_death.png", frame_width, frame_height
+        "graphics/enemies/wizard1/wizard1_death.png", frame_width, frame_height
     )
     wizard1_hurt = Spritesheet(
-        "Enemies/Wizard1/wizard1_hurt.png", frame_width, frame_height
+        "graphics/enemies/wizard1/wizard1_hurt.png", frame_width, frame_height
     )
     wizard1_idle = Spritesheet(
-        "Enemies/Wizard1/wizard1_idle.png", frame_width, frame_height
+        "graphics/enemies/wizard1/wizard1_idle.png", frame_width, frame_height
     )
     
     golem_attack = Spritesheet(
-        "Enemies/Golem/golem_attack.png", frame_width, frame_height
+        "graphics/enemies/golem/golem_attack.png", frame_width, frame_height
     )
     golem_death = Spritesheet(
-        "Enemies/Golem/golem_death.png", frame_width, frame_height
+        "graphics/enemies/golem/golem_death.png", frame_width, frame_height
     )
     golem_hurt = Spritesheet(
-        "Enemies/Golem/golem_hurt.png", frame_width, frame_height
+        "graphics/enemies/golem/golem_hurt.png", frame_width, frame_height
     )
     golem_idle = Spritesheet(
-        "Enemies/Golem/golem_idle.png", frame_width, frame_height
+        "graphics/enemies/golem/golem_idle.png", frame_width, frame_height
     )
 
     wizard2_attack = Spritesheet(
-        "Enemies/Wizard2/wizard2_attack.png", frame_width, frame_height
+        "graphics/enemies/wizard2/wizard2_attack.png", frame_width, frame_height
     )
     wizard2_death = Spritesheet(
-        "Enemies/Wizard2/wizard2_death.png", frame_width, frame_height
+        "graphics/enemies/wizard2/wizard2_death.png", frame_width, frame_height
     )
     wizard2_hurt = Spritesheet(
-        "Enemies/Wizard2/wizard2_hurt.png", frame_width, frame_height
+        "graphics/enemies/wizard2/wizard2_hurt.png", frame_width, frame_height
     )
     wizard2_idle = Spritesheet(
-        "Enemies/Wizard2/wizard2_idle.png", frame_width, frame_height
+        "graphics/enemies/wizard2/wizard2_idle.png", frame_width, frame_height
     )
     
     bringer_attack = Spritesheet(
-        "Enemies/Bringer_of_Death/bringer_attack.png", frame_width, frame_height
+        "graphics/enemies/bringer_of_death/bringer_attack.png", frame_width, frame_height
     )
     bringer_death = Spritesheet(
-        "Enemies/Bringer_of_Death/bringer_death.png", frame_width, frame_height
+        "graphics/enemies/bringer_of_death/bringer_death.png", frame_width, frame_height
     )
     bringer_hurt = Spritesheet(
-        "Enemies/Bringer_of_Death/bringer_hurt.png", frame_width, frame_height
+        "graphics/enemies/bringer_of_death/bringer_hurt.png", frame_width, frame_height
     )
     bringer_idle = Spritesheet(
-        "Enemies/Bringer_of_Death/bringer_idle.png", frame_width, frame_height
+        "graphics/enemies/bringer_of_death/bringer_idle.png", frame_width, frame_height
     )
     
 
-
-    # Define the frames for each animation
+    # frames for each animation
     berserker_attack_frames = [f"{i}.png" for i in range(1, 8)]
     berserker_death_frames = [f"{i}.png" for i in range(1, 8)]
     berserker_hurt_frames = [f"{i}.png" for i in range(1, 4)]
@@ -214,8 +213,7 @@ def load_character_animations():
     bringer_idle_frames = [f"{i}.png" for i in range(1, 9)]
 
     
-
-    # Store the animations in a dictionary
+    # store animations dictionary to access
     animations["Berserker"] = {
         "attack": Animation(
             berserker_attack, berserker_attack_frames, frame_width, frame_height
