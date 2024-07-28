@@ -3,6 +3,7 @@ from constants import SCREEN, HEIGHT, WIDTH, PLAY, TUTORIAL, QUIT, BACK
 from button import Button
 from utils import draw_text
 from character_selection import character_selection_screen
+from game import play_game
 
 
 def start_menu():
@@ -30,7 +31,7 @@ def start_menu():
                 elif play_button.rect.collidepoint(event.pos):
                     selected_char = character_selection_screen()
                     if selected_char != -1:
-                        game()
+                        game(selected_char=selected_char)
                 elif tutorial_button.rect.collidepoint(event.pos):
                     tutorial()
 
@@ -54,21 +55,12 @@ def tutorial():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.rect.collidepoint(event.pos):
                     start_menu()
-
+                    
         pygame.display.update()
 
 
-def game():
-    while True:
-        SCREEN.fill("black")
-        draw_text(SCREEN, "GAME", WIDTH // 2, 100, "white", "lg", "center")
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-        pygame.display.update()
+def game(selected_char: int):
+    play_game(selected_char=selected_char)
 
 
 if __name__ == "__main__":
