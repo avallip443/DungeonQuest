@@ -25,7 +25,7 @@ def draw_panel(screen, panel_img, player, enemies):
         f"{player.name} HP: {player.hp}",
         x=WIDTH // 4,
         y=HEIGHT - PANEL_HEIGHT + 30,
-        colour=RED,
+        colour='white',
     )
 
     player_healthbar = HealthBar(
@@ -44,12 +44,15 @@ def draw_panel(screen, panel_img, player, enemies):
     )
 
     for i, enemy in enumerate(enemies):
+        text_y = PANEL_HEIGHT // 2 - 20 if len(enemies) == 1 else 20 + i * 70
+        bar_y = PANEL_HEIGHT // 2 if len(enemies) == 1 else 40 + i * 70
+        
         draw_text(
             screen,
             f"{enemy.name}",
             x=WIDTH * 0.75,
-            y=HEIGHT - PANEL_HEIGHT + 20 + i * 70,
-            colour=RED,
+            y=HEIGHT - PANEL_HEIGHT + text_y,
+            colour='white',
         )
         enemy_healthbar = HealthBar(
             width=250, height=25, hp=enemy.hp, max_hp=enemy.max_hp
@@ -58,7 +61,7 @@ def draw_panel(screen, panel_img, player, enemies):
             SCREEN,
             hp=enemy.hp,
             x=WIDTH * 0.75 - 250 // 2,
-            y=HEIGHT - PANEL_HEIGHT + 40 + i * 70,
+            y=HEIGHT - PANEL_HEIGHT + bar_y,
         )
 
 
