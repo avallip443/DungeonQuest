@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 from constants import SCREEN, WIDTH, HEIGHT, CLOCK, FPS, FOREST1, PANEL
-from utils import draw_text, draw_bg, draw_panel
+from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
 from enemy import create_enemy
 from animations import load_character_animations, animate_character
@@ -68,20 +68,11 @@ def play_round(enemies, player):
         draw_bg(SCREEN, FOREST1)
         draw_panel(SCREEN, PANEL, player, enemies)
 
-        animate_character(
-            SCREEN, animations, name=player.name, action="idle", scale=3.5, x_pos=200, y_pos=HEIGHT * 0.68
-        )
+        player.action = "idle"
+        for enemy in enemies:
+            enemy.action = "idle"
 
-        for i, enemy in enumerate(enemies):
-            animate_character(
-                SCREEN,
-                animations,
-                name=enemy.name,
-                action="idle",
-                scale=2.5,
-                x_pos=650 - i * 150,
-                y_pos=HEIGHT * 0.65,
-            )
+        draw_characters(SCREEN, player, enemies, animations)
 
         pygame.display.update()
         CLOCK.tick(FPS)
@@ -92,4 +83,4 @@ def play_boss_round():
 
 
 if __name__ == "__main__":
-    play_game(selected_char=4)
+    play_game(selected_char=3)

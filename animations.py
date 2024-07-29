@@ -24,13 +24,12 @@ class Animation:
 
 
 def animate_character(screen, animations, name, action, scale, x_pos, y_pos):
-    
-    if name == 'Enemy':
-        name = 'Bringer'
     if name == 'Bringer of Death':
         name = 'Bringer'
         
-    scale = scale-0.5 if name == "Brute" else scale
+    change_scale = name == 'Brute' or name == 'Berserker'
+        
+    scale = scale-0.5 if change_scale else scale
     current_animation = animations[name][action]
     current_frame = current_animation.get_current_frame(scale=scale)
 
