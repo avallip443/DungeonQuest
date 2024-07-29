@@ -39,7 +39,7 @@ def play_game(selected_char: int):
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [
-                    create_enemy(randint(0, 4)) for _ in range(current_round_enemies)
+                    create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
                 ]
                 play_round(enemies=enemies, player=player)
                 total_level_enemies -= current_round_enemies
