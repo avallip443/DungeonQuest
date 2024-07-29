@@ -9,7 +9,6 @@ from health_bar import HealthBar
 
 def play_game(selected_char: int):
     player = create_character(selected_char)
-
     round = 0
 
     while True:
@@ -67,7 +66,7 @@ def play_round(enemies, player):
         draw_panel(SCREEN, PANEL, player, enemies)
         
         
-        for i, enemy in enumerate(enemies):
+        for enemy in enemies:
             enemy.hp = 10
             enemy_healthbar = HealthBar(30, 10, enemy.hp, enemy.max_hp)
             enemy_healthbar.draw(SCREEN, enemy.hp, enemy.x_pos, enemy.y_pos)

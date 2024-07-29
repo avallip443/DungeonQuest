@@ -39,18 +39,6 @@ def draw_panel(screen, panel_img, player, enemies):
         )
 
 
-    """
-    for count, enemy in enumerate(enemies):
-        draw_text(
-            screen,
-            f"{enemy.name} HP: {enemy.hp}",
-            520,
-            (HEIGHT - PANEL_HEIGHT + 10) + count * 60,
-            colour=RED,
-        )
-    """
-
-
 def draw_text(screen, text, x, y, colour='white', size="med", position="center"):
     if size == "sm":
         font = FONT_SM

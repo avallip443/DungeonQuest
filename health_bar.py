@@ -14,7 +14,6 @@ class HealthBar:
         self.hp = hp
         
         pygame.draw.rect(screen, base, (x_pos, y_pos, self.width, self.height))
-        
         pygame.draw.rect(
             screen, secondary, (x_pos, y_pos, self.width * (self.hp / self.max_hp), self.height)
         )
