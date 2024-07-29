@@ -1,8 +1,8 @@
 import pygame
 
 class Button:
-    def __init__(self, surface, x, y, image, size_x, size_y):
-        self.image = pygame.transform.scale(image, (size_x, size_y))
+    def __init__(self, surface, x, y, image, width, height):
+        self.image = pygame.transform.scale(image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.clicked = False
