@@ -1,5 +1,6 @@
 import pygame
 from spritesheet import Spritesheet
+from constants import WIDTH, HEIGHT
 
 
 class Animation:
@@ -21,6 +22,25 @@ class Animation:
         self.clock.tick(self.animation_speed)
         return frame
 
+
+def animate_character(screen, animations, name, action, scale, x_pos, y_pos):
+    
+    if name == 'Enemy':
+        name = 'Bringer'
+    if name == 'Bringer of Death':
+        name = 'Bringer'
+        
+    scale = scale-0.5 if name == "Brute" else scale
+    current_animation = animations[name][action]
+    current_frame = current_animation.get_current_frame(scale=scale)
+
+    frame_width = current_frame.get_width()
+    frame_height = current_frame.get_height()
+    x_pos = x_pos - frame_width // 1.75
+    y_pos = y_pos - frame_height 
+
+    screen.blit(current_frame, (x_pos, y_pos))
+    
 
 def load_character_animations():
     frame_width, frame_height = 250, 300 

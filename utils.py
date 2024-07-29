@@ -7,7 +7,7 @@ from constants import (
     HEIGHT,
     PANEL_HEIGHT,
     RED,
-    POTION
+    POTION,
 )
 from health_bar import HealthBar
 from button import Button
@@ -28,11 +28,15 @@ def draw_panel(screen, panel_img, player, enemies):
         colour=RED,
     )
 
-    player_healthbar = HealthBar(250, 25, player.hp, player.max_hp)
-    player_healthbar.draw(
-        SCREEN, player.hp, WIDTH // 4 - 250 // 2, HEIGHT - PANEL_HEIGHT + 50
+    player_healthbar = HealthBar(
+        width=250, height=25, hp=player.hp, max_hp=player.max_hp
     )
-    potion_button = Button(SCREEN, x=120 , y=HEIGHT - PANEL_HEIGHT*0.25, image=POTION, width=55, height=55)
+    player_healthbar.draw(
+        SCREEN, hp=player.hp, x=WIDTH // 4 - 250 // 2, y=HEIGHT - PANEL_HEIGHT + 50
+    )
+    potion_button = Button(
+        SCREEN, x=120, y=HEIGHT - PANEL_HEIGHT * 0.25, image=POTION, width=55, height=55
+    )
 
     potion_button.draw()
     draw_text(
@@ -44,8 +48,17 @@ def draw_panel(screen, panel_img, player, enemies):
             screen,
             f"{enemy.name}",
             x=WIDTH * 0.75,
-            y=HEIGHT - PANEL_HEIGHT + 30 + i * 40,
+            y=HEIGHT - PANEL_HEIGHT + 20 + i * 70,
             colour=RED,
+        )
+        enemy_healthbar = HealthBar(
+            width=250, height=25, hp=enemy.hp, max_hp=enemy.max_hp
+        )
+        enemy_healthbar.draw(
+            SCREEN,
+            hp=enemy.hp,
+            x=WIDTH * 0.75 - 250 // 2,
+            y=HEIGHT - PANEL_HEIGHT + 40 + i * 70,
         )
 
 
