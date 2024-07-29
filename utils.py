@@ -8,24 +8,36 @@ from constants import (
     PANEL_HEIGHT,
     RED,
 )
+from health_bar import HealthBar
 
 
 def draw_bg(screen, background_img):
     screen.blit(background_img, (0, 0))
 
 
-def draw_panel(screen, panel_img, player, player_healthbar, enemies=0):
+def draw_panel(screen, panel_img, player, enemies):
     screen.blit(panel_img, (0, HEIGHT - PANEL_HEIGHT))
     
     draw_text(
         screen,
         f"{player.name} HP: {player.hp}",
-        WIDTH // 4,
-        HEIGHT - PANEL_HEIGHT + 30,
+        x=WIDTH // 4,
+        y=HEIGHT - PANEL_HEIGHT + 30,
         colour=RED,
     )
+        
+    player_healthbar = HealthBar(250, 25, player.hp, player.max_hp)
+    player_healthbar.draw(SCREEN, player.hp, WIDTH // 4 - 250 // 2, HEIGHT - PANEL_HEIGHT + 50)
     
-    player_healthbar.draw(SCREEN, player.hp)
+    for i, enemy in enumerate(enemies):
+        draw_text(
+            screen,
+            f"{enemy.name}",
+            x=WIDTH * 0.75,
+            y=HEIGHT - PANEL_HEIGHT + 30 + i * 40,
+            colour=RED,
+        )
+
 
     """
     for count, enemy in enumerate(enemies):
