@@ -7,6 +7,7 @@ from enemy import create_enemy
 
 
 def play_game(selected_char: int):
+    player = create_character(selected_char)
     round = 0
 
     while True:
@@ -26,36 +27,19 @@ def play_game(selected_char: int):
             position="center",
         )
 
-        player = create_character(selected_char)
         round += 1
-        totalLevelEnemies = round + randint(6, 11)
-        enemies = []
+        total_level_enemies = round + randint(6, 11)
 
-        if totalLevelEnemies > 0:
-            if totalLevelEnemies == 1:
+        while total_level_enemies > 0:
+            if total_level_enemies == 1:
                 play_boss_round()
-                totalLevelEnemies -= 1
+                total_level_enemies -= 1
             else:
-                currentRoundEnemies = min(randint(1, 4), totalLevelEnemies - 1)
-
-                for i in range(currentRoundEnemies):
-                    enemy_index = randint(0, 5)
-                    enemy = create_enemy(enemy_index)
-                    enemies.append(enemy)
-                    
+                current_round_enemies = min(randint(1, 4), total_level_enemies - 1)
+                enemies = [create_enemy(randint(0, 4)) for _ in range(current_round_enemies)]    
                 play_round(enemies=enemies, player=player)
-                totalLevelEnemies -= currentRoundEnemies
-        else:
-            draw_text(
-                SCREEN,
-                text=f"GAME: {selected_char}, ROUND: DONE",
-                x=WIDTH // 2,
-                y=100,
-                colour="white",
-                size="lg",
-                position="center",
-            )
-
+                total_level_enemies -= current_round_enemies
+    
         pygame.display.update()
         CLOCK.tick(FPS)
 
@@ -68,20 +52,20 @@ def play_round(enemies, player):
     game_over = 0  # 1 = player win, -1 = player loss
     
     while run:
-        CLOCK.tick(FPS)
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                pygame.quit()
+                quit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 clicked = True
-            else:
-                clicked = False
+
                 
         draw_bg(SCREEN, FOREST1)
-        
-                
+        pygame.display.update()
+        CLOCK.tick(FPS)
+
+
 def play_boss_round():
     pass
 
