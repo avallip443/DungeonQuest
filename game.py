@@ -1,13 +1,18 @@
 import pygame
 from random import randint
-from constants import SCREEN, WIDTH, CLOCK, FPS, FOREST1
-from utils import draw_text, draw_bg
+from constants import SCREEN, WIDTH, CLOCK, FPS, FOREST1, PANEL
+from utils import draw_text, draw_bg, draw_panel
 from player import create_character
 from enemy import create_enemy
+from health_bar import HealthBar
 
 
 def play_game(selected_char: int):
     player = create_character(selected_char)
+    player_healthbar = HealthBar(
+        0, 50, player.hp, player.max_hp
+    )
+
     round = 0
 
     while True:
@@ -37,14 +42,14 @@ def play_game(selected_char: int):
             else:
                 current_round_enemies = min(randint(1, 4), total_level_enemies - 1)
                 enemies = [create_enemy(randint(0, 4)) for _ in range(current_round_enemies)]    
-                play_round(enemies=enemies, player=player)
+                play_round(enemies=enemies, player=player, player_healthbar=player_healthbar)
                 total_level_enemies -= current_round_enemies
     
         pygame.display.update()
         CLOCK.tick(FPS)
 
 
-def play_round(enemies, player):
+def play_round(enemies, player, player_healthbar):
     run = True
     current_fighter = 1
     action_cooldown = 0
@@ -62,6 +67,7 @@ def play_round(enemies, player):
 
                 
         draw_bg(SCREEN, FOREST1)
+        draw_panel(SCREEN, PANEL, player, player_healthbar, 0)
         pygame.display.update()
         CLOCK.tick(FPS)
 

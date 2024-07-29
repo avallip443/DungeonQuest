@@ -2,31 +2,38 @@ import pygame
 
 pygame.init()
 
+
 # colours
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
+
 
 # screen dimensions
 WIDTH = 800
 HEIGHT = 550
 PANEL_HEIGHT = 150
 
+
 # graphics settings
 FONT_SM = pygame.font.SysFont("Times New Roman", 18)
 FONT = pygame.font.SysFont("Times New Roman", 26)
 FONT_LG = pygame.font.SysFont("Times New Roman", 36)
 
+
 # settings
 FPS = 60
 CLOCK = pygame.time.Clock()
+
 
 # game settings
 ACTION_WAIT_TIME = 90
 POTION_EFFECT = 15
 
+
 #  initalize pygame
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("DungeonQUEST")
+
 
 # BACKGROUNDS
 FOREST1 = pygame.image.load("graphics/backgrounds/forest1.png").convert_alpha()
@@ -42,6 +49,7 @@ SWORD = pygame.image.load("graphics/icons/sword.png").convert_alpha()
 POTION = pygame.image.load("graphics/icons/potion.png").convert_alpha()
 VICTORY = pygame.image.load("graphics/icons/victory.png").convert_alpha()
 DEFEAT = pygame.image.load("graphics/icons/defeat.png").convert_alpha()
+
 
 # BUTTONS
 RESTART = pygame.image.load("graphics/icons/restart.png").convert_alpha()
