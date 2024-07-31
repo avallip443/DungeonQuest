@@ -7,48 +7,56 @@ def handle_actions(
 ):
     pygame.mouse.set_visible(True)
     pos = pygame.mouse.get_pos()
-    draw_sword_icon = False
+    print(f"current fighter battle: {current_fighter}")
 
-    if current_fighter == 1 and action_cooldown == 0:
-        for i, enemy in enumerate(enemies):
-            if enemy.hitbox.collidepoint(pos):
-                pygame.mouse.set_visible(False)
-                screen.blit(SWORD, pos)
-                
-                if enemy.alive and clicked:
-                    perform_attack(player, enemies[i])
-                    current_fighter = 0
-                    action_cooldown = 30
-                    continue
+    if action_cooldown == 0:
+        if current_fighter == 1:
+            if player_turn(screen, clicked, pos, player, enemies, potion_button):
+                current_fighter, action_cooldown = 0, 10
+        elif current_fighter == 0:
+            enemy_turn(enemies, player)
+            current_fighter, action_cooldown = 1, 10
 
-            if potion_button.rect.collidepoint(pos) and clicked:
-                if player.potions > 0:
-                    player.hp += 30
-                    if player.hp > player.max_hp:
-                        player.hp = player.max_hp
-                    player.potions -= 1
-                    current_fighter = 0
-                    action_cooldown = 30
+    action_cooldown = max(0, action_cooldown - 1)
+    reset_actions(player, enemies)
+    return current_fighter, action_cooldown
 
-    elif current_fighter == 0 and action_cooldown == 0:
-        for enemy in enemies:
-            if enemy.alive:
-                perform_attack(enemy, player)
-        current_fighter = 1
-        action_cooldown = 30
 
-    if action_cooldown > 0:
-        action_cooldown -= 1
-
-    player.action = "idle"
+def player_turn(screen, clicked, pos, player, enemies, potion_button):
+    turn_done = False
     for enemy in enemies:
-        enemy.action = "idle"
+        if enemy.hitbox.collidepoint(pos):
+            pygame.mouse.set_visible(False)
+            screen.blit(SWORD, pos)
+
+            if enemy.alive and clicked:
+                perform_attack(player, enemy)
+                turn_done = True
+
+    if (
+        potion_button.rect.collidepoint(pos)
+        and clicked
+        and player.potions > 0
+        and player.max_hp > player.hp
+    ):
+        player.heal()
+        turn_done = True
+
+    return turn_done
+
+
+def enemy_turn(enemies, player):
+    for enemy in enemies:
+        if enemy.alive:
+            perform_attack(enemy, player)
 
 
 def perform_attack(attacker, target):
-    damage = attacker.strength
-    if damage > 0:
-        target.hp -= damage
-    if target.hp < 0:
-        target.hp = 0
-        target.alive = False
+    damage = attacker.attack()
+    target.take_damage(damage)
+
+
+def reset_actions(player, enemies):
+    player.action = "idle"
+    for enemy in enemies:
+        enemy.action = "idle"

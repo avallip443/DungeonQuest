@@ -1,3 +1,6 @@
+from random import randint, random
+
+
 class Player:
     def __init__(
         self,
@@ -23,19 +26,27 @@ class Player:
         self.x_pos = 150
         self.y_pos = 100
 
-    def take_damage(self, amount: int):
-        self.hp -= amount
+    def take_damage(self, damage: int):
+        self.hp -= damage
         if self.hp <= 0:
             self.hp = 0
             self.alive = False
 
-    def heal(self, amount: int):
-        self.hp += amount
-        if self.hp > self.max_hp:
-            self.hp = self.max_hp
+    def heal(self):
+        heal = 30 + randint(-5, 5)
+        self.hp = min(self.hp + heal, self.max_hp)
+        self.potions -= 1
 
     def attack(self):
-        pass
+        damage = self.strength + randint(-5, 5)
+
+        if random() < self.crit_chance / 100:
+            damage += 1.5
+
+        if random() < self.double_chance / 100:
+            return damage * 2
+
+        return damage
 
 
 def create_character(index: int) -> Player:

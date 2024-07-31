@@ -1,6 +1,7 @@
 import pygame
 from spritesheet import Spritesheet
 
+
 class Animation:
     def __init__(self, spritesheet, frame_names, frame_width, frame_height):
         self.frames = [spritesheet.parse_sprite(name) for name in frame_names]
@@ -22,7 +23,7 @@ class Animation:
 
 
 def load_character_animations():
-    frame_width, frame_height = 250, 300 
+    frame_width, frame_height = 250, 300
     animations = {}
 
     # load sprite sheets
@@ -105,7 +106,7 @@ def load_character_animations():
     warrior_special = Spritesheet(
         "graphics/characters/warrior/warrior_special.png", frame_width, frame_height
     )
-    
+
     wizard1_attack = Spritesheet(
         "graphics/enemies/wizard1/wizard1_attack.png", frame_width, frame_height
     )
@@ -118,7 +119,7 @@ def load_character_animations():
     wizard1_idle = Spritesheet(
         "graphics/enemies/wizard1/wizard1_idle.png", frame_width, frame_height
     )
-    
+
     golem_attack = Spritesheet(
         "graphics/enemies/golem/golem_attack.png", frame_width, frame_height
     )
@@ -144,9 +145,11 @@ def load_character_animations():
     wizard2_idle = Spritesheet(
         "graphics/enemies/wizard2/wizard2_idle.png", frame_width, frame_height
     )
-    
+
     bringer_attack = Spritesheet(
-        "graphics/enemies/bringer_of_death/bringer_attack.png", frame_width, frame_height
+        "graphics/enemies/bringer_of_death/bringer_attack.png",
+        frame_width,
+        frame_height,
     )
     bringer_death = Spritesheet(
         "graphics/enemies/bringer_of_death/bringer_death.png", frame_width, frame_height
@@ -157,7 +160,6 @@ def load_character_animations():
     bringer_idle = Spritesheet(
         "graphics/enemies/bringer_of_death/bringer_idle.png", frame_width, frame_height
     )
-    
 
     # frames for each animation
     berserker_attack_frames = [f"{i}.png" for i in range(1, 8)]
@@ -189,29 +191,28 @@ def load_character_animations():
     warrior_hurt_frames = [f"{i}.png" for i in range(1, 4)]
     warrior_idle_frames = [f"{i}.png" for i in range(1, 11)]
     warrior_special_frames = [f"{i}.png" for i in range(1, 6)]
-    
-    # generate frame in reverse 
-    wizard1_attack_frames = [f"{i}.png" for i in range(8, 0, -1)]  
+
+    # generate frame in reverse
+    wizard1_attack_frames = [f"{i}.png" for i in range(8, 0, -1)]
     wizard1_death_frames = [f"{i}.png" for i in range(7, 0, -1)]
-    wizard1_hurt_frames = [f"{i}.png" for i in range(3, 0, -1)]    
+    wizard1_hurt_frames = [f"{i}.png" for i in range(3, 0, -1)]
     wizard1_idle_frames = [f"{i}.png" for i in range(8, 0, -1)]
-    
+
     wizard2_attack_frames = [f"{i}.png" for i in range(13, 0, -1)]
     wizard2_death_frames = [f"{i}.png" for i in range(18, 0, -1)]
     wizard2_hurt_frames = [f"{i}.png" for i in range(3, 0, -1)]
     wizard2_idle_frames = [f"{i}.png" for i in range(10, 0, -1)]
-    
+
     golem_attack_frames = [f"{i}.png" for i in range(11, 0, -1)]
     golem_death_frames = [f"{i}.png" for i in range(13, 0, -1)]
     golem_hurt_frames = [f"{i}.png" for i in range(4, 0, -1)]
     golem_idle_frames = [f"{i}.png" for i in range(8, 0, -1)]
-    
+
     bringer_attack_frames = [f"{i}.png" for i in range(1, 11)]
     bringer_death_frames = [f"{i}.png" for i in range(1, 12)]
     bringer_hurt_frames = [f"{i}.png" for i in range(1, 4)]
     bringer_idle_frames = [f"{i}.png" for i in range(1, 9)]
 
-    
     # store animations dictionary to access
     animations["Berserker"] = {
         "attack": Animation(
@@ -286,7 +287,7 @@ def load_character_animations():
             warrior_special, warrior_special_frames, frame_width, frame_height
         ),
     }
-    
+
     animations["Wizard1"] = {
         "attack": Animation(
             wizard1_attack, wizard1_attack_frames, frame_width, frame_height
@@ -297,7 +298,7 @@ def load_character_animations():
         "hurt": Animation(wizard1_hurt, wizard1_hurt_frames, frame_width, frame_height),
         "idle": Animation(wizard1_idle, wizard1_idle_frames, frame_width, frame_height),
     }
-    
+
     animations["Wizard2"] = {
         "attack": Animation(
             wizard2_attack, wizard2_attack_frames, frame_width, frame_height
@@ -313,9 +314,7 @@ def load_character_animations():
         "attack": Animation(
             golem_attack, golem_attack_frames, frame_width, frame_height
         ),
-        "death": Animation(
-            golem_death, golem_death_frames, frame_width, frame_height
-        ),
+        "death": Animation(golem_death, golem_death_frames, frame_width, frame_height),
         "hurt": Animation(golem_hurt, golem_hurt_frames, frame_width, frame_height),
         "idle": Animation(golem_idle, golem_idle_frames, frame_width, frame_height),
     }
@@ -324,7 +323,9 @@ def load_character_animations():
         "attack": Animation(
             bringer_attack, bringer_attack_frames, frame_width, frame_height
         ),
-        "death": Animation(bringer_death, bringer_death_frames, frame_width, frame_height),
+        "death": Animation(
+            bringer_death, bringer_death_frames, frame_width, frame_height
+        ),
         "hurt": Animation(bringer_hurt, bringer_hurt_frames, frame_width, frame_height),
         "idle": Animation(bringer_idle, bringer_idle_frames, frame_width, frame_height),
     }

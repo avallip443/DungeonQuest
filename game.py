@@ -64,11 +64,12 @@ def play_game(selected_char: int):
 def play_round(enemies, player, animations):
     run = True
     current_fighter = 1  # 1: player, 0: computer
-    clicked = False
     action_cooldown = 0
     game_over = 0  # 1: player win, -1: player loss
+    clicked = False
 
     while run:
+        clicked = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -76,8 +77,6 @@ def play_round(enemies, player, animations):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 clicked = True
-            else:
-                clicked = False
 
         draw_bg(SCREEN, FOREST1)
 
@@ -92,7 +91,9 @@ def play_round(enemies, player, animations):
         draw_panel(SCREEN, PANEL, player, enemies, potion_button)
         draw_characters(SCREEN, player, enemies, animations)
 
-        handle_actions(
+        print(f"current fighter: {current_fighter}")
+
+        current_fighter, action_cooldown = handle_actions(
             SCREEN,
             clicked,
             current_fighter,
@@ -101,6 +102,7 @@ def play_round(enemies, player, animations):
             potion_button,
             action_cooldown,
         )
+        
 
         if player.hp <= 0:
             game_over = -1
