@@ -1,6 +1,4 @@
 import pygame
-from constants import WIDTH, HEIGHT
-
 
 class Enemy:
     def __init__(
@@ -22,7 +20,6 @@ class Enemy:
         self.action = 'idle'
         self.x_pos = 0
         self.y_pos = 0
-        self.rect = pygame.Rect(self.x_pos, self.y_pos, 1, 1)
         self.hitbox = pygame.Rect(0, 0, 100, 120)
 
 
@@ -42,12 +39,6 @@ class Enemy:
     def attack(self):
         pass
     
-    
-    def update(self, frame_width, frame_height):
-        self.rect.width = frame_width
-        self.rect.height = frame_height
-        self.rect.x = self.x_pos - frame_width // 2
-        self.rect.y = self.y_pos - frame_height
 
     def update_hitbox(self, x_pos, y_pos):
         self.hitbox.x = x_pos
@@ -78,25 +69,6 @@ def create_boss(index: int, x_pos: int, y_pos: int) -> Enemy:
     else:
         raise ValueError(f"Invalid enemy index: {index}")
     
-"""
-def animate_enemy(screen, enemy, animations, scale):
-    name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name
-
-    change_scale = enemy.name in ["Brute", "Berserker"]
-    scale = scale - 0.5 if change_scale else scale
-
-    current_animation = animations[name][enemy.action]
-    current_frame = current_animation.get_current_frame(scale=scale)
-
-    
-    frame_width = current_frame.get_width()
-    frame_height = current_frame.get_height()
-    
-    enemy.update(frame_width, frame_height)
-    pygame.draw.rect(screen, (255, 0, 0), enemy.rect)
-    
-    screen.blit(current_frame, (enemy.rect.x, enemy.rect.y))
-"""
 
 def animate_enemy(screen, enemy, animations, scale):
     name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name
@@ -110,7 +82,6 @@ def animate_enemy(screen, enemy, animations, scale):
     frame_width = current_frame.get_width()
     frame_height = current_frame.get_height()
     
-    enemy.update(frame_width, frame_height)  # Ensure rect is updated
     
-    screen.blit(current_frame, (enemy.rect.x, enemy.rect.y))
+    screen.blit(current_frame, (enemy.x_pos - frame_width // 2, enemy.y_pos - frame_height))
     
