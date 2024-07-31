@@ -1,16 +1,29 @@
 import pygame
 from random import randint
-from constants import SCREEN, WIDTH, HEIGHT, CLOCK, FPS, FOREST1, PANEL
+from constants import (
+    SCREEN,
+    WIDTH,
+    CLOCK,
+    FPS,
+    FOREST1,
+    PANEL,
+    HEIGHT,
+    PANEL_HEIGHT,
+    POTION,
+)
 from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
 from enemy import create_enemy
-from animations import load_character_animations, animate_character
+from animations import load_character_animations
+from battle import handle_actions
+from button import Button
 
 
 def play_game(selected_char: int):
     pygame.init()
     player = create_character(selected_char)
     round = 0
+    animations = load_character_animations()
 
     while True:
         for event in pygame.event.get():
@@ -34,27 +47,26 @@ def play_game(selected_char: int):
 
         while total_level_enemies > 0:
             if total_level_enemies == 1:
-                play_boss_round()
+                play_boss_round(player, animations)
                 total_level_enemies -= 1
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [
-                    create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
+                    create_enemy(randint(0, 1)) for i in range(current_round_enemies)
                 ]
-                play_round(enemies=enemies, player=player)
+                play_round(enemies=enemies, player=player, animations=animations)
                 total_level_enemies -= current_round_enemies
 
         pygame.display.update()
         CLOCK.tick(FPS)
 
 
-def play_round(enemies, player):
+def play_round(enemies, player, animations):
     run = True
-    current_fighter = 1
-    action_cooldown = 0
+    current_fighter = 1  # 1: player, 0: computer
     clicked = False
-    game_over = 0  # 1 = player win, -1 = player loss
-    animations = load_character_animations()
+    action_cooldown = 0
+    game_over = 0  # 1: player win, -1: player loss
 
     while run:
         for event in pygame.event.get():
@@ -64,21 +76,50 @@ def play_round(enemies, player):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 clicked = True
+            else:
+                clicked = False
 
         draw_bg(SCREEN, FOREST1)
-        draw_panel(SCREEN, PANEL, player, enemies)
 
-        player.action = "idle"
-        for enemy in enemies:
-            enemy.action = "idle"
+        potion_button = Button(
+            SCREEN,
+            x=120,
+            y=HEIGHT - PANEL_HEIGHT * 0.25,
+            image=POTION,
+            width=55,
+            height=55,
+        )
+        draw_panel(SCREEN, PANEL, player, enemies, potion_button)
+
+        handle_actions(
+            SCREEN,
+            clicked,
+            current_fighter,
+            player,
+            enemies,
+            potion_button,
+            action_cooldown,
+        )
 
         draw_characters(SCREEN, player, enemies, animations)
+
+        if player.hp <= 0:
+            game_over = -1
+            run = False
+        if all(enemy.hp <= 0 for enemy in enemies):
+            game_over = 1
+            run = False
 
         pygame.display.update()
         CLOCK.tick(FPS)
 
+    if game_over == 1:
+        print("Player wins!")
+    elif game_over == -1:
+        print("Player loses!")
 
-def play_boss_round():
+
+def play_boss_round(player, animations):
     pass
 
 

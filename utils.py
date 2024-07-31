@@ -1,4 +1,3 @@
-import pygame
 from constants import (
     FONT,
     FONT_SM,
@@ -6,20 +5,17 @@ from constants import (
     WIDTH,
     HEIGHT,
     PANEL_HEIGHT,
-    POTION,
-    CLOCK, 
-    FPS
 )
 from health_bar import HealthBar
-from button import Button
-from animations import load_character_animations, animate_character
+from animations import animate_character
+from enemy import animate_enemy
 
 
 def draw_bg(screen, background_img):
     screen.blit(background_img, (0, 0))
 
 
-def draw_panel(screen, panel_img, player, enemies):
+def draw_panel(screen, panel_img, player, enemies, potion_button):
     screen.blit(panel_img, (0, HEIGHT - PANEL_HEIGHT))
 
     draw_text(
@@ -35,9 +31,6 @@ def draw_panel(screen, panel_img, player, enemies):
     )
     player_healthbar.draw(
         screen, hp=player.hp, x=WIDTH // 4 - 250 // 2, y=HEIGHT - PANEL_HEIGHT + 50
-    )
-    potion_button = Button(
-        screen, x=120, y=HEIGHT - PANEL_HEIGHT * 0.25, image=POTION, width=55, height=55
     )
 
     potion_button.draw()
@@ -91,17 +84,6 @@ def draw_text(screen, text, x, y, colour="white", size="med", position="center")
 
 
 def draw_characters(screen, player, enemies, animations):
-    for i, enemy in enumerate(enemies):
-        animate_character(
-            screen,
-            animations,
-            name=enemy.name,
-            action=enemy.action,
-            scale=2.5,
-            x_pos=700 - i * 150,
-            y_pos=HEIGHT * 0.65,
-        )
-        
     animate_character(
         screen,
         animations,
@@ -111,3 +93,21 @@ def draw_characters(screen, player, enemies, animations):
         x_pos=200,
         y_pos=HEIGHT * 0.68,
     )
+
+    for i, enemy in enumerate(enemies):
+        x_pos = 700 - i * 150
+        y_pos = HEIGHT * 0.65
+        enemy.x_pos = x_pos
+        enemy.y_pos = y_pos
+        enemy.update_hitbox(x_pos - 50, y_pos - 140)
+        
+        animate_enemy(
+            screen=screen,
+            animations=animations,
+            enemy=enemy,
+            scale=2.5,
+        )
+        
+    
+        
+
