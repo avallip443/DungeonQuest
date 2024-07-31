@@ -1,8 +1,6 @@
 class Player:
     def __init__(
         self,
-        x_pos: int,
-        y_pos: int,
         name: str,
         max_hp: int,
         strength: int,
@@ -21,8 +19,10 @@ class Player:
         self.start_potions = potions
         self.potions = potions
         self.alive = True
-    
-    
+        self.action = "idle"
+        self.x_pos = 150
+        self.y_pos = 100
+
     def take_damage(self, amount: int):
         self.hp -= amount
         if self.hp <= 0:
@@ -40,19 +40,19 @@ class Player:
 
 def create_character(index: int) -> Player:
     characters = [
-        (100, 150, 'Warrior', 100, 20, 2, 2, 50, 3),
-        (100, 150, 'Rouge', 85, 15, 10, 2, 55, 3),
-        (100, 150, "Berserker", 75, 30, 5, 10, 60, 3),
-        (100, 150, "Brute", 130, 15, 2, 2, 50, 3),
-        (100, 150, "Huntress", 85, 10, 10, 25, 45, 3),
+        ("Warrior", 100, 20, 2, 2, 50, 3),
+        ("Rouge", 85, 15, 10, 2, 55, 3),
+        ("Berserker", 75, 30, 5, 10, 60, 3),
+        ("Brute", 130, 15, 2, 2, 50, 3),
+        ("Huntress", 85, 10, 10, 25, 45, 3),
     ]
 
     if 0 <= index <= len(characters):
         return Player(*characters[index])
     else:
         raise ValueError(f"Invalid character index: {index}")
-    
-    
+
+
 def animate_player(screen, player, animations, scale):
     change_scale = player.name in ["Brute", "Berserker"]
     scale = scale - 0.5 if change_scale else scale

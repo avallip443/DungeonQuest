@@ -7,7 +7,6 @@ from constants import (
     PANEL_HEIGHT,
 )
 from health_bar import HealthBar
-from animations import animate_character
 from enemy import animate_enemy
 from player import animate_player
 

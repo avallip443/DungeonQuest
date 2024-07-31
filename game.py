@@ -90,6 +90,7 @@ def play_round(enemies, player, animations):
             height=55,
         )
         draw_panel(SCREEN, PANEL, player, enemies, potion_button)
+        draw_characters(SCREEN, player, enemies, animations)
 
         handle_actions(
             SCREEN,
@@ -100,8 +101,6 @@ def play_round(enemies, player, animations):
             potion_button,
             action_cooldown,
         )
-
-        draw_characters(SCREEN, player, enemies, animations)
 
         if player.hp <= 0:
             game_over = -1

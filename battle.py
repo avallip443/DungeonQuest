@@ -7,9 +7,9 @@ def handle_actions(
 ):
     pygame.mouse.set_visible(True)
     pos = pygame.mouse.get_pos()
+    draw_sword_icon = False
 
     if current_fighter == 1 and action_cooldown == 0:
-        
         for i, enemy in enumerate(enemies):
             if enemy.hitbox.collidepoint(pos):
                 pygame.mouse.set_visible(False)
