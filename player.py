@@ -53,3 +53,16 @@ def create_character(index: int) -> Player:
         raise ValueError(f"Invalid character index: {index}")
     
     
+def animate_player(screen, player, animations, scale):
+    change_scale = player.name in ["Brute", "Berserker"]
+    scale = scale - 0.5 if change_scale else scale
+
+    current_animation = animations[player.name][player.action]
+    current_frame = current_animation.get_current_frame(scale=scale)
+
+    frame_width = current_frame.get_width()
+    frame_height = current_frame.get_height()
+    x_pos = player.x_pos - frame_width // 2
+    y_pos = player.y_pos - frame_height
+
+    screen.blit(current_frame, (x_pos, y_pos))

@@ -73,7 +73,7 @@ def create_boss(index: int, x_pos: int, y_pos: int) -> Enemy:
 def animate_enemy(screen, enemy, animations, scale):
     name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name
 
-    change_scale = enemy.name in ["Brute", "Berserker"]
+    change_scale = enemy.name in ["boss1", "boss2"]
     scale = scale - 0.5 if change_scale else scale
 
     current_animation = animations[name][enemy.action]
@@ -81,7 +81,8 @@ def animate_enemy(screen, enemy, animations, scale):
 
     frame_width = current_frame.get_width()
     frame_height = current_frame.get_height()
+    x_pos = enemy.x_pos - frame_width // 2
+    y_pos = enemy.y_pos - frame_height
     
-    
-    screen.blit(current_frame, (enemy.x_pos - frame_width // 2, enemy.y_pos - frame_height))
+    screen.blit(current_frame, (x_pos, y_pos))
     
