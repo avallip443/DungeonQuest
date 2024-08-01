@@ -1,5 +1,6 @@
 import pygame
 from random import randint, random
+import math
 
 
 class Enemy:
@@ -21,7 +22,6 @@ class Enemy:
         self.y_pos = 0
         self.hitbox = pygame.Rect(0, 0, 100, 120)
 
-
     def take_damage(self, damage: int):
         self.hp -= damage
         if self.hp <= 0:
@@ -34,7 +34,7 @@ class Enemy:
         if random() < self.crit_chance / 100:
             damage += 1.5
 
-        return damage
+        return math.floor(damage)
 
     def update_hitbox(self, x_pos, y_pos):
         self.hitbox.x = x_pos

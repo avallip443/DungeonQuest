@@ -1,4 +1,5 @@
 from random import randint, random
+import math
 
 
 class Player:
@@ -47,7 +48,7 @@ class Player:
         if random() < self.double_chance / 100:
             return damage * 2
 
-        return damage
+        return math.floor(damage)
 
 
 def create_character(index: int) -> Player:
