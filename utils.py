@@ -11,6 +11,18 @@ from enemy import animate_enemy
 from player import animate_player
 
 
+# layout
+PLAYER_X_POS = 150
+PLAYER_Y_POS = HEIGHT * 0.67
+ENEMY_BASE_X_POS = 700
+ENEMY_Y_POS = HEIGHT * 0.66
+ENEMY_SPACING = 150
+HEALTHBAR_WIDTH = 250
+HEALTHBAR_HEIGHT = 25
+SCALE_PLAYER = 3.5
+SCALE_ENEMY = 2.5
+
+
 def draw_bg(screen, background_img):
     screen.blit(background_img, (0, 0))
 
@@ -18,58 +30,52 @@ def draw_bg(screen, background_img):
 def draw_panel(screen, panel_img, player, enemies, potion_button):
     screen.blit(panel_img, (0, HEIGHT - PANEL_HEIGHT))
 
+    # player stats
     draw_text(
         screen,
         f"{player.name} HP: {player.hp}",
         x=WIDTH // 4,
         y=HEIGHT - PANEL_HEIGHT + 30,
-        colour='white',
+        colour="white",
     )
-
-    player_healthbar = HealthBar(
-        width=250, height=25, hp=player.hp, max_hp=player.max_hp
+    draw_health_bar(
+        screen,
+        player.hp,
+        player.max_hp,
+        WIDTH // 4 - HEALTHBAR_WIDTH // 2,
+        HEIGHT - PANEL_HEIGHT + 50,
     )
-    player_healthbar.draw(
-        screen, hp=player.hp, x=WIDTH // 4 - 250 // 2, y=HEIGHT - PANEL_HEIGHT + 50
-    )
-
     potion_button.draw()
     draw_text(
         screen, str(player.potions), x=140, y=HEIGHT - PANEL_HEIGHT * 0.35, size="sm"
     )
 
-    for i, enemy in enumerate(enemies):
-        text_y = PANEL_HEIGHT // 2 - 20 if len(enemies) == 1 else 20 + i * 70
-        bar_y = PANEL_HEIGHT // 2 if len(enemies) == 1 else 40 + i * 70
-        
+    # enemy stats 
+    panel_offsets = [(20, 40), (90, 110)] if len(enemies) == 2 else [(30, 50)]
+
+    for i, (text_offset, bar_offset) in enumerate(panel_offsets):
+        x = WIDTH * 0.75
+        text_y = HEIGHT - PANEL_HEIGHT + text_offset
+        bar_y = HEIGHT - PANEL_HEIGHT + bar_offset
+
         draw_text(
             screen,
-            f"{enemy.name}",
-            x=WIDTH * 0.75,
-            y=HEIGHT - PANEL_HEIGHT + text_y,
-            colour='white',
+            f"{enemies[i].name}",
+            x=x,
+            y=text_y,
+            colour="white",
         )
-        enemy_healthbar = HealthBar(
-            width=250, height=25, hp=enemy.hp, max_hp=enemy.max_hp
-        )
-        enemy_healthbar.draw(
-            screen,
-            hp=enemy.hp,
-            x=WIDTH * 0.75 - 250 // 2,
-            y=HEIGHT - PANEL_HEIGHT + bar_y,
+        draw_health_bar(
+            screen, enemies[i].hp, enemies[i].max_hp, x - HEALTHBAR_WIDTH // 2, bar_y
         )
 
 
 def draw_text(screen, text, x, y, colour="white", size="med", position="center"):
-    if size == "sm":
-        font = FONT_SM
-    elif size == "med":
-        font = FONT
-    elif size == "lg":
-        font = FONT_LG
+    font = {"sm": FONT_SM, "med": FONT, "lg": FONT_LG}.get(size, FONT)
 
     lines = text.split("\n")
     y_offset = 0
+
     for line in lines:
         img = font.render(line, False, colour)
         img_rect = img.get_rect()
@@ -83,31 +89,29 @@ def draw_text(screen, text, x, y, colour="white", size="med", position="center")
         y_offset += img_rect.height
 
 
-def draw_characters(screen, player, enemies, animations):
-    player.x_pos = 200
-    player.y_pos = HEIGHT * 0.68
-    
-    animate_player(
-        screen,
-        player,
-        animations,
-        scale=3.5
+def draw_health_bar(screen, hp, max_hp, x, y):
+    health_bar = HealthBar(
+        width=HEALTHBAR_WIDTH, height=HEALTHBAR_HEIGHT, hp=hp, max_hp=max_hp
     )
+    health_bar.draw(screen, hp=hp, x=x, y=y)
+
+
+def draw_characters(screen, player, enemies, animations):
+    player.x_pos = PLAYER_X_POS
+    player.y_pos = PLAYER_Y_POS
+
+    animate_player(screen, player, animations, scale=SCALE_PLAYER)
 
     for i, enemy in enumerate(enemies):
-        x_pos = 700 - i * 150
-        y_pos = HEIGHT * 0.65
+        x_pos = ENEMY_BASE_X_POS - i * ENEMY_SPACING
+        y_pos = ENEMY_Y_POS
         enemy.x_pos = x_pos
         enemy.y_pos = y_pos
         enemy.update_hitbox(x_pos - 50, y_pos - 140)
-        
+
         animate_enemy(
             screen=screen,
             animations=animations,
             enemy=enemy,
-            scale=2.5,
+            scale=SCALE_ENEMY,
         )
-        
-    
-        
-
