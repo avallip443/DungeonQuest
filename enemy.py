@@ -21,6 +21,7 @@ class Enemy:
         self.x_pos = 0
         self.y_pos = 0
         self.hitbox = pygame.Rect(0, 0, 100, 120)
+        self.action_cooldown = 10
 
     def take_damage(self, damage: int):
         self.hp -= damage

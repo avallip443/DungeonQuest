@@ -63,7 +63,7 @@ def play_game(selected_char: int):
 
 def play_round(enemies, player, animations):
     run = True
-    current_fighter = 1  # 1: player, 0: computer
+    current_fighter = 0  # 1: player, 0: computer
     action_cooldown = 0
     game_over = 0  # 1: player win, -1: player loss
     clicked = False

@@ -12,12 +12,16 @@ def handle_actions(
     pos = pygame.mouse.get_pos()
 
     if action_cooldown == 0:
-        if current_fighter == 1:
+        if current_fighter == 0:
             if player_turn(screen, clicked, pos, player, enemies, potion_button):
-                current_fighter, action_cooldown = 0, 10
-        elif current_fighter == 0:
-            enemy_turn(enemies, player)
-            current_fighter, action_cooldown = 1, 10
+                current_fighter, action_cooldown = 1, 20
+        elif current_fighter == 1:
+            enemy_turn(enemies[0], player)
+            current_fighter = 2 if len(enemies) == 2 else 0
+            action_cooldown = 20
+        else:
+            enemy_turn(enemies[1], player)
+            current_fighter, action_cooldown = 0, 20
 
     action_cooldown = max(0, action_cooldown - 1)
     reset_actions(player, enemies)
@@ -48,10 +52,9 @@ def player_turn(screen, clicked, pos, player, enemies, potion_button):
     return turn_done
 
 
-def enemy_turn(enemies, player):
-    for enemy in enemies:
-        if enemy.alive:
-            perform_attack(enemy, player)
+def enemy_turn(enemy, player):
+    if enemy.alive:
+        perform_attack(enemy, player)
 
 
 def perform_attack(attacker, target):
@@ -70,3 +73,4 @@ def reset_actions(player, enemies):
     player.action = "idle"
     for enemy in enemies:
         enemy.action = "idle"
+        enemy.action_cooldown = max(0, enemy.action_cooldown - 1)
