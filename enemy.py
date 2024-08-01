@@ -1,6 +1,7 @@
 import pygame
 from random import randint, random
 import math
+from animations import load_character_animations
 
 
 class Enemy:
@@ -21,25 +22,60 @@ class Enemy:
         self.x_pos = 0
         self.y_pos = 0
         self.hitbox = pygame.Rect(0, 0, 100, 120)
-        self.action_cooldown = 10
+        self.animation_timer = 0
+        self.current_frame_index = 0
+        self.animations = load_character_animations()
+        self.delay_counter = 0
 
     def take_damage(self, damage: int):
         self.hp -= damage
         if self.hp <= 0:
             self.hp = 0
             self.alive = False
+        else:
+            self.delay_counter = 8
+        self.action = "idle"
 
     def attack(self):
+        special_attack = False
         damage = self.strength + randint(-5, 5)
 
         if random() < self.crit_chance / 100:
             damage += 1.5
+            special_attack = True
 
+        self.action = "special" if special_attack else "attack"
         return math.floor(damage)
+    
+    def death(self):
+        self.action = "death"
+        self.alive = False
 
     def update_hitbox(self, x_pos, y_pos):
         self.hitbox.x = x_pos
         self.hitbox.y = y_pos
+        
+    def update_animation(self):
+        current_animation = self.animations[self.name][self.action]
+        animation_length = current_animation.get_frame_count()
+
+        if self.delay_counter > 0:
+            self.delay_counter -= 1
+            if self.delay_counter == 0 and self.hp > 0:
+                self.action = "hurt"
+            elif self.delay_counter == 0 and self.hp == 0:
+                self.action = "death"
+            return
+        
+        if self.action != "idle":
+            self.animation_timer += 1
+
+            if self.animation_timer > (animation_length):
+                self.animation_timer = 0
+                self.current_frame_index = 0
+                
+                if self.action in ["hurt", "special", "attack"]:
+                    self.action = "idle"
 
 
 def create_enemy(index: int) -> Enemy:

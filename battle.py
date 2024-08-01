@@ -1,5 +1,5 @@
 import pygame
-from constants import SWORD, FONT, SCREEN
+from constants import SWORD
 from damage_text import DamageText
 
 damage_text_group = pygame.sprite.Group()
@@ -13,18 +13,20 @@ def handle_actions(
 
     if action_cooldown == 0:
         if current_fighter == 0:
-            if player_turn(screen, clicked, pos, player, enemies, potion_button):
-                current_fighter, action_cooldown = 1, 20
+            if player.delay_counter == 0:
+                if player_turn(screen, clicked, pos, player, enemies, potion_button):
+                    current_fighter, action_cooldown = 1, 10
         elif current_fighter == 1:
-            enemy_turn(enemies[0], player)
-            current_fighter = 2 if len(enemies) == 2 else 0
-            action_cooldown = 20
+            if player.delay_counter == 0:
+                enemy_turn(enemies[0], player)
+                current_fighter = 2 if len(enemies) == 2 else 0
+                action_cooldown = 20 if len(enemies) == 2 else 10
         else:
-            enemy_turn(enemies[1], player)
-            current_fighter, action_cooldown = 0, 20
+            if player.delay_counter == 0:
+                enemy_turn(enemies[1], player)
+                current_fighter, action_cooldown = 0, 10
 
     action_cooldown = max(0, action_cooldown - 1)
-    reset_actions(player, enemies)
     return current_fighter, action_cooldown
 
 
@@ -65,12 +67,6 @@ def perform_attack(attacker, target):
 
 def display_damage(target, damage, colour):
     x, y = target.x_pos, target.y_pos - 210
-    damage_text = DamageText(x, y, str(damage), colour) 
+    damage_text = DamageText(x, y, str(damage), colour)
     damage_text_group.add(damage_text)
 
-
-def reset_actions(player, enemies):
-    player.action = "idle"
-    for enemy in enemies:
-        enemy.action = "idle"
-        enemy.action_cooldown = max(0, enemy.action_cooldown - 1)

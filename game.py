@@ -103,6 +103,10 @@ def play_round(enemies, player, animations):
         
         damage_text_group.update()
         damage_text_group.draw(SCREEN)
+        player.update_animation()
+        
+        for enemy in enemies:
+            enemy.update_animation()
 
         if player.hp <= 0:
             game_over = -1

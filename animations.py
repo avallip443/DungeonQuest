@@ -21,6 +21,9 @@ class Animation:
         self.clock.tick(self.animation_speed)
         return frame
 
+    def get_frame_count(self):
+        return len(self.frames)
+
 
 def load_character_animations():
     frame_width, frame_height = 250, 300

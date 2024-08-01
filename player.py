@@ -1,5 +1,6 @@
 from random import randint, random
 import math
+from animations import load_character_animations
 
 
 class Player:
@@ -24,14 +25,22 @@ class Player:
         self.potions = potions
         self.alive = True
         self.action = "idle"
-        self.x_pos = 150
-        self.y_pos = 100
+        self.x_pos = 0
+        self.y_pos = 0
+        self.animation_timer = 0
+        self.current_frame_index = 0
+        self.animations = load_character_animations()
+        self.delay_counter = 0
 
     def take_damage(self, damage: int):
         self.hp -= damage
         if self.hp <= 0:
             self.hp = 0
             self.alive = False
+            # self.action = "death"
+        else:
+            self.delay_counter = 10
+        self.action = "idle"
 
     def heal(self):
         heal = 30 + randint(-5, 5)
@@ -40,15 +49,41 @@ class Player:
         return heal
 
     def attack(self):
+        special_attack = False
         damage = self.strength + randint(-5, 5)
 
         if random() < self.crit_chance / 100:
             damage += 1.5
+            special_attack = True
 
         if random() < self.double_chance / 100:
-            return damage * 2
+            damage * 2
+            special_attack = True
 
+        self.action = "special" if special_attack else "attack"
         return math.floor(damage)
+
+    def update_animation(self):
+        current_animation = self.animations[self.name][self.action]
+        animation_length = current_animation.get_frame_count()
+
+        if self.delay_counter > 0:
+            self.delay_counter -= 1
+            if self.delay_counter == 0 and self.hp > 0:
+                self.action = "hurt"
+            elif self.delay_counter == 0 and self.hp == 0:
+                self.action = "death"
+            return
+
+        if self.action != "idle":
+            self.animation_timer += 1
+
+            if self.animation_timer > (animation_length):
+                self.animation_timer = 0
+                self.current_frame_index = 0
+
+                if self.action in ["hurt", "special", "attack"]:
+                    self.action = "idle"
 
 
 def create_character(index: int) -> Player:
