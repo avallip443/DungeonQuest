@@ -15,7 +15,7 @@ from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
 from enemy import create_enemy
 from animations import load_character_animations
-from battle import handle_actions
+from battle import handle_actions, damage_text_group
 from button import Button
 
 
@@ -91,8 +91,6 @@ def play_round(enemies, player, animations):
         draw_panel(SCREEN, PANEL, player, enemies, potion_button)
         draw_characters(SCREEN, player, enemies, animations)
 
-        print(f"current fighter: {current_fighter}")
-
         current_fighter, action_cooldown = handle_actions(
             SCREEN,
             clicked,
@@ -103,6 +101,8 @@ def play_round(enemies, player, animations):
             action_cooldown,
         )
         
+        damage_text_group.update()
+        damage_text_group.draw(SCREEN)
 
         if player.hp <= 0:
             game_over = -1

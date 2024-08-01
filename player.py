@@ -36,6 +36,7 @@ class Player:
         heal = 30 + randint(-5, 5)
         self.hp = min(self.hp + heal, self.max_hp)
         self.potions -= 1
+        return heal
 
     def attack(self):
         damage = self.strength + randint(-5, 5)

@@ -1,5 +1,8 @@
 import pygame
-from constants import SWORD
+from constants import SWORD, FONT, SCREEN
+from damage_text import DamageText
+
+damage_text_group = pygame.sprite.Group()
 
 
 def handle_actions(
@@ -7,7 +10,6 @@ def handle_actions(
 ):
     pygame.mouse.set_visible(True)
     pos = pygame.mouse.get_pos()
-    print(f"current fighter battle: {current_fighter}")
 
     if action_cooldown == 0:
         if current_fighter == 1:
@@ -39,7 +41,8 @@ def player_turn(screen, clicked, pos, player, enemies, potion_button):
         and player.potions > 0
         and player.max_hp > player.hp
     ):
-        player.heal()
+        heal = player.heal()
+        display_damage(player, heal, (0, 255, 0))
         turn_done = True
 
     return turn_done
@@ -54,6 +57,13 @@ def enemy_turn(enemies, player):
 def perform_attack(attacker, target):
     damage = attacker.attack()
     target.take_damage(damage)
+    display_damage(target, damage, (255, 0, 0))
+
+
+def display_damage(target, damage, colour):
+    x, y = target.x_pos, target.y_pos - 210
+    damage_text = DamageText(x, y, str(damage), colour) 
+    damage_text_group.add(damage_text)
 
 
 def reset_actions(player, enemies):
