@@ -1,6 +1,15 @@
 from random import randint, random
 import math
 from animations import load_character_animations
+from enum import Enum
+
+
+class Action(Enum):
+    IDLE = "idle"
+    ATTACK = "attack"
+    SPECIAL = "special"
+    HURT = "hurt"
+    DEATH = "death"
 
 
 class Player:
@@ -14,76 +23,68 @@ class Player:
         potion_chance: int,
         potions: int,
     ):
-        self.name = name
-        self.max_hp = max_hp
-        self.hp = max_hp
-        self.strength = strength
-        self.crit_chance = crit_chance
-        self.double_chance = double_chance
-        self.potion_chance = potion_chance
-        self.start_potions = potions
-        self.potions = potions
-        self.alive = True
-        self.action = "idle"
-        self.x_pos = 0
-        self.y_pos = 0
-        self.animation_timer = 0
-        self.current_frame_index = 0
+        self.name: str = name
+        self.max_hp: int = max_hp
+        self.hp: int = max_hp
+        self.strength: int = strength
+        self.crit_chance: int = crit_chance
+        self.double_chance: int = double_chance
+        self.potion_chance: int = potion_chance
+        self.potions: int = potions
+
+        self.alive: bool = True
+        self.action: Action = Action.IDLE
+        self.x_pos: int = 0
+        self.y_pos: int = 0
+        self.animation_timer: int = 0
+        self.delay_counter: int = 0
+        self.current_frame_index: int = 0
         self.animations = load_character_animations()
-        self.delay_counter = 0
 
-    def take_damage(self, damage: int):
-        self.hp -= damage
-        if self.hp <= 0:
-            self.hp = 0
-            self.alive = False
-            # self.action = "death"
-        else:
-            self.delay_counter = 10
-        self.action = "idle"
 
-    def heal(self):
-        heal = 30 + randint(-5, 5)
-        self.hp = min(self.hp + heal, self.max_hp)
+    def take_damage(self, damage: int) -> None:
+        self.hp = max(self.hp - damage, 0)
+        self.active = self.hp > 0
+        self.delay_counter = 10 if self.alive else 0
+
+    def heal(self) -> int:
+        heal_amount = 30 + randint(-5, 5)
+        self.hp = min(self.hp + heal_amount, self.max_hp)
         self.potions -= 1
-        return heal
+        return heal_amount
 
-    def attack(self):
-        special_attack = False
+    def attack(self) -> int:
         damage = self.strength + randint(-5, 5)
+        self.action = Action.ATTACK
 
         if random() < self.crit_chance / 100:
             damage += 1.5
-            special_attack = True
+            self.action = Action.SPECIAL
 
         if random() < self.double_chance / 100:
             damage * 2
-            special_attack = True
+            self.action = Action.SPECIAL
 
-        self.action = "special" if special_attack else "attack"
         return math.floor(damage)
 
     def update_animation(self):
-        current_animation = self.animations[self.name][self.action]
-        animation_length = current_animation.get_frame_count()
-
         if self.delay_counter > 0:
             self.delay_counter -= 1
-            if self.delay_counter == 0 and self.hp > 0:
-                self.action = "hurt"
-            elif self.delay_counter == 0 and self.hp == 0:
-                self.action = "death"
+            if self.delay_counter == 0:
+                self.action = Action.HURT if self.alive else Action.DEATH
             return
 
-        if self.action != "idle":
-            self.animation_timer += 1
+        current_animation = self.animations[self.name][self.action.value]
+        animation_length = current_animation.get_frame_count()
 
-            if self.animation_timer > (animation_length):
-                self.animation_timer = 0
+        if self.action != Action.IDLE:
+            self.animation_timer = self.animation_timer = (
+                self.animation_timer + 1
+            ) % animation_length
+            if self.animation_timer == 0:
                 self.current_frame_index = 0
-
-                if self.action in ["hurt", "special", "attack"]:
-                    self.action = "idle"
+                if self.action in [Action.HURT, Action.SPECIAL, Action.ATTACK]:
+                    self.action = Action.IDLE
 
 
 def create_character(index: int) -> Player:
@@ -101,11 +102,11 @@ def create_character(index: int) -> Player:
         raise ValueError(f"Invalid character index: {index}")
 
 
-def animate_player(screen, player, animations, scale):
+def animate_player(screen, player: Player, animations, scale: float) -> None:
     change_scale = player.name in ["Brute", "Berserker"]
     scale = scale - 0.5 if change_scale else scale
 
-    current_animation = animations[player.name][player.action]
+    current_animation = animations[player.name][player.action.value]
     current_frame = current_animation.get_current_frame(scale=scale)
 
     frame_width = current_frame.get_width()
