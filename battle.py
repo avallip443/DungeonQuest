@@ -3,6 +3,7 @@ from constants import SWORD
 from damage_text import DamageText
 from typing import Tuple
 
+
 # constants
 PLAYER_COOLDOWN = 10
 ENEMY_COOLDOWN_SINGLE = 10
@@ -37,7 +38,6 @@ def handle_actions(
     """
 
     pygame.mouse.set_visible(True)
-    pos = pygame.mouse.get_pos()
 
     if action_cooldown == 0:
         current_fighter, action_cooldown = execute_turn(
