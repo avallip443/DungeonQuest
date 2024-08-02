@@ -2,6 +2,15 @@ import pygame
 from random import randint, random
 import math
 from animations import load_character_animations
+from enum import Enum
+
+
+class Action(Enum):
+    IDLE = "idle"
+    ATTACK = "attack"
+    SPECIAL = "special"
+    HURT = "hurt"
+    DEATH = "death"
 
 
 class Enemy:
@@ -12,71 +21,61 @@ class Enemy:
         strength: int,
         crit_chance: int,
     ):
-        self.name = name
-        self.max_hp = max_hp
-        self.hp = max_hp
-        self.strength = strength
-        self.crit_chance = crit_chance
-        self.alive = True
-        self.action = "idle"
-        self.x_pos = 0
-        self.y_pos = 0
-        self.hitbox = pygame.Rect(0, 0, 100, 120)
-        self.animation_timer = 0
-        self.current_frame_index = 0
+        self.name: str = name
+        self.max_hp: int = max_hp
+        self.hp: int = max_hp
+        self.strength: int = strength
+        self.crit_chance: int = crit_chance
+        
+        self.alive: bool = True
+        self.action: Action = Action.IDLE
+        self.x_pos: int = 0
+        self.y_pos: int = 0
+        self.hitbox = pygame.Rect(0, 0, 100, 120) 
+        self.animation_timer: int = 0
+        self.delay_counter: int = 0
+        self.current_frame_index: int = 0
         self.animations = load_character_animations()
-        self.delay_counter = 0
 
-    def take_damage(self, damage: int):
-        self.hp -= damage
-        if self.hp <= 0:
-            self.hp = 0
-            self.alive = False
-        else:
-            self.delay_counter = 8
-        self.action = "idle"
+    def take_damage(self, damage: int) -> None:
+        self.hp = max(self.hp - damage, 0)
+        self.active = self.hp > 0
+        self.delay_counter = 10 if self.alive else 0
+        
 
-    def attack(self):
-        special_attack = False
+    def attack(self) -> int:
         damage = self.strength + randint(-5, 5)
+        self.action = Action.ATTACK
 
         if random() < self.crit_chance / 100:
             damage += 1.5
-            special_attack = True
 
-        self.action = "special" if special_attack else "attack"
         return math.floor(damage)
     
-    def death(self):
-        self.action = "death"
-        self.alive = False
 
-    def update_hitbox(self, x_pos, y_pos):
+    def update_hitbox(self, x_pos: int, y_pos: int) -> None:
         self.hitbox.x = x_pos
         self.hitbox.y = y_pos
         
-    def update_animation(self):
-        current_animation = self.animations[self.name][self.action]
-        animation_length = current_animation.get_frame_count()
-
+        
+    def update_animation(self) -> None:
         if self.delay_counter > 0:
             self.delay_counter -= 1
-            if self.delay_counter == 0 and self.hp > 0:
-                self.action = "hurt"
-            elif self.delay_counter == 0 and self.hp == 0:
-                self.action = "death"
+            if self.delay_counter == 0 :
+                self.action = Action.HURT if self.alive else Action.DEATH
             return
         
-        if self.action != "idle":
-            self.animation_timer += 1
+        current_animation = self.animations[self.name][self.action.value]
+        animation_length = current_animation.get_frame_count()
 
-            if self.animation_timer > (animation_length):
-                self.animation_timer = 0
+        if self.action != Action.IDLE:
+            self.animation_timer = (
+                self.animation_timer + 1
+            ) % animation_length
+            if self.animation_timer == 0:
                 self.current_frame_index = 0
-                
-                if self.action in ["hurt", "special", "attack"]:
-                    self.action = "idle"
-
+                if self.action in [Action.HURT, Action.ATTACK]:
+                    self.action = Action.IDLE
 
 def create_enemy(index: int) -> Enemy:
     enemies = [
@@ -90,11 +89,10 @@ def create_enemy(index: int) -> Enemy:
         raise ValueError(f"Invalid enemy index: {index}")
 
 
-def create_boss(index: int, x_pos: int, y_pos: int) -> Enemy:
-    frame_width, frame_height = 250, 300
+def create_boss(index: int) -> Enemy:
     enemies = [
-        ("Bringer of Death", 100, 20, 2, 3, x_pos, y_pos, frame_width, frame_height),
-        ("Wizard1", 75, 30, 5, 3, x_pos, y_pos, frame_width, frame_height),
+        ("Bringer of Death", 100, 20, 2, 3 ),
+        ("Wizard1", 75, 30, 5, 3),
     ]
 
     if 0 <= index <= len(enemies):
@@ -103,13 +101,13 @@ def create_boss(index: int, x_pos: int, y_pos: int) -> Enemy:
         raise ValueError(f"Invalid enemy index: {index}")
 
 
-def animate_enemy(screen, enemy, animations, scale):
+def animate_enemy(screen, enemy: Enemy, animations, scale: float) -> None:
     name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name
 
     change_scale = enemy.name in ["boss1", "boss2"]
     scale = scale - 0.5 if change_scale else scale
 
-    current_animation = animations[name][enemy.action]
+    current_animation = animations[name][enemy.action.value]
     current_frame = current_animation.get_current_frame(scale=scale)
 
     frame_width = current_frame.get_width()
