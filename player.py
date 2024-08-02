@@ -78,7 +78,7 @@ class Player:
         animation_length = current_animation.get_frame_count()
 
         if self.action != Action.IDLE:
-            self.animation_timer = self.animation_timer = (
+            self.animation_timer = (
                 self.animation_timer + 1
             ) % animation_length
             if self.animation_timer == 0:
