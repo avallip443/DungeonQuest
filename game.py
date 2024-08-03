@@ -19,7 +19,14 @@ from battle import handle_actions, damage_text_group
 from button import Button
 
 
-def play_game(selected_char: int):
+def play_game(selected_char: int) -> None:
+    """
+    Main game loop that manages game rounds and character selection.
+
+    Args:
+        selected_char (int): Index of the selected character.
+    """
+    
     pygame.init()
     player = create_character(selected_char)
     round = 0
@@ -61,7 +68,16 @@ def play_game(selected_char: int):
         CLOCK.tick(FPS)
 
 
-def play_round(enemies, player, animations):
+def play_round(enemies, player, animations) -> None:
+    """
+    Manages the game logic for a single round of combat.
+
+    Args:
+        enemies (list): A list of enemy instances for the round.
+        player (Character): Player character instance.
+        animations (dict): A dictionary containing animations for characters.
+    """
+    
     run = True
     current_fighter = 0  # 1: player, 0: computer
     action_cooldown = 0
@@ -117,15 +133,26 @@ def play_round(enemies, player, animations):
 
         pygame.display.update()
         CLOCK.tick(FPS)
-
-    if game_over == 1:
-        print("Player wins!")
-    elif game_over == -1:
-        print("Player loses!")
+        
+    display_game_over_message(game_over)
 
 
 def play_boss_round(player, animations):
     pass
+
+
+def display_game_over_message(game_over: int) -> None:
+    """
+    Displays a message indicating the outcome of the game.
+
+    Args:
+        gam
+        e_over (int): The result of the game round (-1 for loss, 1 for win).
+    """
+    if game_over == 1:
+        print("Player wins!")
+    elif game_over == -1:
+        print("Player loses!")
 
 
 if __name__ == "__main__":
