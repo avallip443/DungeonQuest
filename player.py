@@ -74,7 +74,7 @@ class Player:
                 self.action = Action.HURT if self.alive else Action.DEATH
             return
 
-        current_animation = self.animations[self.name][self.action.value]
+        current_animation = self.animations[self.name.lower()][self.action.value]
         animation_length = current_animation.get_frame_count()
 
         if self.action != Action.IDLE:
@@ -106,7 +106,7 @@ def animate_player(screen, player: Player, animations, scale: float) -> None:
     change_scale = player.name in ["Brute", "Berserker"]
     scale = scale - 0.5 if change_scale else scale
 
-    current_animation = animations[player.name][player.action.value]
+    current_animation = animations[player.name.lower()][player.action.value]
     current_frame = current_animation.get_current_frame(scale=scale)
 
     frame_width = current_frame.get_width()

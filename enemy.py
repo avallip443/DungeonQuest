@@ -65,7 +65,7 @@ class Enemy:
                 self.action = Action.HURT if self.alive else Action.DEATH
             return
         
-        current_animation = self.animations[self.name][self.action.value]
+        current_animation = self.animations[self.name.lower()][self.action.value]
         animation_length = current_animation.get_frame_count()
 
         if self.action != Action.IDLE:
@@ -107,7 +107,7 @@ def animate_enemy(screen, enemy: Enemy, animations, scale: float) -> None:
     change_scale = enemy.name in ["boss1", "boss2"]
     scale = scale - 0.5 if change_scale else scale
 
-    current_animation = animations[name][enemy.action.value]
+    current_animation = animations[name.lower()][enemy.action.value]
     current_frame = current_animation.get_current_frame(scale=scale)
 
     frame_width = current_frame.get_width()
