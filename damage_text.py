@@ -3,11 +3,10 @@ from constants import FONT
 
 
 class DamageText(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, damage: str, colour: tuple):
+    def __init__(self, x: int, y: int, damage: str, colour: tuple[int, int, int]):
         super().__init__()
         self.image = FONT.render(damage, True, colour)
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect = self.image.get_rect(center=(x, y))
         self.counter = 0
 
 
