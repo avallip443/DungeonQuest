@@ -1,11 +1,9 @@
 import pygame
 from spritesheet import Spritesheet
 
-# Constants for frame dimensions
+# constants 
 FRAME_WIDTH = 250
 FRAME_HEIGHT = 300
-
-# Animation speed in frames per second
 ANIMATION_SPEED = 10
 
 
@@ -72,7 +70,7 @@ def load_character_animations():
             "death": generate_frame_names(10),
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(10),
-            #"special": generate_frame_names(6),
+            "special": generate_frame_names(6),
         },
         "rouge": {
             "attack": generate_frame_names(4),
