@@ -6,14 +6,39 @@ from character_selection import character_selection_screen
 from game import play_game
 
 
-def start_menu():
-    play_button = Button(SCREEN, WIDTH // 2, HEIGHT // 2 - 50, PLAY, 92 * 2, 28 * 2)
-    tutorial_button = Button(SCREEN, WIDTH // 2, HEIGHT // 2 + 30, TUTORIAL, 92 * 2, 28 * 2)
-    quit_button = Button(SCREEN, WIDTH // 2, HEIGHT // 2 + 110, QUIT, 92 * 2, 28 * 2)
+def start_menu() -> None:
+    """
+    Displays the start menu where players can choose to play the game, view the tutorial, or quit.
+    """
+    
+    play_button = Button(
+        SCREEN,
+        x=WIDTH // 2,
+        y=HEIGHT // 2 - 50,
+        image=PLAY,
+        width=92 * 2,
+        height=28 * 2,
+    )
+    tutorial_button = Button(
+        SCREEN,
+        x=WIDTH // 2,
+        y=HEIGHT // 2 + 30,
+        image=TUTORIAL,
+        width=92 * 2,
+        height=28 * 2,
+    )
+    quit_button = Button(
+        SCREEN,
+        x=WIDTH // 2,
+        y=HEIGHT // 2 + 110,
+        image=QUIT,
+        width=92 * 2,
+        height=28 * 2,
+    )
 
     while True:
         SCREEN.fill("black")
-        draw_text(SCREEN, "DUNGEON QUEST", WIDTH // 2, 100, "white", "lg", "center")
+        draw_text(SCREEN, text="DUNGEON QUEST", x=WIDTH // 2, y=100, size="lg")
 
         play_button.draw()
         tutorial_button.draw()
@@ -38,29 +63,42 @@ def start_menu():
         pygame.display.update()
 
 
-def tutorial():
-    back_button = Button(SCREEN, 50, 50, BACK, 31 * 1.5, 35 * 1.5)
+def tutorial() -> None:
+    """
+    Displays the tutorial screen with instructions on how to play the game.
+    """
     
+    back_button = Button(
+        SCREEN, x=50, y=50, image=BACK, width=31 * 1.5, height=35 * 1.5
+    )
+
     while True:
         SCREEN.fill("black")
-        draw_text(SCREEN, "TUTORIAL", WIDTH // 2, 100, "white", "lg", "center")
-        
+        draw_text(SCREEN, text="TUTORIAL", x=WIDTH // 2, y=100, size="lg")
+
         back_button.draw()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-                
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.rect.collidepoint(event.pos):
                     start_menu()
-                    
+
         pygame.display.update()
 
 
 def game(selected_char: int):
-    play_game(selected_char=selected_char)
+    """
+    Starts the game with the selected character.
+
+    Args:
+        selected_char (int): The index of the selected character.
+    """
+    
+    play_game(selected_char)
 
 
 if __name__ == "__main__":

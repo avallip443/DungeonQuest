@@ -23,7 +23,6 @@ class Button:
         Returns:
             bool: True if the button was clicked, False otherwise.
         """
-        
         action = False
         pos = pygame.mouse.get_pos()
 
