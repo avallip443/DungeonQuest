@@ -2,7 +2,8 @@ from random import randint, random
 import math
 from animations import load_character_animations
 from enum import Enum
-
+import pygame
+from battle import display_damage
 
 class Action(Enum):
     IDLE = "idle"
@@ -40,11 +41,13 @@ class Player:
         self.delay_counter: int = 0
         self.current_frame_index: int = 0
         self.animations = load_character_animations()
+        self.delayed_damage = 0
 
     def take_damage(self, damage: int) -> None:
-        self.hp = max(self.hp - damage, 0)
+        self.delayed_damage = damage
+        #self.hp = max(self.hp - damage, 0)
         self.active = self.hp > 0
-        self.delay_counter = 10 if self.alive else 0
+        self.delay_counter = 10 #if self.alive else 0
 
     def heal(self) -> int:
         heal_amount = 30 + randint(-5, 5)
@@ -67,10 +70,20 @@ class Player:
         return math.floor(damage)
 
     def update_animation(self) -> None:
+        """
+        Updates the player's animation and processes delayed actions like applying damage.
+
+        Args:
+            screen (pygame.Surface): Surface to render damage texts.
+        """
         if self.delay_counter > 0:
             self.delay_counter -= 1
             if self.delay_counter == 0:
+                self.hp = max(self.hp - self.delayed_damage, 0)
+                self.alive = self.hp > 0
                 self.action = Action.HURT if self.alive else Action.DEATH
+                display_damage(self, self.delayed_damage, (255, 0, 0))
+                self.delayed_damage = 0
             return
 
         current_animation = self.animations[self.name.lower()][self.action.value]
