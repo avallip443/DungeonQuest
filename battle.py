@@ -1,5 +1,5 @@
 import pygame
-from constants import SWORD, SCREEN
+from constants import SWORD
 from damage_text import DamageText
 
 
@@ -153,7 +153,7 @@ def perform_attack(attacker, target) -> None:
     damage = attacker.attack()
     target.take_damage(damage)
     target.update_animation()
-    #display_damage(target, damage, (255, 0, 0))
+    # display_damage(target, damage, (255, 0, 0))
 
 
 def display_damage(target, damage: int, colour) -> None:

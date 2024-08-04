@@ -2,8 +2,8 @@ from random import randint, random
 import math
 from animations import load_character_animations
 from enum import Enum
-import pygame
 from battle import display_damage
+
 
 class Action(Enum):
     IDLE = "idle"
@@ -45,9 +45,8 @@ class Player:
 
     def take_damage(self, damage: int) -> None:
         self.delayed_damage = damage
-        #self.hp = max(self.hp - damage, 0)
         self.active = self.hp > 0
-        self.delay_counter = 10 #if self.alive else 0
+        self.delay_counter = 10  
 
     def heal(self) -> int:
         heal_amount = 30 + randint(-5, 5)

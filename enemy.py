@@ -5,6 +5,7 @@ from animations import load_character_animations
 from enum import Enum
 from battle import display_damage
 
+
 class Action(Enum):
     IDLE = "idle"
     ATTACK = "attack"
@@ -40,9 +41,8 @@ class Enemy:
 
     def take_damage(self, damage: int) -> None:
         self.delayed_damage = damage
-        #self.hp = max(self.hp - damage, 0)
         self.active = self.hp > 0
-        self.delay_counter = 10 #if self.alive else 0
+        self.delay_counter = 10
 
     def attack(self) -> int:
         damage = self.strength + randint(-5, 5)
