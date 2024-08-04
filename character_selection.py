@@ -6,9 +6,12 @@ from button import Button
 from utils import draw_text
 
 
-def character_selection_screen() -> None:
+def character_selection_screen() -> int:
     """
     Displays the character selection screen where the player can choose a character.
+
+    Returns:
+        int: Index of the selected character.
     """
 
     from main import start_menu
@@ -25,9 +28,13 @@ def character_selection_screen() -> None:
     )
 
     while True:
-        selected_index = handle_events(
+        selected_index, play_clicked = handle_events(
             play_button, back_button, hovered_index, selected_index, start_menu
         )
+        
+        if play_clicked:
+            return selected_index
+        
         mouse_pos = pygame.mouse.get_pos()
         hovered_index = get_hovered_index(mouse_pos)
 
@@ -68,11 +75,11 @@ def handle_events(
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_pos = pygame.mouse.get_pos()
             if play_button.rect.collidepoint(mouse_pos):
-                return selected_index
+                return selected_index, True
             if back_button.rect.collidepoint(event.pos):
                 start_menu()
             selected_index = hovered_index
-    return selected_index
+    return selected_index, False
 
 
 def get_hovered_index(mouse_pos) -> int:
@@ -108,7 +115,7 @@ def draw_character_options(
     animations,
     play_button,
     back_button,
-):
+) -> None:
     """
     Draws the character options on the screen, highlighting the selected and hovered characters.
 
@@ -159,7 +166,7 @@ def draw_character_options(
 
 def draw_selected_character(
     screen, animations, selected_index, hovered_index, play_button
-):
+) -> None:
     """
     Draws the selected character's animation and stats on the screen.
 
@@ -184,7 +191,7 @@ def draw_selected_character(
         play_button.draw()
 
 
-def draw_hovered_character(screen, animations, hovered_index):
+def draw_hovered_character(screen, animations, hovered_index) -> None:
     """
     Draws the hovered character's animation and stats on the screen.
 
@@ -204,7 +211,7 @@ def draw_hovered_character(screen, animations, hovered_index):
     draw_character_stats(screen, hovered_index)
 
 
-def animate_character(screen, animations, name: str, scale: float):
+def animate_character(screen, animations, name: str, scale: float) -> None:
     """
     Animates the character on the screen based on the provided animation data.
 
@@ -228,7 +235,7 @@ def animate_character(screen, animations, name: str, scale: float):
     screen.blit(current_frame, (x_pos, y_pos))
 
 
-def draw_character_stats(screen, index):
+def draw_character_stats(screen, index) -> None:
     """
     Draws the character stats on the screen.
 

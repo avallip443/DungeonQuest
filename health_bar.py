@@ -8,13 +8,11 @@ class HealthBar:
         self.height = height
         self.hp = hp
         self.max_hp = max_hp
-        
 
-    def draw(self, screen, hp: int, x, y, base=RED, secondary=GREEN):
+    def draw(self, screen, hp: int, x, y, base=RED, secondary=GREEN) -> None:
         self.hp = hp
-        
+
         pygame.draw.rect(screen, base, (x, y, self.width, self.height))
         pygame.draw.rect(
             screen, secondary, (x, y, self.width * (self.hp / self.max_hp), self.height)
         )
-        

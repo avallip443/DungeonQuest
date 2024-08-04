@@ -23,11 +23,11 @@ SCALE_PLAYER = 3.5
 SCALE_ENEMY = 2.5
 
 
-def draw_bg(screen, background_img):
+def draw_bg(screen, background_img) -> None:
     screen.blit(background_img, (0, 0))
 
 
-def draw_panel(screen, panel_img, player, enemies, potion_button):
+def draw_panel(screen, panel_img, player, enemies, potion_button) -> None:
     screen.blit(panel_img, (0, HEIGHT - PANEL_HEIGHT))
 
     # player stats
@@ -50,7 +50,7 @@ def draw_panel(screen, panel_img, player, enemies, potion_button):
         screen, str(player.potions), x=140, y=HEIGHT - PANEL_HEIGHT * 0.35, size="sm"
     )
 
-    # enemy stats 
+    # enemy stats
     panel_offsets = [(20, 40), (90, 110)] if len(enemies) == 2 else [(30, 50)]
 
     for i, (text_offset, bar_offset) in enumerate(panel_offsets):

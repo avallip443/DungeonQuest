@@ -9,8 +9,7 @@ class DamageText(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x, y))
         self.counter = 0
 
-
-    def update(self):
+    def update(self) -> None:
         self.rect.y -= 1
         self.counter += 1
 

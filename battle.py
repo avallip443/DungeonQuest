@@ -1,7 +1,6 @@
 import pygame
 from constants import SWORD
 from damage_text import DamageText
-from typing import Tuple
 
 
 # constants
@@ -20,7 +19,7 @@ def handle_actions(
     enemies,
     potion_button,
     action_cooldown: int,
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Handles the game actions based on the current state and user inputs.
 
@@ -34,7 +33,7 @@ def handle_actions(
         action_cooldown (int): Cooldown timer for actions.
 
     Returns:
-        Tuple[int, int]: Updated current_fighter index and action_cooldown.
+        tuple[int, int]: Updated current_fighter index and action_cooldown.
     """
 
     pygame.mouse.set_visible(True)
@@ -55,7 +54,7 @@ def execute_turn(
     player,
     enemies,
     potion_button,
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Executes the current turn based on the current fighter.
 
@@ -156,7 +155,7 @@ def perform_attack(attacker, target) -> None:
     display_damage(target, damage, (255, 0, 0))
 
 
-def display_damage(target, damage: int, colour):
+def display_damage(target, damage: int, colour) -> None:
     """
     Displays damage text on the screen for a given target.
 

@@ -1,7 +1,7 @@
 import pygame
 from spritesheet import Spritesheet
 
-# constants 
+# constants
 FRAME_WIDTH = 250
 FRAME_HEIGHT = 300
 ANIMATION_SPEED = 10
@@ -41,7 +41,10 @@ def load_character_animations():
     def create_animation_dict(name, frames_dict):
         return {
             action: Animation(
-                load_spritesheet(folder, name, action), frames, FRAME_WIDTH, FRAME_HEIGHT
+                load_spritesheet(folder, name, action),
+                frames,
+                FRAME_WIDTH,
+                FRAME_HEIGHT,
             )
             for action, frames in frames_dict.items()
         }

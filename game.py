@@ -26,7 +26,7 @@ def play_game(selected_char: int) -> None:
     Args:
         selected_char (int): Index of the selected character.
     """
-    
+
     pygame.init()
     player = create_character(selected_char)
     round = 0
@@ -38,7 +38,7 @@ def play_game(selected_char: int) -> None:
                 pygame.quit()
                 quit()
 
-        SCREEN.fill("black")
+        SCREEN.fill((0, 0, 0))
         draw_text(
             SCREEN,
             text=f"GAME: {selected_char}, ROUND: {round}",
@@ -77,7 +77,7 @@ def play_round(enemies, player, animations) -> None:
         player (Character): Player character instance.
         animations (dict): A dictionary containing animations for characters.
     """
-    
+
     run = True
     current_fighter = 0  # 1: player, 0: computer
     action_cooldown = 0
@@ -116,11 +116,11 @@ def play_round(enemies, player, animations) -> None:
             potion_button,
             action_cooldown,
         )
-        
+
         damage_text_group.update()
         damage_text_group.draw(SCREEN)
         player.update_animation()
-        
+
         for enemy in enemies:
             enemy.update_animation()
 
@@ -133,7 +133,7 @@ def play_round(enemies, player, animations) -> None:
 
         pygame.display.update()
         CLOCK.tick(FPS)
-        
+
     display_game_over_message(game_over)
 
 

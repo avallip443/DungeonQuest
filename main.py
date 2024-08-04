@@ -10,7 +10,7 @@ def start_menu() -> None:
     """
     Displays the start menu where players can choose to play the game, view the tutorial, or quit.
     """
-    
+
     play_button = Button(
         SCREEN,
         x=WIDTH // 2,
@@ -37,7 +37,7 @@ def start_menu() -> None:
     )
 
     while True:
-        SCREEN.fill("black")
+        SCREEN.fill((0, 0, 0))
         draw_text(SCREEN, text="DUNGEON QUEST", x=WIDTH // 2, y=100, size="lg")
 
         play_button.draw()
@@ -67,7 +67,7 @@ def tutorial() -> None:
     """
     Displays the tutorial screen with instructions on how to play the game.
     """
-    
+
     back_button = Button(
         SCREEN, x=50, y=50, image=BACK, width=31 * 1.5, height=35 * 1.5
     )
@@ -90,14 +90,14 @@ def tutorial() -> None:
         pygame.display.update()
 
 
-def game(selected_char: int):
+def game(selected_char: int) -> None:
     """
     Starts the game with the selected character.
 
     Args:
         selected_char (int): The index of the selected character.
     """
-    
+
     play_game(selected_char)
 
 

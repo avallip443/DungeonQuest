@@ -41,7 +41,6 @@ class Player:
         self.current_frame_index: int = 0
         self.animations = load_character_animations()
 
-
     def take_damage(self, damage: int) -> None:
         self.hp = max(self.hp - damage, 0)
         self.active = self.hp > 0
@@ -67,7 +66,7 @@ class Player:
 
         return math.floor(damage)
 
-    def update_animation(self):
+    def update_animation(self) -> None:
         if self.delay_counter > 0:
             self.delay_counter -= 1
             if self.delay_counter == 0:
@@ -78,9 +77,7 @@ class Player:
         animation_length = current_animation.get_frame_count()
 
         if self.action != Action.IDLE:
-            self.animation_timer = (
-                self.animation_timer + 1
-            ) % animation_length
+            self.animation_timer = (self.animation_timer + 1) % animation_length
             if self.animation_timer == 0:
                 self.current_frame_index = 0
                 if self.action in [Action.HURT, Action.SPECIAL, Action.ATTACK]:

@@ -26,12 +26,12 @@ class Enemy:
         self.hp: int = max_hp
         self.strength: int = strength
         self.crit_chance: int = crit_chance
-        
+
         self.alive: bool = True
         self.action: Action = Action.IDLE
         self.x_pos: int = 0
         self.y_pos: int = 0
-        self.hitbox = pygame.Rect(0, 0, 100, 120) 
+        self.hitbox = pygame.Rect(0, 0, 100, 120)
         self.animation_timer: int = 0
         self.delay_counter: int = 0
         self.current_frame_index: int = 0
@@ -41,7 +41,6 @@ class Enemy:
         self.hp = max(self.hp - damage, 0)
         self.active = self.hp > 0
         self.delay_counter = 10 if self.alive else 0
-        
 
     def attack(self) -> int:
         damage = self.strength + randint(-5, 5)
@@ -51,31 +50,28 @@ class Enemy:
             damage += 1.5
 
         return math.floor(damage)
-    
 
     def update_hitbox(self, x_pos: int, y_pos: int) -> None:
         self.hitbox.x = x_pos
         self.hitbox.y = y_pos
-        
-        
+
     def update_animation(self) -> None:
         if self.delay_counter > 0:
             self.delay_counter -= 1
-            if self.delay_counter == 0 :
+            if self.delay_counter == 0:
                 self.action = Action.HURT if self.alive else Action.DEATH
             return
-        
+
         current_animation = self.animations[self.name.lower()][self.action.value]
         animation_length = current_animation.get_frame_count()
 
         if self.action != Action.IDLE:
-            self.animation_timer = (
-                self.animation_timer + 1
-            ) % animation_length
+            self.animation_timer = (self.animation_timer + 1) % animation_length
             if self.animation_timer == 0:
                 self.current_frame_index = 0
                 if self.action in [Action.HURT, Action.ATTACK]:
                     self.action = Action.IDLE
+
 
 def create_enemy(index: int) -> Enemy:
     enemies = [
@@ -91,7 +87,7 @@ def create_enemy(index: int) -> Enemy:
 
 def create_boss(index: int) -> Enemy:
     enemies = [
-        ("Bringer of Death", 100, 20, 2, 3 ),
+        ("Bringer of Death", 100, 20, 2, 3),
         ("Wizard1", 75, 30, 5, 3),
     ]
 
