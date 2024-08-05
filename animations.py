@@ -60,6 +60,7 @@ def load_character_animations():
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(10),
             "special": generate_frame_names(8),
+            "walk": generate_frame_names(8)
         },
         "brute": {
             "attack": generate_frame_names(7),
