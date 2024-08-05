@@ -11,6 +11,7 @@ class Action(Enum):
     SPECIAL = "special"
     HURT = "hurt"
     DEATH = "death"
+    WALK = "walk"
 
 
 class Player:
@@ -46,7 +47,7 @@ class Player:
     def take_damage(self, damage: int) -> None:
         self.delayed_damage = damage
         self.active = self.hp > 0
-        self.delay_counter = 10  
+        self.delay_counter = 10
 
     def heal(self) -> int:
         heal_amount = 30 + randint(-5, 5)
@@ -63,10 +64,36 @@ class Player:
             self.action = Action.SPECIAL
 
         if random() < self.double_chance / 100:
-            damage * 2
+            damage *= 2
             self.action = Action.SPECIAL
 
         return math.floor(damage)
+
+    def walk(self, target_x: int) -> None:
+        """
+        Initiates the walking animation towards a target position.
+
+        Args:
+            target_x (int): x position to move to.
+        """
+        if self.x_pos < target_x:
+            self.action = Action.IDLE
+
+    def update_walk_pos(self, target_x: int, speed: int = 5) -> None:
+        """
+        Updates the player's position for walking.
+
+        Args:
+            target_x (int): Target x position to reach.
+            speed (int): Speed of movement.
+        """
+
+        if self.action == Action.IDLE:
+            if self.x_pos < target_x:
+                self.x_pos += speed
+                if self.x_pos >= target_x:
+                    self.x_pos = target_x
+                    self.action = Action.IDLE
 
     def update_animation(self) -> None:
         """
@@ -92,7 +119,7 @@ class Player:
             self.animation_timer = (self.animation_timer + 1) % animation_length
             if self.animation_timer == 0:
                 self.current_frame_index = 0
-                if self.action in [Action.HURT, Action.SPECIAL, Action.ATTACK]:
+                if self.action in [Action.HURT, Action.SPECIAL]: #, Action.ATTACK]:
                     self.action = Action.IDLE
 
 
@@ -105,7 +132,7 @@ def create_character(index: int) -> Player:
         ("Huntress", 85, 10, 10, 25, 45, 3),
     ]
 
-    if 0 <= index <= len(characters):
+    if 0 <= index < len(characters):
         return Player(*characters[index])
     else:
         raise ValueError(f"Invalid character index: {index}")

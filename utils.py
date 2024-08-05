@@ -12,7 +12,7 @@ from player import animate_player
 
 
 # layout
-PLAYER_X_POS = 150
+PLAYER_X_POS = 0 # 150
 PLAYER_Y_POS = HEIGHT * 0.67
 ENEMY_BASE_X_POS = 700
 ENEMY_Y_POS = HEIGHT * 0.66
@@ -97,7 +97,7 @@ def draw_health_bar(screen, hp, max_hp, x, y):
 
 
 def draw_characters(screen, player, enemies, animations):
-    player.x_pos = PLAYER_X_POS
+    #player.x_pos = PLAYER_X_POS
     player.y_pos = PLAYER_Y_POS
 
     animate_player(screen, player, animations, scale=SCALE_PLAYER)

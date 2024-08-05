@@ -32,13 +32,16 @@ def play_game(selected_char: int) -> None:
     round = 0
     animations = load_character_animations()
 
+    target_position = 100  # Target x position for walking
+    player.walk(target_x=target_position)  # Initiate walking
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        SCREEN.fill((0, 0, 0))
+        draw_bg(SCREEN, FOREST1)
         draw_text(
             SCREEN,
             text=f"GAME: {selected_char}, ROUND: {round}",
@@ -49,23 +52,32 @@ def play_game(selected_char: int) -> None:
             position="center",
         )
 
-        round += 1
-        total_level_enemies = round + randint(4, 6)
+        player.update_walk_pos(target_x=target_position)
+        player.update_animation()
 
-        while total_level_enemies > 0:
-            if total_level_enemies == 1:
-                play_boss_round(player, animations)
-                total_level_enemies -= 1
-            else:
-                current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
-                enemies = [
-                    create_enemy(randint(0, 1)) for i in range(current_round_enemies)
-                ]
-                play_round(enemies=enemies, player=player, animations=animations)
-                total_level_enemies -= current_round_enemies
-
+        draw_characters(SCREEN, player, [], animations)
         pygame.display.update()
         CLOCK.tick(FPS)
+
+        if player.x_pos >= target_position:  # Stop loop when player reaches target
+            break
+
+    # Proceed with the next phase of the game
+    # (e.g., start the first round of combat)
+    round += 1
+    total_level_enemies = round + randint(4, 6)
+
+    while total_level_enemies > 0:
+        if total_level_enemies == 1:
+            play_boss_round(player, animations)
+            total_level_enemies -= 1
+        else:
+            current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
+            enemies = [
+                create_enemy(randint(0, 1)) for i in range(current_round_enemies)
+            ]
+            play_round(enemies=enemies, player=player, animations=animations)
+            total_level_enemies -= current_round_enemies
 
 
 def play_round(enemies, player, animations) -> None:
