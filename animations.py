@@ -60,7 +60,7 @@ def load_character_animations():
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(10),
             "special": generate_frame_names(8),
-            "walk": generate_frame_names(8)
+            "walk": generate_frame_names(8),
         },
         "brute": {
             "attack": generate_frame_names(7),
@@ -68,6 +68,7 @@ def load_character_animations():
             "hurt": generate_frame_names(4),
             "idle": generate_frame_names(11),
             "special": generate_frame_names(7),
+            "walk": generate_frame_names(8),
         },
         "huntress": {
             "attack": generate_frame_names(6),
@@ -75,6 +76,7 @@ def load_character_animations():
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(10),
             "special": generate_frame_names(6),
+            "walk": generate_frame_names(8),
         },
         "rouge": {
             "attack": generate_frame_names(4),
@@ -82,6 +84,7 @@ def load_character_animations():
             "hurt": generate_frame_names(4),
             "idle": generate_frame_names(8),
             "special": generate_frame_names(4),
+            "walk": generate_frame_names(8),
         },
         "warrior": {
             "attack": generate_frame_names(4),
@@ -89,6 +92,7 @@ def load_character_animations():
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(10),
             "special": generate_frame_names(5),
+            "walk": generate_frame_names(6),
         },
         "wizard1": {
             "attack": generate_frame_names(8, reverse=True),
