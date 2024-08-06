@@ -105,12 +105,14 @@ def load_character_animations():
             "death": generate_frame_names(18, reverse=True),
             "hurt": generate_frame_names(3, reverse=True),
             "idle": generate_frame_names(10, reverse=True),
+            "walk": generate_frame_names(8, reverse=True),
         },
         "golem": {
             "attack": generate_frame_names(11, reverse=True),
             "death": generate_frame_names(13, reverse=True),
             "hurt": generate_frame_names(4, reverse=True),
             "idle": generate_frame_names(8, reverse=True),
+            "walk": generate_frame_names(10, reverse=True),
         },
         "bringer": {
             "attack": generate_frame_names(10),
