@@ -19,24 +19,19 @@ from battle import handle_actions, damage_text_group
 from button import Button
 
 
-def play_game(selected_char: int) -> None:
+def player_walk_in(player, target_x: int, animations, round: int) -> None:
     """
-    Main game loop that manages game rounds and character selection.
+    Handles the animation of the player walking into the screen.
 
     Args:
-        selected_char (int): Index of the selected character.
+        player (Character): Player character instance.
+        target_x (int): Target x-coordinate for the player to walk to.
+        animations (dict): Dictionary containing animations for characters.
+        round (int): The current round number.
     """
-
-    pygame.init()
-    player = create_character(selected_char)
-    round = 0
-    animations = load_character_animations()
-
-    player_target_position = 100
-    enemy_start_position = WIDTH + 10
-    enemy_target_position = 700
-    player.walk(target_x=player_target_position)
-
+    player.x_pos = 0
+    player.walk(target_x=target_x)
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -54,20 +49,65 @@ def play_game(selected_char: int) -> None:
             position="center",
         )
 
-        player.update_walk_pos(target_x=player_target_position)
+        player.update_walk_pos(target_x=target_x)
         player.update_animation()
 
         draw_characters(SCREEN, player, [], animations)
         pygame.display.update()
         CLOCK.tick(FPS)
 
-        if player.x_pos >= player_target_position:
+        if player.x_pos >= target_x:
             break
 
-    round += 1
+
+def player_walk_out(player, target_x: int, animations, speed: int = 5) -> None:
+    """
+    Handles the animation of the player walking out of the screen.
+
+    Args:
+        player (Character): Player character instance.
+        target_x (int): Target x-coordinate for the player to walk to.
+        animations (dict): Dictionary containing animations for characters.
+    """
+    
+    player.walk(target_x=target_x)
+
+    while True:
+        player.update_walk_pos(target_x=target_x, speed=speed)
+        player.update_animation()
+
+        SCREEN.fill((0, 0, 0))
+        draw_characters(SCREEN, player, [], animations)
+        pygame.display.update()
+        CLOCK.tick(FPS)
+
+        if player.x_pos >= target_x:
+            break
+
+
+def play_game(selected_char: int) -> None:
+    """
+    Main game loop that manages game rounds and character selection.
+
+    Args:
+        selected_char (int): Index of the selected character.
+    """
+
+    pygame.init()
+    player = create_character(selected_char)
+    round = 1
+    animations = load_character_animations()
+    
+    player_target_position = 100
+    
+    enemy_start_position = WIDTH + 10
+    enemy_target_position = 700
+
     total_level_enemies = round + randint(4, 6)
 
     while total_level_enemies > 0:
+        player_walk_in(player, player_target_position, animations, round)
+        
         if total_level_enemies == 1:
             play_boss_round(player, animations)
             total_level_enemies -= 1
@@ -79,16 +119,14 @@ def play_game(selected_char: int) -> None:
 
             for i, enemy in enumerate(enemies):
                 enemy.x_pos = enemy_start_position + (1 - i) * 130
-                enemy.walk(target_x=enemy_target_position - (1-i) * 130)
+                enemy.walk(target_x=enemy_target_position - (1 - i) * 130)
 
             # enemy walking sequence
             enemies_moving = True
             while enemies_moving:
                 enemies_moving = False
                 for i, enemy in enumerate(enemies):
-                    enemy.update_walk_pos(
-                        target_x=enemy_target_position - i * 130
-                    )
+                    enemy.update_walk_pos(target_x=enemy_target_position - i * 130)
                     enemy.update_animation()
                     if enemy.x_pos > enemy_target_position - i * 130:
                         enemies_moving = True
@@ -109,6 +147,9 @@ def play_game(selected_char: int) -> None:
 
             play_round(enemies=enemies, player=player, animations=animations)
             total_level_enemies -= current_round_enemies
+
+            player_walk_out(player, WIDTH + 50, animations, 20)
+            round += 1
 
 
 def play_round(enemies, player, animations) -> None:
