@@ -98,9 +98,6 @@ class Player:
     def update_animation(self) -> None:
         """
         Updates the player's animation and processes delayed actions like applying damage.
-
-        Args:
-            screen (pygame.Surface): Surface to render damage texts.
         """
         if self.delay_counter > 0:
             self.delay_counter -= 1
@@ -119,7 +116,7 @@ class Player:
             self.animation_timer = (self.animation_timer + 1) % animation_length
             if self.animation_timer == 0:
                 self.current_frame_index = 0
-                if self.action in [Action.HURT, Action.SPECIAL]: #, Action.ATTACK]:
+                if self.action in [Action.HURT, Action.SPECIAL, Action.ATTACK]:
                     self.action = Action.IDLE
 
 

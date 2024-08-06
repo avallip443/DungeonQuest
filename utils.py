@@ -12,7 +12,7 @@ from player import animate_player
 
 
 # layout
-PLAYER_X_POS = 0 # 150
+PLAYER_X_POS = 0  # 150
 PLAYER_Y_POS = HEIGHT * 0.67
 ENEMY_BASE_X_POS = 700
 ENEMY_Y_POS = HEIGHT * 0.66
@@ -50,8 +50,8 @@ def draw_panel(screen, panel_img, player, enemies, potion_button) -> None:
         screen, str(player.potions), x=140, y=HEIGHT - PANEL_HEIGHT * 0.35, size="sm"
     )
 
-    # enemy stats
-    panel_offsets = [(20, 40), (90, 110)] if len(enemies) == 2 else [(30, 50)]
+    # enemy stats (len == 2 prints enemies in reverse)
+    panel_offsets = [(90, 110), (20, 40)] if len(enemies) == 2 else [(30, 50)]
 
     for i, (text_offset, bar_offset) in enumerate(panel_offsets):
         x = WIDTH * 0.75
@@ -97,17 +97,14 @@ def draw_health_bar(screen, hp, max_hp, x, y):
 
 
 def draw_characters(screen, player, enemies, animations):
-    #player.x_pos = PLAYER_X_POS
+    # player.x_pos = PLAYER_X_POS
     player.y_pos = PLAYER_Y_POS
 
     animate_player(screen, player, animations, scale=SCALE_PLAYER)
 
-    for i, enemy in enumerate(enemies):
-        x_pos = ENEMY_BASE_X_POS - i * ENEMY_SPACING
-        y_pos = ENEMY_Y_POS
-        enemy.x_pos = x_pos
-        enemy.y_pos = y_pos
-        enemy.update_hitbox(x_pos - 50, y_pos - 140)
+    for enemy in enemies:
+        enemy.y_pos = ENEMY_Y_POS
+        enemy.update_hitbox(enemy.x_pos - 50, ENEMY_Y_POS - 140)
 
         animate_enemy(
             screen=screen,

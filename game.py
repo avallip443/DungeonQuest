@@ -32,8 +32,10 @@ def play_game(selected_char: int) -> None:
     round = 0
     animations = load_character_animations()
 
-    target_position = 100  # Target x position for walking
-    player.walk(target_x=target_position)  # Initiate walking
+    player_target_position = 100
+    enemy_start_position = WIDTH + 100
+    enemy_target_position = 700
+    player.walk(target_x=player_target_position)
 
     while True:
         for event in pygame.event.get():
@@ -41,8 +43,7 @@ def play_game(selected_char: int) -> None:
                 pygame.quit()
                 quit()
 
-        #draw_bg(SCREEN, FOREST1)
-        SCREEN.fill((0,0,0))
+        SCREEN.fill((0, 0, 0))
         draw_text(
             SCREEN,
             text=f"ROUND: {round+1}",
@@ -53,18 +54,16 @@ def play_game(selected_char: int) -> None:
             position="center",
         )
 
-        player.update_walk_pos(target_x=target_position)
+        player.update_walk_pos(target_x=player_target_position)
         player.update_animation()
 
         draw_characters(SCREEN, player, [], animations)
         pygame.display.update()
         CLOCK.tick(FPS)
 
-        if player.x_pos >= target_position:  # Stop loop when player reaches target
+        if player.x_pos >= player_target_position:
             break
 
-    # Proceed with the next phase of the game
-    # (e.g., start the first round of combat)
     round += 1
     total_level_enemies = round + randint(4, 6)
 
@@ -75,8 +74,39 @@ def play_game(selected_char: int) -> None:
         else:
             current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
             enemies = [
-                create_enemy(randint(0, 1)) for i in range(current_round_enemies)
+                create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
             ]
+
+            for i, enemy in enumerate(enemies):
+                enemy.x_pos = enemy_start_position + (1 - i) * 130
+                enemy.walk(target_x=enemy_target_position - (1-i) * 130)
+
+            # enemy walking sequence
+            enemies_moving = True
+            while enemies_moving:
+                enemies_moving = False
+                for i, enemy in enumerate(enemies):
+                    enemy.update_walk_pos(
+                        target_x=enemy_target_position - i * 130
+                    )
+                    enemy.update_animation()
+                    if enemy.x_pos > enemy_target_position - i * 130:
+                        enemies_moving = True
+
+                SCREEN.fill((0, 0, 0))
+                draw_text(
+                    SCREEN,
+                    text=f"ROUND: {round+1}",
+                    x=WIDTH // 2,
+                    y=100,
+                    colour="white",
+                    size="lg",
+                    position="center",
+                )
+                draw_characters(SCREEN, player, enemies, animations)
+                pygame.display.update()
+                CLOCK.tick(FPS)
+
             play_round(enemies=enemies, player=player, animations=animations)
             total_level_enemies -= current_round_enemies
 
@@ -86,9 +116,9 @@ def play_round(enemies, player, animations) -> None:
     Manages the game logic for a single round of combat.
 
     Args:
-        enemies (list): A list of enemy instances for the round.
+        enemies (list): List of enemy instances for the round.
         player (Character): Player character instance.
-        animations (dict): A dictionary containing animations for characters.
+        animations (dict): Dictionary containing animations for characters.
     """
 
     run = True

@@ -12,6 +12,7 @@ class Action(Enum):
     SPECIAL = "special"
     HURT = "hurt"
     DEATH = "death"
+    WALK = "walk"
 
 
 class Enemy:
@@ -30,7 +31,7 @@ class Enemy:
 
         self.alive: bool = True
         self.action: Action = Action.IDLE
-        self.x_pos: int = 0
+        self.x_pos: int = 800
         self.y_pos: int = 0
         self.hitbox = pygame.Rect(0, 0, 100, 120)
         self.animation_timer: int = 0
@@ -52,6 +53,32 @@ class Enemy:
             damage += 1.5
 
         return math.floor(damage)
+    
+    def walk(self, target_x: int) -> None:
+        """
+        Initiates the walking animation towards a target position.
+
+        Args:
+            target_x (int): x position to move to.
+        """
+        if self.x_pos > target_x:
+            self.action = Action.WALK
+            
+    def update_walk_pos(self, target_x: int, speed: int = 10) -> None:
+        """
+        Updates the player's position for walking.
+
+        Args:
+            target_x (int): Target x position to reach.
+            speed (int): Speed of movement.
+        """
+
+        if self.action == Action.WALK:
+            if self.x_pos > target_x:
+                self.x_pos -= speed
+                if self.x_pos <= target_x:
+                    self.x_pos = target_x
+                    self.action = Action.IDLE
 
     def update_hitbox(self, x_pos: int, y_pos: int) -> None:
         self.hitbox.x = x_pos
