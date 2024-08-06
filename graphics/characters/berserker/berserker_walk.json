@@ -1,0 +1,76 @@
+{"frames": {
+
+"1.png":
+{
+	"frame": {"x":1,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"2.png":
+{
+	"frame": {"x":163,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"3.png":
+{
+	"frame": {"x":325,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"4.png":
+{
+	"frame": {"x":487,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"5.png":
+{
+	"frame": {"x":649,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"6.png":
+{
+	"frame": {"x":811,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"7.png":
+{
+	"frame": {"x":973,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+},
+"8.png":
+{
+	"frame": {"x":1135,"y":1,"w":162,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":162,"h":42},
+	"sourceSize": {"w":162,"h":42}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "berserker_walk.png",
+	"format": "RGBA8888",
+	"size": {"w":1296,"h":42},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d28ac0b7501a5529d4fb7e6446af8ab1:9baa5314d68a3adb51408e50596929c6:b0ad5120fa5d71ceb5167809dad98e22$"
+}
+}
