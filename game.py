@@ -33,7 +33,7 @@ def play_game(selected_char: int) -> None:
     animations = load_character_animations()
 
     player_target_position = 100
-    enemy_start_position = WIDTH + 100
+    enemy_start_position = WIDTH + 10
     enemy_target_position = 700
     player.walk(target_x=player_target_position)
 
@@ -96,7 +96,7 @@ def play_game(selected_char: int) -> None:
                 SCREEN.fill((0, 0, 0))
                 draw_text(
                     SCREEN,
-                    text=f"ROUND: {round+1}",
+                    text=f"ROUND: {round}",
                     x=WIDTH // 2,
                     y=100,
                     colour="white",
