@@ -77,7 +77,7 @@ class Player:
             target_x (int): x position to move to.
         """
         if self.x_pos < target_x:
-            self.action = Action.IDLE
+            self.action = Action.WALK
 
     def update_walk_pos(self, target_x: int, speed: int = 5) -> None:
         """
@@ -88,7 +88,7 @@ class Player:
             speed (int): Speed of movement.
         """
 
-        if self.action == Action.IDLE:
+        if self.action == Action.WALK:
             if self.x_pos < target_x:
                 self.x_pos += speed
                 if self.x_pos >= target_x:

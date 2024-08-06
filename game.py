@@ -41,10 +41,11 @@ def play_game(selected_char: int) -> None:
                 pygame.quit()
                 quit()
 
-        draw_bg(SCREEN, FOREST1)
+        #draw_bg(SCREEN, FOREST1)
+        SCREEN.fill((0,0,0))
         draw_text(
             SCREEN,
-            text=f"GAME: {selected_char}, ROUND: {round}",
+            text=f"ROUND: {round+1}",
             x=WIDTH // 2,
             y=100,
             colour="white",
