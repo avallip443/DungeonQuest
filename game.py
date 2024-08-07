@@ -19,72 +19,6 @@ from battle import handle_actions, damage_text_group
 from button import Button
 
 
-def player_walk_in(player, target_x: int, animations, round: int) -> None:
-    """
-    Handles the animation of the player walking into the screen.
-
-    Args:
-        player (Character): Player character instance.
-        target_x (int): Target x-coordinate for the player to walk to.
-        animations (dict): Dictionary containing animations for characters.
-        round (int): The current round number.
-    """
-    player.x_pos = 0
-    player.walk(target_x=target_x)
-    
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-        SCREEN.fill((0, 0, 0))
-        draw_text(
-            SCREEN,
-            text=f"ROUND: {round+1}",
-            x=WIDTH // 2,
-            y=100,
-            colour="white",
-            size="lg",
-            position="center",
-        )
-
-        player.update_walk_pos(target_x=target_x)
-        player.update_animation()
-
-        draw_characters(SCREEN, player, [], animations)
-        pygame.display.update()
-        CLOCK.tick(FPS)
-
-        if player.x_pos >= target_x:
-            break
-
-
-def player_walk_out(player, target_x: int, animations, speed: int = 5) -> None:
-    """
-    Handles the animation of the player walking out of the screen.
-
-    Args:
-        player (Character): Player character instance.
-        target_x (int): Target x-coordinate for the player to walk to.
-        animations (dict): Dictionary containing animations for characters.
-    """
-    
-    player.walk(target_x=target_x)
-
-    while True:
-        player.update_walk_pos(target_x=target_x, speed=speed)
-        player.update_animation()
-
-        SCREEN.fill((0, 0, 0))
-        draw_characters(SCREEN, player, [], animations)
-        pygame.display.update()
-        CLOCK.tick(FPS)
-
-        if player.x_pos >= target_x:
-            break
-
-
 def play_game(selected_char: int) -> None:
     """
     Main game loop that manages game rounds and character selection.
@@ -97,9 +31,9 @@ def play_game(selected_char: int) -> None:
     player = create_character(selected_char)
     round = 1
     animations = load_character_animations()
-    
+
     player_target_position = 100
-    
+
     enemy_start_position = WIDTH + 10
     enemy_target_position = 700
 
@@ -107,7 +41,7 @@ def play_game(selected_char: int) -> None:
 
     while total_level_enemies > 0:
         player_walk_in(player, player_target_position, animations, round)
-        
+
         if total_level_enemies == 1:
             play_boss_round(player, animations)
             total_level_enemies -= 1
@@ -223,6 +157,73 @@ def play_round(enemies, player, animations) -> None:
 
 def play_boss_round(player, animations):
     pass
+
+
+def player_walk_in(player, target_x: int, animations, round: int) -> None:
+    """
+    Handles the animation of the player walking into the screen.
+
+    Args:
+        player (Character): Player character instance.
+        target_x (int): Target x-coordinate for the player to walk to.
+        animations (dict): Dictionary containing animations for characters.
+        round (int): The current round number.
+    """
+
+    player.x_pos = 0
+    player.walk(target_x=target_x)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        SCREEN.fill((0, 0, 0))
+        draw_text(
+            SCREEN,
+            text=f"ROUND: {round}",
+            x=WIDTH // 2,
+            y=100,
+            colour="white",
+            size="lg",
+            position="center",
+        )
+
+        player.update_walk_pos(target_x=target_x)
+        player.update_animation()
+
+        draw_characters(SCREEN, player, [], animations)
+        pygame.display.update()
+        CLOCK.tick(FPS)
+
+        if player.x_pos >= target_x:
+            break
+
+
+def player_walk_out(player, target_x: int, animations, speed: int = 5) -> None:
+    """
+    Handles the animation of the player walking out of the screen.
+
+    Args:
+        player (Character): Player character instance.
+        target_x (int): Target x-coordinate for the player to walk to.
+        animations (dict): Dictionary containing animations for characters.
+    """
+
+    player.walk(target_x=target_x)
+
+    while True:
+        player.update_walk_pos(target_x=target_x, speed=speed)
+        player.update_animation()
+
+        SCREEN.fill((0, 0, 0))
+        draw_characters(SCREEN, player, [], animations)
+        pygame.display.update()
+        CLOCK.tick(FPS)
+
+        if player.x_pos >= target_x:
+            break
 
 
 def display_game_over_message(game_over: int) -> None:
