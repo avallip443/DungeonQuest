@@ -29,6 +29,14 @@ class Animation:
     def get_frame_count(self):
         return len(self.frames)
 
+    def get_last_death_frame(self, scale=1):
+        frame = self.frames[-1]  # Get the last frame of the death animation
+        if scale != 1:
+            frame = pygame.transform.scale(
+                frame, (int(self.frame_width * scale), int(self.frame_height * scale))
+            )
+        return frame
+
 
 def load_character_animations():
     animations = {}
