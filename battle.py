@@ -107,7 +107,7 @@ def player_turn(
     turn_done = False
 
     for enemy in enemies:
-        if enemy.hitbox.collidepoint(pos):
+        if enemy.hitbox.collidepoint(pos) and enemy.alive:
             pygame.mouse.set_visible(False)
             screen.blit(SWORD, pos)
 
