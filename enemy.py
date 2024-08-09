@@ -67,20 +67,24 @@ class Enemy:
 
         damage = self.strength + randint(-5, 5)
         self.action = Action.ATTACK
+        self.animation_timer = 0
 
         if random() < self.crit_chance / 100:
-            damage += 1.5
+            damage *= 1.5
 
         return math.floor(damage)
 
-    def appy_damage(self) -> None:
+    def apply_damage(self) -> None:
         """
         Apply damage and update the action based on remaining HP
         """
 
         self.hp = max(self.hp - self.delayed_damage, 0)
         self.alive = self.hp > 0
+
         self.action = Action.HURT if self.alive else Action.DEATH
+        self.animation_timer = 0
+
         display_damage(self, self.delayed_damage, (255, 0, 0))
         self.delayed_damage = 0
 
@@ -93,6 +97,7 @@ class Enemy:
         """
         if self.x_pos > target_x:
             self.action = Action.WALK
+            self.animation_timer = 0
 
     def update_walk_pos(self, target_x: int, speed: int = 10) -> None:
         """
@@ -105,9 +110,8 @@ class Enemy:
 
         if self.action == Action.WALK:
             if self.x_pos > target_x:
-                self.x_pos -= speed
+                self.x_pos = max(self.x_pos - speed, target_x)
                 if self.x_pos <= target_x:
-                    self.x_pos = target_x
                     self.action = Action.IDLE
 
     def update_hitbox(self, x_pos: int, y_pos: int) -> None:
@@ -119,8 +123,7 @@ class Enemy:
             y_pos (int): y-coordinate of the hitbox.
         """
 
-        self.hitbox.x = x_pos
-        self.hitbox.y = y_pos
+        self.hitbox.topleft = (x_pos, y_pos)
 
     def update_animation(self) -> None:
         """
@@ -130,7 +133,7 @@ class Enemy:
         if self.delay_counter > 0:
             self.delay_counter -= 1
             if self.delay_counter == 0:
-                self.appy_damage()
+                self.apply_damage()
             return
 
         current_animation = self.animations[self.name.lower()][self.action.value]
@@ -161,7 +164,7 @@ class Enemy:
             if self.animation_timer >= animation_length:
                 self.animation_timer = 0
                 self.current_frame_index = 0
-                if self.action in [Action.HURT, Action.ATTACK, Action.SPECIAL]:
+                if self.action != Action.WALK:
                     self.action = Action.IDLE
 
 
