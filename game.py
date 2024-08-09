@@ -60,7 +60,7 @@ def play_game(selected_char: int) -> None:
             while enemies_moving:
                 enemies_moving = False
                 for i, enemy in enumerate(enemies):
-                    enemy.update_walk_pos(target_x=enemy_target_position - i * 130)
+                    enemy.update_walk_pos(target_x=enemy_target_position - i * 130, speed=20)
                     enemy.update_animation()
                     if enemy.x_pos > enemy_target_position - i * 130:
                         enemies_moving = True
@@ -145,6 +145,7 @@ def play_round(enemies, player, animations) -> None:
         if player.hp <= 0:
             game_over = -1
             run = False
+            
         if all(enemy.hp <= 0 for enemy in enemies):
             game_over = 1
             run = False

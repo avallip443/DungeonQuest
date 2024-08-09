@@ -4,7 +4,7 @@ from damage_text import DamageText
 
 
 # constants
-PLAYER_COOLDOWN = 20
+PLAYER_COOLDOWN = 10
 ENEMY_COOLDOWN = 20
 
 damage_text_group = pygame.sprite.Group()
