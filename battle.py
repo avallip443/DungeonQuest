@@ -4,9 +4,8 @@ from damage_text import DamageText
 
 
 # constants
-PLAYER_COOLDOWN = 10
-ENEMY_COOLDOWN_SINGLE = 10
-ENEMY_COOLDOWN_DOUBLE = 20
+PLAYER_COOLDOWN = 20
+ENEMY_COOLDOWN = 20
 
 damage_text_group = pygame.sprite.Group()
 
@@ -38,12 +37,12 @@ def handle_actions(
 
     pygame.mouse.set_visible(True)
 
+    action_cooldown = max(0, action_cooldown - 1)
     if action_cooldown == 0:
         current_fighter, action_cooldown = execute_turn(
             screen, clicked, current_fighter, player, enemies, potion_button
         )
 
-    action_cooldown = max(0, action_cooldown - 1)
     return current_fighter, action_cooldown
 
 
@@ -75,13 +74,10 @@ def execute_turn(
             return 1, PLAYER_COOLDOWN
     elif current_figher == 1:  # 1st enemy turn
         enemy_turn(enemies[0], player)
-        if len(enemies) == 2:
-            return 2, ENEMY_COOLDOWN_DOUBLE
-        else:
-            return 0, ENEMY_COOLDOWN_SINGLE
+        return (2, ENEMY_COOLDOWN) if len(enemies) == 2 else (0, ENEMY_COOLDOWN)
     elif current_figher == 2:  # 2nd enemy turn
         enemy_turn(enemies[1], player)
-        return 0, ENEMY_COOLDOWN_SINGLE
+        return 0, ENEMY_COOLDOWN
 
     return current_figher, 0
 
@@ -153,7 +149,6 @@ def perform_attack(attacker, target) -> None:
     damage = attacker.attack()
     target.take_damage(damage)
     target.update_animation()
-    # display_damage(target, damage, (255, 0, 0))
 
 
 def display_damage(target, damage: int, colour) -> None:
