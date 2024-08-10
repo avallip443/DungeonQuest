@@ -19,6 +19,11 @@ from battle import handle_actions, damage_text_group
 from button import Button
 
 
+# round vars
+display_round_over = True
+round_display_duration = 20
+
+
 def play_game(selected_char: int) -> None:
     """
     Main game loop that manages game rounds and character selection.
@@ -60,7 +65,9 @@ def play_game(selected_char: int) -> None:
             while enemies_moving:
                 enemies_moving = False
                 for i, enemy in enumerate(enemies):
-                    enemy.update_walk_pos(target_x=enemy_target_position - i * 130, speed=20)
+                    enemy.update_walk_pos(
+                        target_x=enemy_target_position - i * 130, speed=20
+                    )
                     enemy.update_animation()
                     if enemy.x_pos > enemy_target_position - i * 130:
                         enemies_moving = True
@@ -95,6 +102,8 @@ def play_round(enemies, player, animations) -> None:
         player (Character): Player character instance.
         animations (dict): Dictionary containing animations for characters.
     """
+
+    global display_round_over, round_display_duration 
 
     run = True
     current_fighter = 0  # 1: player, 0: computer
@@ -145,10 +154,16 @@ def play_round(enemies, player, animations) -> None:
         if player.hp <= 0:
             game_over = -1
             run = False
-            
+
         if all(enemy.hp <= 0 for enemy in enemies):
             game_over = 1
-            run = False
+
+            if display_round_over:
+                display_round_over_message()
+            else:
+                round_display_duration = 20
+                display_round_over = True
+                run = False
 
         pygame.display.update()
         CLOCK.tick(FPS)
@@ -239,6 +254,26 @@ def display_game_over_message(game_over: int) -> None:
         print("Player wins!")
     elif game_over == -1:
         print("Player loses!")
+
+def display_round_over_message() -> bool:
+    """
+    Displays the round over message without blocking the game loop.
+    """
+    global display_round_over, round_display_duration
+    
+    if round_display_duration > 0:
+        draw_text(
+            SCREEN,
+            text="SUCCESS! ALL ENEMIES DEFEATED",
+            x=WIDTH // 2,
+            y=100,
+            colour="white",
+            size="lg",
+            position="center",
+        )
+        round_display_duration -= 1
+    else:
+        display_round_over = False
 
 
 if __name__ == "__main__":
