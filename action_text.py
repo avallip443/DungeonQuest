@@ -27,7 +27,7 @@ class ActionText(pygame.sprite.Sprite):
         if self.counter >= 0:
             self.rect.y -= 2
         
-        if self.counter > 10 + max(0, -self.counter):
+        if self.counter > 15 + max(0, -self.counter):
             self.kill()
         
         

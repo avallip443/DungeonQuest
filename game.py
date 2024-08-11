@@ -21,7 +21,7 @@ from button import Button
 
 # round vars
 display_round_over = True
-round_display_duration = 20
+round_display_duration = 25
 
 
 def play_game(selected_char: int) -> None:
@@ -51,7 +51,7 @@ def play_game(selected_char: int) -> None:
             play_boss_round(player, animations)
             total_level_enemies -= 1
         else:
-            current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
+            current_round_enemies = min(randint(2, 2), total_level_enemies - 1)
             enemies = [
                 create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
             ]
@@ -150,6 +150,7 @@ def play_round(enemies, player, animations) -> None:
         heal_text_group.draw(SCREEN)
 
         potion_text_group.update()
+
         for sprite in potion_text_group:
             if sprite.counter >= 0:
                 potion_text_group.draw(SCREEN)
@@ -169,7 +170,7 @@ def play_round(enemies, player, animations) -> None:
             if display_round_over:
                 display_round_over_message()
             else:
-                round_display_duration = 20
+                round_display_duration = 25
                 display_round_over = True
                 run = False
 
@@ -243,6 +244,15 @@ def player_walk_out(player, target_x: int, animations, speed: int = 5) -> None:
 
         SCREEN.fill((0, 0, 0))
         draw_characters(SCREEN, player, [], animations)
+        draw_text(
+            SCREEN,
+            text="SUCCESS! ENEMIES DEFEATED",
+            x=WIDTH // 2,
+            y=100,
+            colour="white",
+            size="lg",
+            position="center",
+        )
         pygame.display.update()
         CLOCK.tick(FPS)
 
@@ -272,7 +282,7 @@ def display_round_over_message() -> bool:
     if round_display_duration > 0:
         draw_text(
             SCREEN,
-            text="SUCCESS! ALL ENEMIES DEFEATED",
+            text="SUCCESS! ENEMIES DEFEATED",
             x=WIDTH // 2,
             y=100,
             colour="white",

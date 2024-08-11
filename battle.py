@@ -76,10 +76,10 @@ def execute_turn(
             return 1, PLAYER_COOLDOWN
     elif current_figher == 1:  # 1st enemy turn
         enemy_turn(enemies[0], player)
-        return (2, ENEMY_COOLDOWN) if len(enemies) == 2 else (0, ENEMY_COOLDOWN)
+        return (2, ENEMY_COOLDOWN) if len(enemies) == 2 else (0, ENEMY_COOLDOWN - 10)
     elif current_figher == 2:  # 2nd enemy turn
         enemy_turn(enemies[1], player)
-        return 0, ENEMY_COOLDOWN
+        return 0, ENEMY_COOLDOWN - 10
 
     return current_figher, 0
 
