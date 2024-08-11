@@ -51,7 +51,7 @@ def play_game(selected_char: int) -> None:
             play_boss_round(player, animations)
             total_level_enemies -= 1
         else:
-            current_round_enemies = min(randint(2, 2), total_level_enemies - 1)
+            current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
             enemies = [
                 create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
             ]
