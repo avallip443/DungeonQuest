@@ -6,6 +6,8 @@ from constants import (
     CLOCK,
     FPS,
     FOREST1,
+    CASTLE2,
+    CASTLE3,
     PANEL,
     HEIGHT,
     PANEL_HEIGHT,
@@ -42,58 +44,69 @@ def play_game(selected_char: int) -> None:
     enemy_start_position = WIDTH + 10
     enemy_target_position = 700
 
-    total_level_enemies = round + randint(4, 6)
+    current_level = 0
+    backgrounds = [FOREST1, CASTLE3, CASTLE2]
 
-    while total_level_enemies > 0:
-        player_walk_in(player, player_target_position, animations, round)
+    while current_level < 3:
+        total_level_enemies = round + randint(4, 6)
 
-        if total_level_enemies == 1:
-            play_boss_round(player, animations)
-            total_level_enemies -= 1
-        else:
-            current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
-            enemies = [
-                create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
-            ]
+        while total_level_enemies > 0:
+            player_walk_in(player, player_target_position, animations, current_level=current_level, round=round)
 
-            for i, enemy in enumerate(enemies):
-                enemy.x_pos = enemy_start_position + (1 - i) * 130
-                enemy.walk(target_x=enemy_target_position - (1 - i) * 130)
+            if total_level_enemies == 1:
+                play_boss_round(player, animations)
+                total_level_enemies -= 1
+            else:
+                current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
+                enemies = [
+                    create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
+                ]
 
-            # enemy walking sequence
-            enemies_moving = True
-            while enemies_moving:
-                enemies_moving = False
                 for i, enemy in enumerate(enemies):
-                    enemy.update_walk_pos(
-                        target_x=enemy_target_position - i * 130, speed=20
+                    enemy.x_pos = enemy_start_position + (1 - i) * 130
+                    enemy.walk(target_x=enemy_target_position - (1 - i) * 130)
+
+                # enemy walking sequence
+                enemies_moving = True
+                while enemies_moving:
+                    enemies_moving = False
+                    for i, enemy in enumerate(enemies):
+                        enemy.update_walk_pos(
+                            target_x=enemy_target_position - i * 130, speed=20
+                        )
+                        enemy.update_animation()
+                        if enemy.x_pos > enemy_target_position - i * 130:
+                            enemies_moving = True
+
+                    SCREEN.fill((0, 0, 0))
+                    draw_text(
+                        SCREEN,
+                        text=f"LEVEL: {current_level + 1} ROUND: {round}",
+                        x=WIDTH // 2,
+                        y=100,
+                        colour="white",
+                        size="lg",
+                        position="center",
                     )
-                    enemy.update_animation()
-                    if enemy.x_pos > enemy_target_position - i * 130:
-                        enemies_moving = True
+                    draw_characters(SCREEN, player, enemies, animations)
+                    pygame.display.update()
+                    CLOCK.tick(FPS)
 
-                SCREEN.fill((0, 0, 0))
-                draw_text(
-                    SCREEN,
-                    text=f"ROUND: {round}",
-                    x=WIDTH // 2,
-                    y=100,
-                    colour="white",
-                    size="lg",
-                    position="center",
+                play_round(
+                    enemies=enemies,
+                    player=player,
+                    animations=animations,
+                    background=backgrounds[current_level],
                 )
-                draw_characters(SCREEN, player, enemies, animations)
-                pygame.display.update()
-                CLOCK.tick(FPS)
+                total_level_enemies -= current_round_enemies
 
-            play_round(enemies=enemies, player=player, animations=animations)
-            total_level_enemies -= current_round_enemies
+                player_walk_out(player, WIDTH + 50, animations, 20)
+                round += 1
 
-            player_walk_out(player, WIDTH + 50, animations, 20)
-            round += 1
+        current_level += 1
 
 
-def play_round(enemies, player, animations) -> None:
+def play_round(enemies, player, animations, background) -> None:
     """
     Manages the game logic for a single round of combat.
 
@@ -121,7 +134,10 @@ def play_round(enemies, player, animations) -> None:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 clicked = True
 
-        draw_bg(SCREEN, FOREST1)
+        background_img_scaled = pygame.transform.smoothscale(
+            background, (WIDTH, HEIGHT - PANEL_HEIGHT)
+        )
+        draw_bg(SCREEN, background_img_scaled)
 
         potion_button = Button(
             SCREEN,
@@ -184,7 +200,7 @@ def play_boss_round(player, animations):
     pass
 
 
-def player_walk_in(player, target_x: int, animations, round: int) -> None:
+def player_walk_in(player, target_x: int, animations, current_level: int, round: int) -> None:
     """
     Handles the animation of the player walking into the screen.
 
@@ -207,7 +223,7 @@ def player_walk_in(player, target_x: int, animations, round: int) -> None:
         SCREEN.fill((0, 0, 0))
         draw_text(
             SCREEN,
-            text=f"ROUND: {round}",
+            text=f"LEVEL: {current_level + 1} ROUND: {round}",
             x=WIDTH // 2,
             y=100,
             colour="white",

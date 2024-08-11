@@ -60,6 +60,7 @@ BACK = pygame.image.load("graphics/buttons/back.png").convert_alpha()
 EXIT = pygame.image.load("graphics/buttons/exit.png").convert_alpha()
 QUIT = pygame.image.load("graphics/buttons/quit.png").convert_alpha()
 
+
 # STATS
 CHARACTERS = [
     {
