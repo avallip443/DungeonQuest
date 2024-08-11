@@ -46,6 +46,18 @@ class Player(Fighter):
 
         return damage
 
+    def get_potion(self) -> None:
+        """
+        Increases the player's potion count based on potion_chance after an enemy dies.
+
+        Returns:
+            bool: True if a potion was received, False otherwise.
+        """
+        if random() < self.potion_chance / 100:
+            self.potions += 1
+            return True
+        return False
+
     def walk(self, target_x: int) -> None:
         """
         Initiates the walking animation towards a target position.
@@ -78,7 +90,7 @@ def create_character(index: int) -> Player:
         ("Warrior", 100, 20, 2, 2, 50, 3),
         ("Rouge", 85, 15, 10, 2, 55, 3),
         ("Berserker", 75, 30, 5, 10, 60, 3),
-        ("Brute", 130, 15, 2, 2, 50, 3),
+        ("Brute", 130, 15, 2, 2, 100, 3),
         ("Huntress", 85, 10, 10, 25, 45, 3),
     ]
 

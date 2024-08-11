@@ -15,7 +15,7 @@ from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
 from enemy import create_enemy
 from animations import load_character_animations
-from battle import handle_actions, damage_text_group
+from battle import handle_actions, damage_text_group, heal_text_group, potion_text_group
 from button import Button
 
 
@@ -103,7 +103,7 @@ def play_round(enemies, player, animations) -> None:
         animations (dict): Dictionary containing animations for characters.
     """
 
-    global display_round_over, round_display_duration 
+    global display_round_over, round_display_duration
 
     run = True
     current_fighter = 0  # 1: player, 0: computer
@@ -146,6 +146,14 @@ def play_round(enemies, player, animations) -> None:
 
         damage_text_group.update()
         damage_text_group.draw(SCREEN)
+        heal_text_group.update()
+        heal_text_group.draw(SCREEN)
+
+        potion_text_group.update()
+        for sprite in potion_text_group:
+            if sprite.counter >= 0:
+                potion_text_group.draw(SCREEN)
+
         player.update_animation()
 
         for enemy in enemies:
@@ -247,20 +255,20 @@ def display_game_over_message(game_over: int) -> None:
     Displays a message indicating the outcome of the game.
 
     Args:
-        gam
-        e_over (int): The result of the game round (-1 for loss, 1 for win).
+        game_over (int): The result of the game round (-1 for loss, 1 for win).
     """
     if game_over == 1:
         print("Player wins!")
     elif game_over == -1:
         print("Player loses!")
 
+
 def display_round_over_message() -> bool:
     """
     Displays the round over message without blocking the game loop.
     """
     global display_round_over, round_display_duration
-    
+
     if round_display_duration > 0:
         draw_text(
             SCREEN,

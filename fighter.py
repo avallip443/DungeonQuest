@@ -2,7 +2,7 @@ from random import randint, random
 import math
 from animations import load_character_animations
 from enum import Enum
-from battle import display_damage
+from battle import display_action_text
 
 
 class Action(Enum):
@@ -82,7 +82,7 @@ class Fighter:
         self.action = Action.HURT if self.alive else Action.DEATH
         self.animation_timer = 0
 
-        display_damage(self, self.delayed_damage, (255, 0, 0))
+        display_action_text(target=self, text=self.delayed_damage, colour=(255, 0, 0))
         self.delayed_damage = 0
 
     def update_animation(self) -> None:

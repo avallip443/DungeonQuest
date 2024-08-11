@@ -1,13 +1,15 @@
 import pygame
 from constants import SWORD
-from damage_text import DamageText
+from action_text import ActionText
 
 
 # constants
-PLAYER_COOLDOWN = 10
-ENEMY_COOLDOWN = 20
+PLAYER_COOLDOWN = 20
+ENEMY_COOLDOWN = 25
 
 damage_text_group = pygame.sprite.Group()
+heal_text_group = pygame.sprite.Group()
+potion_text_group = pygame.sprite.Group()
 
 
 def handle_actions(
@@ -118,7 +120,9 @@ def player_turn(
         and player.max_hp > player.hp
     ):
         heal = player.heal()
-        display_damage(player, heal, (0, 255, 0))
+        display_action_text(
+            target=player, text_group=heal_text_group, text=heal, colour=(0, 255, 0)
+        )
         turn_done = True
 
     return turn_done
@@ -145,22 +149,38 @@ def perform_attack(attacker, target) -> None:
         attacker (Enemy/Player): Attacking fighter.
         target (Enemy/Player): Target fighter being attacked.
     """
+    from player import Player
 
     damage = attacker.attack()
     target.take_damage(damage)
     target.update_animation()
 
+    if target.hp - damage <= 0 and isinstance(attacker, Player):
+        potion_received = attacker.get_potion()
+        if potion_received:
+            display_action_text(
+                target=attacker,
+                text_group=potion_text_group,
+                text="+1 Potion",
+                colour=(0, 255, 0)
+            )
 
-def display_damage(target, damage: int, colour) -> None:
+
+def display_action_text(
+    target, text: int, colour, text_group=damage_text_group
+) -> None:
     """
     Displays damage text on the screen for a given target.
 
     Args:
         target (Fighter): Target receiving damage.
-        damage (int): Amount of damage dealt.
+        text (str): Action text being displayed.
         color (Tuple[int, int, int]): RGB color for the damage text.
+        text-group (sprite.Group): Sprite group action is associated with.
     """
 
     x, y = target.x_pos, target.y_pos - 210
-    damage_text = DamageText(x, y, str(damage), colour)
-    damage_text_group.add(damage_text)
+    delay = 10 if str(text).find("Potion") != -1 else 0
+    print(f"delay {delay} text {text}")
+    action_text = ActionText(x, y, str(text), colour, delay=delay)
+    text_group.add(action_text)
