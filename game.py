@@ -53,9 +53,9 @@ def play_game(selected_char: int) -> None:
         while total_level_enemies > 0:
             player_walk_in(player, player_target_position, animations, current_level=current_level, round=round)
 
-            if total_level_enemies == 1:
+            if total_level_enemies <= 1:
                 play_boss_round(player, animations)
-                total_level_enemies -= 1
+                total_level_enemies = 0
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [

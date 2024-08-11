@@ -181,6 +181,5 @@ def display_action_text(
 
     x, y = target.x_pos, target.y_pos - 210
     delay = 10 if str(text).find("Potion") != -1 else 0
-    print(f"delay {delay} text {text}")
     action_text = ActionText(x, y, str(text), colour, delay=delay)
     text_group.add(action_text)
