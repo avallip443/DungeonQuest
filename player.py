@@ -90,7 +90,7 @@ def create_character(index: int) -> Player:
         ("Warrior", 100, 20, 2, 2, 50, 3),
         ("Rouge", 85, 15, 10, 2, 55, 3),
         ("Berserker", 75, 30, 5, 10, 60, 3),
-        ("Brute", 130, 15, 100, 2, 50, 3),
+        ("Brute", 130, 15, 2, 2, 50, 3),
         ("Huntress", 85, 10, 10, 25, 45, 3),
     ]
 
