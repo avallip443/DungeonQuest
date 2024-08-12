@@ -17,7 +17,7 @@ from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
 from enemy import create_enemy
 from animations import load_character_animations
-from battle import handle_actions, damage_text_group, heal_text_group, potion_text_group
+from battle import handle_actions, damage_text_group, heal_text_group, potion_text_group, crit_text_group
 from button import Button
 from enum import Enum, auto
 
@@ -195,6 +195,8 @@ class Game:
         damage_text_group.draw(SCREEN)
         heal_text_group.update()
         heal_text_group.draw(SCREEN)
+        crit_text_group.update()
+        crit_text_group.draw(SCREEN)
 
         for sprite in potion_text_group:
             if sprite.counter >= 0:
@@ -312,7 +314,7 @@ class Game:
             SCREEN.fill((0, 0, 0))
             draw_text(
                 SCREEN,
-                text=f"LEVEL: {self.current_level + 1} ROUND: {self.round}",
+                text=f"LEVEL: {self.current_level} ROUND: {self.round}",
                 x=WIDTH // 2,
                 y=100,
                 colour="white",

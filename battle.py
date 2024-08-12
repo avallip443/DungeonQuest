@@ -11,6 +11,7 @@ ENEMY_COOLDOWN = 25
 damage_text_group = pygame.sprite.Group()
 heal_text_group = pygame.sprite.Group()
 potion_text_group = pygame.sprite.Group()
+crit_text_group = pygame.sprite.Group()
 
 
 def handle_actions(
@@ -144,7 +145,6 @@ def enemy_turn(enemy, player) -> None:
         enemy (Enemy): Enemy taking the turn.
         player (Player): Player being attacked.
     """
-
     if enemy.alive:
         perform_attack(enemy, player)
 
@@ -186,9 +186,11 @@ def display_action_text(
         color (Tuple[int, int, int]): RGB color for the damage text.
         text-group (sprite.Group): Sprite group action is associated with.
     """
-
     x, y = target.x_pos, target.y_pos - 210
+    
     delay = 10 if str(text).find("Potion") != -1 else 0
+    if str(text).find('Critical'):
+        text_group = crit_text_group
+    
     action_text = ActionText(x, y, str(text), colour, delay=delay)
     text_group.add(action_text)
-
