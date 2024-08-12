@@ -1,20 +1,8 @@
 from random import randint, random
-import math
-from animations import load_character_animations
-from enum import Enum
-from battle import display_damage
+from fighter import Fighter, Action
 
 
-class Action(Enum):
-    IDLE = "idle"
-    ATTACK = "attack"
-    SPECIAL = "special"
-    HURT = "hurt"
-    DEATH = "death"
-    WALK = "walk"
-
-
-class Player:
+class Player(Fighter):
     def __init__(
         self,
         name: str,
@@ -25,49 +13,50 @@ class Player:
         potion_chance: int,
         potions: int,
     ):
-        self.name: str = name
-        self.max_hp: int = max_hp
-        self.hp: int = max_hp
-        self.strength: int = strength
-        self.crit_chance: int = crit_chance
+        super().__init__(name, max_hp, strength, crit_chance, x_pos=0, y_pos=0)
         self.double_chance: int = double_chance
         self.potion_chance: int = potion_chance
         self.potions: int = potions
 
-        self.alive: bool = True
-        self.action: Action = Action.IDLE
-        self.x_pos: int = 0
-        self.y_pos: int = 0
-        self.animation_timer: int = 0
-        self.delay_counter: int = 0
-        self.current_frame_index: int = 0
-        self.animations = load_character_animations()
-        self.delayed_damage = 0
-
-    def take_damage(self, damage: int) -> None:
-        self.delayed_damage = damage
-        self.active = self.hp > 0
-        self.delay_counter = 10
-
     def heal(self) -> int:
+        """
+        Calculate the heal amount from the potion use.
+
+        Returns:
+            int: Heal amount to player's health.
+        """
+
         heal_amount = 30 + randint(-5, 5)
         self.hp = min(self.hp + heal_amount, self.max_hp)
         self.potions -= 1
         return heal_amount
 
     def attack(self) -> int:
-        damage = self.strength + randint(-5, 5)
-        self.action = Action.ATTACK
+        """
+        Calculate the damage dealt by the player.
 
-        if random() < self.crit_chance / 100:
-            damage += 1.5
-            self.action = Action.SPECIAL
+        Returns:
+            int: Damage value including potential critical hit.
+        """
+        damage = super().attack()
 
         if random() < self.double_chance / 100:
             damage *= 2
             self.action = Action.SPECIAL
 
-        return math.floor(damage)
+        return damage
+
+    def get_potion(self) -> None:
+        """
+        Increases the player's potion count based on potion_chance after an enemy dies.
+
+        Returns:
+            bool: True if a potion was received, False otherwise.
+        """
+        if random() < self.potion_chance / 100:
+            self.potions += 1
+            return True
+        return False
 
     def walk(self, target_x: int) -> None:
         """
@@ -77,7 +66,8 @@ class Player:
             target_x (int): x position to move to.
         """
         if self.x_pos < target_x:
-            self.action = Action.IDLE
+            self.action = Action.WALK
+            self.animation_timer = 0
 
     def update_walk_pos(self, target_x: int, speed: int = 5) -> None:
         """
@@ -88,38 +78,10 @@ class Player:
             speed (int): Speed of movement.
         """
 
-        if self.action == Action.IDLE:
+        if self.action == Action.WALK:
             if self.x_pos < target_x:
-                self.x_pos += speed
+                self.x_pos = min(self.x_pos + speed, target_x)
                 if self.x_pos >= target_x:
-                    self.x_pos = target_x
-                    self.action = Action.IDLE
-
-    def update_animation(self) -> None:
-        """
-        Updates the player's animation and processes delayed actions like applying damage.
-
-        Args:
-            screen (pygame.Surface): Surface to render damage texts.
-        """
-        if self.delay_counter > 0:
-            self.delay_counter -= 1
-            if self.delay_counter == 0:
-                self.hp = max(self.hp - self.delayed_damage, 0)
-                self.alive = self.hp > 0
-                self.action = Action.HURT if self.alive else Action.DEATH
-                display_damage(self, self.delayed_damage, (255, 0, 0))
-                self.delayed_damage = 0
-            return
-
-        current_animation = self.animations[self.name.lower()][self.action.value]
-        animation_length = current_animation.get_frame_count()
-
-        if self.action != Action.IDLE:
-            self.animation_timer = (self.animation_timer + 1) % animation_length
-            if self.animation_timer == 0:
-                self.current_frame_index = 0
-                if self.action in [Action.HURT, Action.SPECIAL]: #, Action.ATTACK]:
                     self.action = Action.IDLE
 
 
@@ -143,7 +105,11 @@ def animate_player(screen, player: Player, animations, scale: float) -> None:
     scale = scale - 0.5 if change_scale else scale
 
     current_animation = animations[player.name.lower()][player.action.value]
-    current_frame = current_animation.get_current_frame(scale=scale)
+
+    if player.death_animation_done:
+        current_frame = current_animation.get_last_death_frame(scale=scale)
+    else:
+        current_frame = current_animation.get_current_frame(scale=scale)
 
     frame_width = current_frame.get_width()
     frame_height = current_frame.get_height()
