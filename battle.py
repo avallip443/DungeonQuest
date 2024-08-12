@@ -7,6 +7,7 @@ from action_text import ActionText
 PLAYER_COOLDOWN = 20
 ENEMY_COOLDOWN = 25
 
+# sprite groups
 damage_text_group = pygame.sprite.Group()
 heal_text_group = pygame.sprite.Group()
 potion_text_group = pygame.sprite.Group()
@@ -36,10 +37,9 @@ def handle_actions(
     Returns:
         tuple[int, int]: Updated current_fighter index and action_cooldown.
     """
-
     pygame.mouse.set_visible(True)
-
     action_cooldown = max(0, action_cooldown - 1)
+
     if action_cooldown == 0:
         current_fighter, action_cooldown = execute_turn(
             screen, clicked, current_fighter, player, enemies, potion_button
@@ -70,7 +70,6 @@ def execute_turn(
     Returns:
         Tuple[int, int]: Updated current_fighter index and action_cooldown.
     """
-
     if current_figher == 0:  # player turn
         if player_turn(screen, clicked, player, enemies, potion_button):
             return 1, PLAYER_COOLDOWN
@@ -100,7 +99,6 @@ def player_turn(
     Returns:
         bool: True if the player's turn is done, False otherwise.
     """
-
     pos = pygame.mouse.get_pos()
     turn_done = False
 
@@ -113,19 +111,29 @@ def player_turn(
                 perform_attack(player, enemy)
                 turn_done = True
 
-    if (
-        potion_button.rect.collidepoint(pos)
-        and clicked
-        and player.potions > 0
-        and player.max_hp > player.hp
-    ):
+    if potion_button.rect.collidepoint(pos) and clicked:
+        turn_done = use_potion_if_possible(player)
+
+    return turn_done
+
+
+def use_potion_if_possible(player) -> bool:
+    """
+    Uses a potion if the player has one available and can be healed.
+
+    Args:
+        player (Player): Player object.
+
+    Returns:
+        bool: True if the potion was used, False otherwise.
+    """
+    if player.potions > 0 and player.max_hp > player.hp:
         heal = player.heal()
         display_action_text(
             target=player, text_group=heal_text_group, text=heal, colour=(0, 255, 0)
         )
-        turn_done = True
-
-    return turn_done
+        return True
+    return False
 
 
 def enemy_turn(enemy, player) -> None:
@@ -162,7 +170,7 @@ def perform_attack(attacker, target) -> None:
                 target=attacker,
                 text_group=potion_text_group,
                 text="+1 Potion",
-                colour=(0, 255, 0)
+                colour=(0, 255, 0),
             )
 
 
@@ -183,3 +191,4 @@ def display_action_text(
     delay = 10 if str(text).find("Potion") != -1 else 0
     action_text = ActionText(x, y, str(text), colour, delay=delay)
     text_group.add(action_text)
+
