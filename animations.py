@@ -107,6 +107,7 @@ def load_character_animations():
             "death": generate_frame_names(7, reverse=True),
             "hurt": generate_frame_names(3, reverse=True),
             "idle": generate_frame_names(8, reverse=True),
+            "walk": generate_frame_names(8, reverse=True),
         },
         "wizard2": {
             "attack": generate_frame_names(13, reverse=True),
@@ -127,6 +128,7 @@ def load_character_animations():
             "death": generate_frame_names(11),
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(8),
+            "walk": generate_frame_names(8),
         },
     }
 
