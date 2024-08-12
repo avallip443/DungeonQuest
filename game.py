@@ -19,125 +19,158 @@ from enemy import create_enemy
 from animations import load_character_animations
 from battle import handle_actions, damage_text_group, heal_text_group, potion_text_group
 from button import Button
+from enum import Enum, auto
 
 
-# round vars
 display_round_over = True
 round_display_duration = 25
 
 
-def play_game(selected_char: int) -> None:
-    """
-    Main game loop that manages game rounds and character selection.
+class GameState(Enum):
+    RUNNING = auto()
+    PLAYER_WIN = auto()
+    PLAYER_LOSS = auto()
 
-    Args:
-        selected_char (int): Index of the selected character.
-    """
 
+def main():
+    """
+    Initialize the game and start the main game loop.
+    """
     pygame.init()
-    player = create_character(selected_char)
-    round = 1
-    animations = load_character_animations()
+    selected_char = 3  # Example character index
+    game = Game(selected_char)
+    game.run()
 
-    player_target_position = 100
 
-    enemy_start_position = WIDTH + 10
-    enemy_target_position = 700
+class Game:
+    """
+    Game class encapsulates all game logic and controls the main game loop.
 
-    current_level = 0
-    backgrounds = [FOREST1, CASTLE3, CASTLE2]
+    Attributes:
+        player (Character): Player character instance.
+        animations (dict): Dictionary containing character animations.
+        round (int): Current round number.
+        current_level (int): Current level of the game.
+        backgrounds (list): List of background images for each level.
+        player_target_position (int): Target x-coordinate for player's walk in.
+        enemy_start_position (int): Starting x-coordinate for enemies before walk in.
+        enemy_target_position (int): Target x-coordinate for enemies' walk in.
+    """
 
-    while current_level < 3:
-        total_level_enemies = round + randint(4, 6)
+    def __init__(self, selected_char: int):
+        self.player = create_character(selected_char)
+        self.animations = load_character_animations()
+        self.round: int = 1
+        self.current_level: int = 1
+        self.backgrounds = [FOREST1, CASTLE3, CASTLE2]
+        self.player_target_position = 100
+        self.enemy_start_position: int = WIDTH + 10
+        self.enemy_target_position: int = 700
 
-        while total_level_enemies > 0:
-            player_walk_in(player, player_target_position, animations, current_level=current_level, round=round)
+    def run(self) -> None:
+        """
+        Runs the main game loop for the three levels.
+        """
+        while self.current_level <= 3:
+            self.play_level()
+
+    def play_level(self) -> None:
+        """
+        Play a single level of the game, managing rounds and enemies.
+        """
+        total_level_enemies = self.round + randint(4, 6)
+
+        while total_level_enemies >= 0:
+            self.player_walk_in()
 
             if total_level_enemies <= 1:
-                play_boss_round(player, animations)
-                total_level_enemies = 0
+                self.play_boss_round()
+                total_level_enemies = -1
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [
                     create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
                 ]
 
-                for i, enemy in enumerate(enemies):
-                    enemy.x_pos = enemy_start_position + (1 - i) * 130
-                    enemy.walk(target_x=enemy_target_position - (1 - i) * 130)
-
-                # enemy walking sequence
-                enemies_moving = True
-                while enemies_moving:
-                    enemies_moving = False
-                    for i, enemy in enumerate(enemies):
-                        enemy.update_walk_pos(
-                            target_x=enemy_target_position - i * 130, speed=20
-                        )
-                        enemy.update_animation()
-                        if enemy.x_pos > enemy_target_position - i * 130:
-                            enemies_moving = True
-
-                    SCREEN.fill((0, 0, 0))
-                    draw_text(
-                        SCREEN,
-                        text=f"LEVEL: {current_level + 1} ROUND: {round}",
-                        x=WIDTH // 2,
-                        y=100,
-                        colour="white",
-                        size="lg",
-                        position="center",
-                    )
-                    draw_characters(SCREEN, player, enemies, animations)
-                    pygame.display.update()
-                    CLOCK.tick(FPS)
-
-                play_round(
-                    enemies=enemies,
-                    player=player,
-                    animations=animations,
-                    background=backgrounds[current_level],
-                )
+                self.enemy_walk_in(enemies)
+                self.play_round(enemies)
                 total_level_enemies -= current_round_enemies
 
-                player_walk_out(player, WIDTH + 50, animations, 20)
-                round += 1
+                self.player_walk_out(speed=20)
+                self.round += 1
 
-        current_level += 1
+        self.current_level += 1
 
+    def play_round(self, enemies) -> None:
+        """
+        Manage the game logic for a single round.
 
-def play_round(enemies, player, animations, background) -> None:
-    """
-    Manages the game logic for a single round of combat.
+        Args:
+            enemies (list): List of enemy instances for the round.
+        """
+        global display_round_over, round_display_duration
+        run = True
+        current_fighter = 0
+        action_cooldown = 0
+        game_over = GameState.RUNNING
 
-    Args:
-        enemies (list): List of enemy instances for the round.
-        player (Character): Player character instance.
-        animations (dict): Dictionary containing animations for characters.
-    """
+        while run:
+            clicked = self.handle_events()
 
-    global display_round_over, round_display_duration
+            self.draw_background()
+            potion_button = self.draw_ui_elements(enemies)
 
-    run = True
-    current_fighter = 0  # 1: player, 0: computer
-    action_cooldown = 0
-    game_over = 0  # 1: player win, -1: player loss
-    clicked = False
+            current_fighter, action_cooldown = handle_actions(
+                SCREEN,
+                clicked=clicked,
+                current_fighter=current_fighter,
+                player=self.player,
+                enemies=enemies,
+                potion_button=potion_button,
+                action_cooldown=action_cooldown,
+            )
 
-    while run:
-        clicked = False
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+            self.update_sprites(enemies=enemies)
+            self.update_screen()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                clicked = True
+            if self.player.hp <= 0:
+                game_over = GameState.PLAYER_LOSS
+                run = False
 
+            if all(enemy.hp <= 0 for enemy in enemies):
+                game_over = GameState.PLAYER_WIN
+
+                if display_round_over:
+                    self.display_round_over_message()
+                else:
+                    round_display_duration = 25
+                    display_round_over = True
+                    run = False
+
+            pygame.display.update()
+            CLOCK.tick(FPS)
+
+        self.display_game_over_message(game_over)
+
+    def draw_background(self) -> None:
+        """
+        Draw the background for the current_level.
+        """
         background_img_scaled = pygame.transform.smoothscale(
-            background, (WIDTH, HEIGHT - PANEL_HEIGHT)
+            self.backgrounds[self.current_level - 1], (WIDTH, HEIGHT - PANEL_HEIGHT)
         )
         draw_bg(SCREEN, background_img_scaled)
+
+    def draw_ui_elements(self, enemies) -> Button:
+        """
+        Draw UI elements, including the characters and panel
+
+        Args:
+            enemies(list): List of enemy instances for the round.
+
+        Returns:
+            Button: Potion button instance.
+        """
 
         potion_button = Button(
             SCREEN,
@@ -147,168 +180,187 @@ def play_round(enemies, player, animations, background) -> None:
             width=55,
             height=55,
         )
-        draw_panel(SCREEN, PANEL, player, enemies, potion_button)
-        draw_characters(SCREEN, player, enemies, animations)
+        draw_panel(SCREEN, PANEL, self.player, enemies, potion_button)
+        draw_characters(SCREEN, self.player, enemies, self.animations)
+        return potion_button
 
-        current_fighter, action_cooldown = handle_actions(
-            SCREEN,
-            clicked,
-            current_fighter,
-            player,
-            enemies,
-            potion_button,
-            action_cooldown,
-        )
+    def update_sprites(self, enemies) -> None:
+        """
+        Update and draw sprite groups for characters and action texts.
 
+        Args:
+            enemies (List): List of enemy instances.
+        """
         damage_text_group.update()
         damage_text_group.draw(SCREEN)
         heal_text_group.update()
         heal_text_group.draw(SCREEN)
 
-        potion_text_group.update()
-
         for sprite in potion_text_group:
             if sprite.counter >= 0:
                 potion_text_group.draw(SCREEN)
 
-        player.update_animation()
+        self.player.update_animation()
 
         for enemy in enemies:
             enemy.update_animation()
 
-        if player.hp <= 0:
-            game_over = -1
-            run = False
-
-        if all(enemy.hp <= 0 for enemy in enemies):
-            game_over = 1
-
-            if display_round_over:
-                display_round_over_message()
-            else:
-                round_display_duration = 25
-                display_round_over = True
-                run = False
-
+    def update_screen(self) -> None:
+        """
+        Update the display.
+        """
         pygame.display.update()
-        CLOCK.tick(FPS)
 
-    display_game_over_message(game_over)
+    def handle_events(self) -> bool:
+        """
+        Handle player input and events.
 
+        Returns:
+            bool: True of the mouse button is clicked, False otherwise.
+        """
+        clicked = False
 
-def play_boss_round(player, animations):
-    pass
-
-
-def player_walk_in(player, target_x: int, animations, current_level: int, round: int) -> None:
-    """
-    Handles the animation of the player walking into the screen.
-
-    Args:
-        player (Character): Player character instance.
-        target_x (int): Target x-coordinate for the player to walk to.
-        animations (dict): Dictionary containing animations for characters.
-        round (int): The current round number.
-    """
-
-    player.x_pos = 0
-    player.walk(target_x=target_x)
-
-    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        SCREEN.fill((0, 0, 0))
-        draw_text(
-            SCREEN,
-            text=f"LEVEL: {current_level + 1} ROUND: {round}",
-            x=WIDTH // 2,
-            y=100,
-            colour="white",
-            size="lg",
-            position="center",
-        )
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                clicked = True
+        return clicked
 
-        player.update_walk_pos(target_x=target_x)
-        player.update_animation()
+    def player_walk_in(self) -> None:
+        """
+        Handle the player's walking animation into the screen.
+        """
+        self.player.x_pos = 0
+        self.player.walk(target_x=self.player_target_position)
 
-        draw_characters(SCREEN, player, [], animations)
-        pygame.display.update()
-        CLOCK.tick(FPS)
+        while self.player.x_pos < self.player_target_position:
+            self.handle_events()
+            SCREEN.fill((0, 0, 0))
 
-        if player.x_pos >= target_x:
-            break
+            draw_text(
+                SCREEN,
+                text=f"LEVEL: {self.current_level} ROUND: {self.round}",
+                x=WIDTH // 2,
+                y=100,
+                colour="white",
+                size="lg",
+                position="center",
+            )
 
+            self.player.update_walk_pos(target_x=self.player_target_position)
+            self.player.update_animation()
 
-def player_walk_out(player, target_x: int, animations, speed: int = 5) -> None:
-    """
-    Handles the animation of the player walking out of the screen.
+            draw_characters(SCREEN, self.player, {}, self.animations)
+            pygame.display.update()
+            CLOCK.tick(FPS)
 
-    Args:
-        player (Character): Player character instance.
-        target_x (int): Target x-coordinate for the player to walk to.
-        animations (dict): Dictionary containing animations for characters.
-    """
+    def player_walk_out(self, speed: int = 5) -> None:
+        """
+        Handle the player's walking animtion out of the screen.
 
-    player.walk(target_x=target_x)
+        Args:
+            speed (int): Speed of the player's walking animation.
+        """
+        target_x = WIDTH + 50
+        self.player.walk(target_x=target_x)
 
-    while True:
-        player.update_walk_pos(target_x=target_x, speed=speed)
-        player.update_animation()
+        while self.player.x_pos < target_x:
+            self.player.update_walk_pos(target_x=target_x, speed=speed)
+            self.player.update_animation()
 
-        SCREEN.fill((0, 0, 0))
-        draw_characters(SCREEN, player, [], animations)
-        draw_text(
-            SCREEN,
-            text="SUCCESS! ENEMIES DEFEATED",
-            x=WIDTH // 2,
-            y=100,
-            colour="white",
-            size="lg",
-            position="center",
-        )
-        pygame.display.update()
-        CLOCK.tick(FPS)
+            SCREEN.fill((0, 0, 0))
+            draw_characters(
+                SCREEN, player=self.player, enemies=[], animations=self.animations
+            )
+            draw_text(
+                SCREEN,
+                text="SUCCESS! ENEMIES DEFEATED",
+                x=WIDTH // 2,
+                y=100,
+                colour="white",
+                size="lg",
+                position="center",
+            )
+            pygame.display.update()
+            CLOCK.tick(FPS)
 
-        if player.x_pos >= target_x:
-            break
+    def enemy_walk_in(self, enemies):
+        """
+        Handle the walking animation for enemies entering the screen.
 
+        Args:
+            enemies (list): List of enemy instances.
+        """
+        for i, enemy in enumerate(enemies):
+            enemy.x_pos = self.enemy_start_position + (1 - i) * 130
+            enemy.walk(target_x=self.enemy_target_position - (1 - i) * 130)
 
-def display_game_over_message(game_over: int) -> None:
-    """
-    Displays a message indicating the outcome of the game.
+        enemies_moving = True
+        while enemies_moving:
+            enemies_moving = False
+            for i, enemy in enumerate(enemies):
+                enemy.update_walk_pos(
+                    target_x=self.enemy_target_position - i * 130, speed=20
+                )
+                enemy.update_animation()
+                if enemy.x_pos > self.enemy_target_position - i * 130:
+                    enemies_moving = True
 
-    Args:
-        game_over (int): The result of the game round (-1 for loss, 1 for win).
-    """
-    if game_over == 1:
-        print("Player wins!")
-    elif game_over == -1:
-        print("Player loses!")
+            SCREEN.fill((0, 0, 0))
+            draw_text(
+                SCREEN,
+                text=f"LEVEL: {self.current_level + 1} ROUND: {self.round}",
+                x=WIDTH // 2,
+                y=100,
+                colour="white",
+                size="lg",
+                position="center",
+            )
+            draw_characters(SCREEN, self.player, enemies, self.animations)
+            pygame.display.update()
+            CLOCK.tick(FPS)
 
+    def play_boss_round(self):
+        """
+        Play the boss round logic (currently a placeholder).
+        """
+        pass
 
-def display_round_over_message() -> bool:
-    """
-    Displays the round over message without blocking the game loop.
-    """
-    global display_round_over, round_display_duration
+    def display_game_over_message(self, game_over: GameState) -> None:
+        """
+        Display a message indicating the outcome of the game.
 
-    if round_display_duration > 0:
-        draw_text(
-            SCREEN,
-            text="SUCCESS! ENEMIES DEFEATED",
-            x=WIDTH // 2,
-            y=100,
-            colour="white",
-            size="lg",
-            position="center",
-        )
-        round_display_duration -= 1
-    else:
-        display_round_over = False
+        Args:
+            game_over (GameState): The result of the game round.
+        """
+        if game_over == GameState.PLAYER_WIN:
+            print("Player wins!")
+        elif game_over == GameState.PLAYER_LOSS:
+            print("Player loses!")
+
+    def display_round_over_message(self) -> None:
+        """
+        Displays the round over message without blocking the game loop.
+        """
+        global display_round_over, round_display_duration
+
+        if round_display_duration > 0:
+            draw_text(
+                SCREEN,
+                text="SUCCESS! ENEMIES DEFEATED",
+                x=WIDTH // 2,
+                y=100,
+                colour="white",
+                size="lg",
+                position="center",
+            )
+            round_display_duration -= 1
+        else:
+            display_round_over = False
 
 
 if __name__ == "__main__":
-    play_game(selected_char=3)
+    main()
