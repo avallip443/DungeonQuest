@@ -112,6 +112,7 @@ def load_character_animations():
             "death": generate_frame_names(11),
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(8),
+            "walk": generate_frame_names(8),
         },
     }
 
