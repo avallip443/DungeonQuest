@@ -15,7 +15,7 @@ from constants import (
 )
 from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
-from enemy import create_enemy
+from enemy import create_enemy, create_boss
 from animations import load_character_animations
 from battle import handle_actions, damage_text_group, heal_text_group, potion_text_group, crit_text_group
 from button import Button
@@ -78,26 +78,30 @@ class Game:
         """
         Play a single level of the game, managing rounds and enemies.
         """
-        total_level_enemies = self.round + randint(4, 6)
+        total_level_enemies = self.round + randint(0, 0)
 
         while total_level_enemies >= 0:
             self.player_walk_in()
 
             if total_level_enemies <= 1:
-                self.play_boss_round()
+                #self.play_boss_round()
+                enemies = [
+                    create_boss(randint(0, 1))
+                ]
                 total_level_enemies = -1
+                
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [
                     create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
                 ]
 
-                self.enemy_walk_in(enemies)
-                self.play_round(enemies)
-                total_level_enemies -= current_round_enemies
+            self.enemy_walk_in(enemies)
+            self.play_round(enemies)
+            total_level_enemies -= current_round_enemies
 
-                self.player_walk_out(speed=20)
-                self.round += 1
+            self.player_walk_out(speed=20)
+            self.round += 1
 
         self.current_level += 1
 
@@ -151,6 +155,12 @@ class Game:
             CLOCK.tick(FPS)
 
         self.display_game_over_message(game_over)
+
+    def play_boss_round(self):
+        """
+        Play the boss round logic (currently a placeholder).
+        """
+        pass
 
     def draw_background(self) -> None:
         """
@@ -324,12 +334,6 @@ class Game:
             draw_characters(SCREEN, self.player, enemies, self.animations)
             pygame.display.update()
             CLOCK.tick(FPS)
-
-    def play_boss_round(self):
-        """
-        Play the boss round logic (currently a placeholder).
-        """
-        pass
 
     def display_game_over_message(self, game_over: GameState) -> None:
         """

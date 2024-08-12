@@ -91,8 +91,8 @@ def create_boss(index: int) -> Enemy:
     """
 
     bosses = [
-        ("Bringer of Death", 100, 20, 2, 3),
-        ("Wizard1", 75, 30, 5, 3),
+        ("Bringer", 100, 20, 2),
+        ("Wizard1", 75, 30, 5),
     ]
 
     if 0 <= index <= len(bosses):
