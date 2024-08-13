@@ -17,7 +17,13 @@ from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
 from enemy import create_enemy, create_boss
 from animations import load_character_animations
-from battle import handle_actions, damage_text_group, heal_text_group, potion_text_group, crit_text_group
+from battle import (
+    handle_actions,
+    damage_text_group,
+    heal_text_group,
+    potion_text_group,
+    crit_text_group,
+)
 from button import Button
 from enum import Enum, auto
 
@@ -37,7 +43,7 @@ def main():
     Initialize the game and start the main game loop.
     """
     pygame.init()
-    selected_char = 3  
+    selected_char = 3
     game = Game(selected_char)
     game.run()
 
@@ -84,22 +90,18 @@ class Game:
             self.player_walk_in()
 
             if total_level_enemies <= 1:
-                enemies = [
-                    create_boss(randint(0, 1))
-                ]
-                total_level_enemies = -1
-                
+                enemies = [create_boss(self.current_level)]
+                total_level_enemies = 0
+                current_round_enemies = 1
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [
                     create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
                 ]
 
+            total_level_enemies -= current_round_enemies
             self.enemy_walk_in(enemies)
             self.play_round(enemies)
-            total_level_enemies -= current_round_enemies
-
-            self.player_walk_out(speed=20)
             self.round += 1
 
         self.current_level += 1
@@ -153,6 +155,7 @@ class Game:
             pygame.display.update()
             CLOCK.tick(FPS)
 
+        self.player_walk_out(speed=20, is_boss=enemies[0].type == "boss")
         self.display_game_over_message(game_over)
 
     def draw_background(self) -> None:
@@ -174,7 +177,6 @@ class Game:
         Returns:
             Button: Potion button instance.
         """
-
         potion_button = Button(
             SCREEN,
             x=120,
@@ -184,7 +186,9 @@ class Game:
             height=55,
         )
         draw_panel(SCREEN, PANEL, self.player, enemies, potion_button)
-        draw_characters(SCREEN, self.player, enemies, self.animations, self.current_level)
+        draw_characters(
+            SCREEN, self.player, enemies, self.animations, self.current_level
+        )
         return potion_button
 
     def update_sprites(self, enemies) -> None:
@@ -262,7 +266,7 @@ class Game:
             pygame.display.update()
             CLOCK.tick(FPS)
 
-    def player_walk_out(self, speed: int = 5) -> None:
+    def player_walk_out(self, speed: int = 5, is_boss=False) -> None:
         """
         Handle the player's walking animtion out of the screen.
 
@@ -280,15 +284,26 @@ class Game:
             draw_characters(
                 SCREEN, player=self.player, enemies=[], animations=self.animations
             )
-            draw_text(
-                SCREEN,
-                text="SUCCESS! ENEMIES DEFEATED",
-                x=WIDTH // 2,
-                y=100,
-                colour="white",
-                size="lg",
-                position="center",
-            )
+            if is_boss:
+                draw_text(
+                    SCREEN,
+                    text="BUT THE JOURNEY ISN'T OVER YET",
+                    x=WIDTH // 2,
+                    y=100,
+                    colour="white",
+                    size="lg",
+                    position="center",
+                )
+            else:
+                draw_text(
+                    SCREEN,
+                    text="SUCCESS! ENEMIES DEFEATED",
+                    x=WIDTH // 2,
+                    y=100,
+                    colour="white",
+                    size="lg",
+                    position="center",
+                )
             pygame.display.update()
             CLOCK.tick(FPS)
 
@@ -299,19 +314,25 @@ class Game:
         Args:
             enemies (list): List of enemy instances.
         """
-        for i, enemy in enumerate(enemies):    
+        for i, enemy in enumerate(enemies):
             enemy.x_pos = self.enemy_start_position + (1 - i) * 130
-            walk_target = 540 if enemy.name == "Bringer" else self.enemy_target_position - (1 - i) * 130
-            target_x = walk_target if enemy.name == "Bringer" else self.enemy_target_position - i * 130
+            walk_target = (
+                540
+                if enemy.name == "Bringer"
+                else self.enemy_target_position - (1 - i) * 130
+            )
+            target_x = (
+                walk_target
+                if enemy.name == "Bringer"
+                else self.enemy_target_position - i * 130
+            )
             enemy.walk(target_x=walk_target)
 
         enemies_moving = True
         while enemies_moving:
             enemies_moving = False
             for i, enemy in enumerate(enemies):
-                enemy.update_walk_pos(
-                    target_x=target_x, speed=20
-                )
+                enemy.update_walk_pos(target_x=target_x, speed=20)
                 enemy.update_animation()
                 if enemy.x_pos > target_x:
                     enemies_moving = True
