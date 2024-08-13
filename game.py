@@ -37,7 +37,7 @@ def main():
     Initialize the game and start the main game loop.
     """
     pygame.init()
-    selected_char = 3  # Example character index
+    selected_char = 3  
     game = Game(selected_char)
     game.run()
 
@@ -84,7 +84,6 @@ class Game:
             self.player_walk_in()
 
             if total_level_enemies <= 1:
-                #self.play_boss_round()
                 enemies = [
                     create_boss(randint(0, 1))
                 ]
@@ -156,12 +155,6 @@ class Game:
 
         self.display_game_over_message(game_over)
 
-    def play_boss_round(self):
-        """
-        Play the boss round logic (currently a placeholder).
-        """
-        pass
-
     def draw_background(self) -> None:
         """
         Draw the background for the current_level.
@@ -191,7 +184,7 @@ class Game:
             height=55,
         )
         draw_panel(SCREEN, PANEL, self.player, enemies, potion_button)
-        draw_characters(SCREEN, self.player, enemies, self.animations)
+        draw_characters(SCREEN, self.player, enemies, self.animations, self.current_level)
         return potion_button
 
     def update_sprites(self, enemies) -> None:
@@ -306,19 +299,21 @@ class Game:
         Args:
             enemies (list): List of enemy instances.
         """
-        for i, enemy in enumerate(enemies):
+        for i, enemy in enumerate(enemies):    
             enemy.x_pos = self.enemy_start_position + (1 - i) * 130
-            enemy.walk(target_x=self.enemy_target_position - (1 - i) * 130)
+            walk_target = 540 if enemy.name == "Bringer" else self.enemy_target_position - (1 - i) * 130
+            target_x = walk_target if enemy.name == "Bringer" else self.enemy_target_position - i * 130
+            enemy.walk(target_x=walk_target)
 
         enemies_moving = True
         while enemies_moving:
             enemies_moving = False
             for i, enemy in enumerate(enemies):
                 enemy.update_walk_pos(
-                    target_x=self.enemy_target_position - i * 130, speed=20
+                    target_x=target_x, speed=20
                 )
                 enemy.update_animation()
-                if enemy.x_pos > self.enemy_target_position - i * 130:
+                if enemy.x_pos > target_x:
                     enemies_moving = True
 
             SCREEN.fill((0, 0, 0))
