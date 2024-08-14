@@ -13,7 +13,8 @@ from constants import (
     PANEL_HEIGHT,
     POTION,
     VICTORY,
-    EXIT
+    EXIT,
+    DEFEAT,
 )
 from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
@@ -67,6 +68,7 @@ class Game:
         game_state (GameState): Current state of the game depending on player actions.
         on_exit: Callback function when the game is over.
     """
+
     def __init__(self, selected_char: int, on_exit):
         self.player = create_character(selected_char)
         self.animations = load_character_animations()
@@ -144,11 +146,16 @@ class Game:
             self.update_screen()
 
             if self.player.hp <= 0:
-                self.game_state = GameState.PLAYER_LOSS
+                if display_round_over:
+                    self.display_round_over_message(is_success=True)
+                else:
+                    round_display_duration = 25
+                    display_round_over = True
+                    self.game_state = GameState.PLAYER_LOSS
 
             if all(enemy.hp <= 0 for enemy in enemies):
                 if display_round_over:
-                    self.display_round_over_message()
+                    self.display_round_over_message(is_success=False)
                 else:
                     round_display_duration = 25
                     display_round_over = True
@@ -168,19 +175,17 @@ class Game:
     def display_game_over_message(self) -> None:
         """
         Display a message indicating the outcome of the game.
-
-        Args:
-            game_over (GameState): The result of the game round.
         """
         SCREEN.fill((0, 0, 0))
 
         if self.game_state == GameState.GAME_OVER_PLAYER_WIN:
+            pygame.mouse.set_visible(True)
             running = True
             while running:
                 SCREEN.fill((0, 0, 0))
                 clicked = self.handle_events()
 
-                victory_button = Button(
+                victory_icon = Button(
                     SCREEN,
                     x=WIDTH // 2,
                     y=180,
@@ -188,8 +193,8 @@ class Game:
                     width=280,
                     height=64,
                 )
-                victory_button.draw()
-                
+                victory_icon.draw()
+
                 draw_text(
                     SCREEN,
                     text="JOURNEY IS OVER",
@@ -199,7 +204,7 @@ class Game:
                     size="lg",
                     position="center",
                 )
-                
+
                 exit_button = Button(
                     SCREEN,
                     x=WIDTH // 2,
@@ -209,7 +214,7 @@ class Game:
                     height=28 * 2,
                 )
                 exit_button.draw()
-                
+
                 if clicked:
                     mouse_pos = pygame.mouse.get_pos()
                     if exit_button.rect.collidepoint(mouse_pos):
@@ -221,18 +226,70 @@ class Game:
                 CLOCK.tick(FPS)
 
         elif self.game_state == GameState.PLAYER_LOSS:
-            print("Player loses!")
+            pygame.mouse.set_visible(True)
+            running = True
+            while running:
+                SCREEN.fill((0, 0, 0))
+                clicked = self.handle_events()
 
-    def display_round_over_message(self) -> None:
+                defeat_icon = Button(
+                    SCREEN,
+                    x=WIDTH // 2,
+                    y=180,
+                    image=DEFEAT,
+                    width=240,
+                    height=64,
+                )
+                defeat_icon.draw()
+
+                draw_text(
+                    SCREEN,
+                    text="JOURNEY IS OVER",
+                    x=WIDTH // 2,
+                    y=250,
+                    colour="white",
+                    size="lg",
+                    position="center",
+                )
+
+                exit_button = Button(
+                    SCREEN,
+                    x=WIDTH // 2,
+                    y=380,
+                    image=EXIT,
+                    width=92 * 2,
+                    height=28 * 2,
+                )
+                exit_button.draw()
+
+                if clicked:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if exit_button.rect.collidepoint(mouse_pos):
+                        running = False
+                        if self.on_exit:
+                            self.on_exit()
+
+                pygame.display.update()
+                CLOCK.tick(FPS)
+
+    def display_round_over_message(self, is_success: bool = True) -> None:
         """
         Displays the round over message without blocking the game loop.
+
+        Args:
+            is_success (bool): True if player has defeated enemies, False otherwise.
         """
         global display_round_over, round_display_duration
 
         if round_display_duration > 0:
+            text = (
+                "SUCCESS! ENEMIES DEFEATED"
+                if is_success
+                else "FAILURE! YOU HAVE BEEN DEFEATED"
+            )
             draw_text(
                 SCREEN,
-                text="SUCCESS! ENEMIES DEFEATED",
+                text=text,
                 x=WIDTH // 2,
                 y=100,
                 colour="white",
