@@ -75,6 +75,54 @@ def tutorial() -> None:
         SCREEN.fill("black")
         draw_text(SCREEN, text="TUTORIAL", x=WIDTH // 2, y=100, size="lg")
 
+        draw_text(SCREEN, text="STATS", x=WIDTH // 2, y=170, size="md")
+        draw_text(
+            SCREEN,
+            text="1. Critical hit: Chance to deal 200% damage.",
+            x=WIDTH // 2,
+            y=200,
+            size="sm",
+        )
+        draw_text(
+            SCREEN,
+            text="2. Double hit: Chance to strike twice in one attack.",
+            x=WIDTH // 2,
+            y=225,
+            size="sm",
+        )
+        
+        draw_text(SCREEN, text="POTIONS", x=WIDTH // 2, y=280, size="md")
+        draw_text(
+            SCREEN,
+            text="Potions are used to heal HP. All defeated enemies have a chance to drop potions",
+            x=WIDTH // 2,
+            y=310,
+            size="sm",
+        )
+        
+        draw_text(SCREEN, text="BATTLE", x=WIDTH // 2, y=365, size="md")
+        draw_text(
+            SCREEN,
+            text="1. All players take turns attacking.",
+            x=WIDTH // 2,
+            y=395,
+            size="sm",
+        )
+        draw_text(
+            SCREEN,
+            text="2. Click the enemy to attack or potion button to heal.",
+            x=WIDTH // 2,
+            y=425,
+            size="sm",
+        )
+        draw_text(
+            SCREEN,
+            text="3. Once all enemies are defeat in the level, the boss appears so prepare well!.",
+            x=WIDTH // 2,
+            y=455,
+            size="sm",
+        )
+
         back_button.draw()
 
         for event in pygame.event.get():
@@ -90,4 +138,4 @@ def tutorial() -> None:
 
 
 if __name__ == "__main__":
-    start_menu()
+    tutorial()
