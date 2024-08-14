@@ -3,14 +3,13 @@ from constants import SCREEN, HEIGHT, WIDTH, PLAY, TUTORIAL, QUIT, BACK
 from button import Button
 from utils import draw_text
 from character_selection import character_selection_screen
-from game import play_game
+from game import main
 
 
 def start_menu() -> None:
     """
     Displays the start menu where players can choose to play the game, view the tutorial, or quit.
     """
-
     play_button = Button(
         SCREEN,
         x=WIDTH // 2,
@@ -56,7 +55,7 @@ def start_menu() -> None:
                 elif play_button.rect.collidepoint(event.pos):
                     selected_char = character_selection_screen()
                     if selected_char != -1:
-                        game(selected_char=selected_char)
+                        main(selected_char=selected_char, on_exit=start_menu)
                 elif tutorial_button.rect.collidepoint(event.pos):
                     tutorial()
 
@@ -88,17 +87,6 @@ def tutorial() -> None:
                     start_menu()
 
         pygame.display.update()
-
-
-def game(selected_char: int) -> None:
-    """
-    Starts the game with the selected character.
-
-    Args:
-        selected_char (int): The index of the selected character.
-    """
-
-    play_game(selected_char)
 
 
 if __name__ == "__main__":

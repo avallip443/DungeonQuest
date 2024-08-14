@@ -12,6 +12,8 @@ from constants import (
     HEIGHT,
     PANEL_HEIGHT,
     POTION,
+    VICTORY,
+    EXIT
 )
 from utils import draw_text, draw_bg, draw_panel, draw_characters
 from player import create_character
@@ -34,17 +36,18 @@ round_display_duration = 25
 
 class GameState(Enum):
     RUNNING = auto()
+    NOT_RUNNING = auto()
     PLAYER_WIN = auto()
     PLAYER_LOSS = auto()
+    GAME_OVER_PLAYER_WIN = auto()
 
 
-def main():
+def main(selected_char: int, on_exit):
     """
     Initialize the game and start the main game loop.
     """
     pygame.init()
-    selected_char = 3
-    game = Game(selected_char)
+    game = Game(selected_char, on_exit)
     game.run()
 
 
@@ -61,9 +64,10 @@ class Game:
         player_target_position (int): Target x-coordinate for player's walk in.
         enemy_start_position (int): Starting x-coordinate for enemies before walk in.
         enemy_target_position (int): Target x-coordinate for enemies' walk in.
+        game_state (GameState): Current state of the game depending on player actions.
+        on_exit: Callback function when the game is over.
     """
-
-    def __init__(self, selected_char: int):
+    def __init__(self, selected_char: int, on_exit):
         self.player = create_character(selected_char)
         self.animations = load_character_animations()
         self.round: int = 1
@@ -72,6 +76,8 @@ class Game:
         self.player_target_position = 100
         self.enemy_start_position: int = WIDTH + 10
         self.enemy_target_position: int = 700
+        self.game_state: GameState = GameState.RUNNING
+        self.on_exit = on_exit
 
     def run(self) -> None:
         """
@@ -90,7 +96,7 @@ class Game:
             self.player_walk_in()
 
             if total_level_enemies <= 1:
-                enemies = [create_boss(self.current_level)]
+                enemies = [create_boss(self.current_level - 1)]
                 total_level_enemies = 0
                 current_round_enemies = 1
             else:
@@ -114,12 +120,11 @@ class Game:
             enemies (list): List of enemy instances for the round.
         """
         global display_round_over, round_display_duration
-        run = True
         current_fighter = 0
         action_cooldown = 0
-        game_over = GameState.RUNNING
+        self.game_state = GameState.RUNNING
 
-        while run:
+        while self.game_state == GameState.RUNNING:
             clicked = self.handle_events()
 
             self.draw_background()
@@ -139,86 +144,104 @@ class Game:
             self.update_screen()
 
             if self.player.hp <= 0:
-                game_over = GameState.PLAYER_LOSS
-                run = False
+                self.game_state = GameState.PLAYER_LOSS
 
             if all(enemy.hp <= 0 for enemy in enemies):
-                game_over = GameState.PLAYER_WIN
-
                 if display_round_over:
                     self.display_round_over_message()
                 else:
                     round_display_duration = 25
                     display_round_over = True
-                    run = False
+
+                    self.game_state = GameState.NOT_RUNNING
+                    if enemies[0].type == "boss" and self.current_level == 1:
+                        self.game_state = GameState.GAME_OVER_PLAYER_WIN
 
             pygame.display.update()
             CLOCK.tick(FPS)
 
-        self.player_walk_out(speed=20, is_boss=enemies[0].type == "boss")
-        self.display_game_over_message(game_over)
+        self.display_game_over_message()
 
-    def draw_background(self) -> None:
-        """
-        Draw the background for the current_level.
-        """
-        background_img_scaled = pygame.transform.smoothscale(
-            self.backgrounds[self.current_level - 1], (WIDTH, HEIGHT - PANEL_HEIGHT)
-        )
-        draw_bg(SCREEN, background_img_scaled)
+        if self.game_state == GameState.PLAYER_WIN:
+            self.player_walk_out(speed=20, is_boss=enemies[0].type == "boss")
 
-    def draw_ui_elements(self, enemies) -> Button:
+    def display_game_over_message(self) -> None:
         """
-        Draw UI elements, including the characters and panel
+        Display a message indicating the outcome of the game.
 
         Args:
-            enemies(list): List of enemy instances for the round.
-
-        Returns:
-            Button: Potion button instance.
+            game_over (GameState): The result of the game round.
         """
-        potion_button = Button(
-            SCREEN,
-            x=120,
-            y=HEIGHT - PANEL_HEIGHT * 0.25,
-            image=POTION,
-            width=55,
-            height=55,
-        )
-        draw_panel(SCREEN, PANEL, self.player, enemies, potion_button)
-        draw_characters(
-            SCREEN, self.player, enemies, self.animations, self.current_level
-        )
-        return potion_button
+        SCREEN.fill((0, 0, 0))
 
-    def update_sprites(self, enemies) -> None:
+        if self.game_state == GameState.GAME_OVER_PLAYER_WIN:
+            running = True
+            while running:
+                SCREEN.fill((0, 0, 0))
+                clicked = self.handle_events()
+
+                victory_button = Button(
+                    SCREEN,
+                    x=WIDTH // 2,
+                    y=180,
+                    image=VICTORY,
+                    width=280,
+                    height=64,
+                )
+                victory_button.draw()
+                
+                draw_text(
+                    SCREEN,
+                    text="JOURNEY IS OVER",
+                    x=WIDTH // 2,
+                    y=250,
+                    colour="white",
+                    size="lg",
+                    position="center",
+                )
+                
+                exit_button = Button(
+                    SCREEN,
+                    x=WIDTH // 2,
+                    y=380,
+                    image=EXIT,
+                    width=92 * 2,
+                    height=28 * 2,
+                )
+                exit_button.draw()
+                
+                if clicked:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if exit_button.rect.collidepoint(mouse_pos):
+                        running = False
+                        if self.on_exit:
+                            self.on_exit()
+
+                pygame.display.update()
+                CLOCK.tick(FPS)
+
+        elif self.game_state == GameState.PLAYER_LOSS:
+            print("Player loses!")
+
+    def display_round_over_message(self) -> None:
         """
-        Update and draw sprite groups for characters and action texts.
-
-        Args:
-            enemies (List): List of enemy instances.
+        Displays the round over message without blocking the game loop.
         """
-        damage_text_group.update()
-        damage_text_group.draw(SCREEN)
-        heal_text_group.update()
-        heal_text_group.draw(SCREEN)
-        crit_text_group.update()
-        crit_text_group.draw(SCREEN)
+        global display_round_over, round_display_duration
 
-        for sprite in potion_text_group:
-            if sprite.counter >= 0:
-                potion_text_group.draw(SCREEN)
-
-        self.player.update_animation()
-
-        for enemy in enemies:
-            enemy.update_animation()
-
-    def update_screen(self) -> None:
-        """
-        Update the display.
-        """
-        pygame.display.update()
+        if round_display_duration > 0:
+            draw_text(
+                SCREEN,
+                text="SUCCESS! ENEMIES DEFEATED",
+                x=WIDTH // 2,
+                y=100,
+                colour="white",
+                size="lg",
+                position="center",
+            )
+            round_display_duration -= 1
+        else:
+            display_round_over = False
 
     def handle_events(self) -> bool:
         """
@@ -351,37 +374,67 @@ class Game:
             pygame.display.update()
             CLOCK.tick(FPS)
 
-    def display_game_over_message(self, game_over: GameState) -> None:
+    def draw_background(self) -> None:
         """
-        Display a message indicating the outcome of the game.
+        Draw the background for the current_level.
+        """
+        background_img_scaled = pygame.transform.smoothscale(
+            self.backgrounds[self.current_level - 1], (WIDTH, HEIGHT - PANEL_HEIGHT)
+        )
+        draw_bg(SCREEN, background_img_scaled)
+
+    def draw_ui_elements(self, enemies) -> Button:
+        """
+        Draw UI elements, including the characters and panel
 
         Args:
-            game_over (GameState): The result of the game round.
-        """
-        if game_over == GameState.PLAYER_WIN:
-            print("Player wins!")
-        elif game_over == GameState.PLAYER_LOSS:
-            print("Player loses!")
+            enemies(list): List of enemy instances for the round.
 
-    def display_round_over_message(self) -> None:
+        Returns:
+            Button: Potion button instance.
         """
-        Displays the round over message without blocking the game loop.
-        """
-        global display_round_over, round_display_duration
+        potion_button = Button(
+            SCREEN,
+            x=120,
+            y=HEIGHT - PANEL_HEIGHT * 0.25,
+            image=POTION,
+            width=55,
+            height=55,
+        )
+        draw_panel(SCREEN, PANEL, self.player, enemies, potion_button)
+        draw_characters(
+            SCREEN, self.player, enemies, self.animations, self.current_level
+        )
+        return potion_button
 
-        if round_display_duration > 0:
-            draw_text(
-                SCREEN,
-                text="SUCCESS! ENEMIES DEFEATED",
-                x=WIDTH // 2,
-                y=100,
-                colour="white",
-                size="lg",
-                position="center",
-            )
-            round_display_duration -= 1
-        else:
-            display_round_over = False
+    def update_sprites(self, enemies) -> None:
+        """
+        Update and draw sprite groups for characters and action texts.
+
+        Args:
+            enemies (List): List of enemy instances.
+        """
+        damage_text_group.update()
+        damage_text_group.draw(SCREEN)
+        heal_text_group.update()
+        heal_text_group.draw(SCREEN)
+        crit_text_group.update()
+        crit_text_group.draw(SCREEN)
+
+        for sprite in potion_text_group:
+            if sprite.counter >= 0:
+                potion_text_group.draw(SCREEN)
+
+        self.player.update_animation()
+
+        for enemy in enemies:
+            enemy.update_animation()
+
+    def update_screen(self) -> None:
+        """
+        Update the display.
+        """
+        pygame.display.update()
 
 
 if __name__ == "__main__":
