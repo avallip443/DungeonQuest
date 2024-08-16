@@ -68,6 +68,7 @@ def create_enemy(index: int) -> Enemy:
     enemies = [
         ("Golem", 1, 1, 10),
         ("Wizard2", 1, 1, 2),
+        ("Fireworm", 1, 1, 2),
     ]
 
     if 0 <= index <= len(enemies):
