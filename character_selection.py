@@ -13,18 +13,17 @@ def character_selection_screen() -> int:
     Returns:
         int: Index of the selected character.
     """
-
-    from main import start_menu
+    from main import start_menu  # avoid circular import
 
     selected_index = 0
     hovered_index = -1
 
     animations = load_character_animations()
     play_button = Button(
-        SCREEN, x=WIDTH // 2, y=HEIGHT * 0.85, image=PLAY, width=92 * 2, height=28 * 2
+        SCREEN, x=WIDTH // 2, y=HEIGHT * 0.85, image=PLAY, width=184, height=56
     )
     back_button = Button(
-        SCREEN, x=50, y=50, image=BACK, width=31 * 1.5, height=35 * 1.5
+        SCREEN, x=50, y=50, image=BACK, width=46.5, height=52.5
     )
 
     while True:
@@ -52,8 +51,9 @@ def character_selection_screen() -> int:
 
 
 def handle_events(
-    play_button, back_button, hovered_index: int, selected_index: int, start_menu
-) -> int:
+    play_button: Button, back_button: Button, hovered_index: int, 
+    selected_index: int, start_menu
+) -> tuple[int, bool]:
     """
     Handles events such as quitting, clicking buttons, and selecting characters.
 
@@ -65,9 +65,8 @@ def handle_events(
         start_menu (function): Function to call to return to the start menu.
 
     Returns:
-        int: Index of the selected character.
+        tuple[int, bool]: Updated selected index and boolean indicating if the play button was clicked.
     """
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -92,11 +91,9 @@ def get_hovered_index(mouse_pos) -> int:
     Returns:
         int: Index of the hovered character, or -1 if none are hovered.
     """
-
     hovered_index = -1
     y_offset = 170
 
-    # update hovered index from mouse position
     for index, character in enumerate(CHARACTERS):
         text_rect = FONT.render(character["name"], True, (100, 100, 100)).get_rect(
             center=(130, y_offset)
@@ -108,13 +105,13 @@ def get_hovered_index(mouse_pos) -> int:
 
 
 def draw_character_options(
-    screen,
-    characters,
+    screen: pygame.Surface,
+    characters: list,
     selected_index: int,
     hovered_index: int,
-    animations,
-    play_button,
-    back_button,
+    animations: dict,
+    play_button: Button,
+    back_button: Button,
 ) -> None:
     """
     Draws the character options on the screen, highlighting the selected and hovered characters.
@@ -128,7 +125,6 @@ def draw_character_options(
         play_button (Button): Play button instance.
         back_button (Button): Back button instance.
     """
-
     screen.fill((0, 0, 0))
     y_offset = 170
 
@@ -144,11 +140,11 @@ def draw_character_options(
 
     for index, character in enumerate(characters):
         colour = (
-            (255, 255, 0)  # yellow
+            (255, 255, 0)  # yellow for selected character
             if index == selected_index
-            else (255, 255, 255)  # white
+            else (255, 255, 255)  # white for hovered character
             if index == hovered_index
-            else (100, 100, 100)  # black
+            else (100, 100, 100)  # gray for unselected character
         )
         draw_text(screen, text=character["name"], x=130, y=y_offset, colour=colour)
         y_offset += 50
@@ -165,7 +161,8 @@ def draw_character_options(
 
 
 def draw_selected_character(
-    screen, animations, selected_index, hovered_index, play_button
+    screen: pygame.Surface, animations: dict, selected_index: int, 
+    hovered_index: int, play_button: Button
 ) -> None:
     """
     Draws the selected character's animation and stats on the screen.
@@ -177,7 +174,6 @@ def draw_selected_character(
         hovered_index (int): Index of the currently hovered character.
         play_button (Button): Play button instance.
     """
-
     selected_character = CHARACTERS[selected_index]["name"]
 
     if hovered_index == selected_index or hovered_index == -1:
@@ -191,7 +187,9 @@ def draw_selected_character(
         play_button.draw()
 
 
-def draw_hovered_character(screen, animations, hovered_index) -> None:
+def draw_hovered_character(
+    screen: pygame.Surface, animations: dict, hovered_index: int
+) -> None:
     """
     Draws the hovered character's animation and stats on the screen.
 
@@ -200,7 +198,6 @@ def draw_hovered_character(screen, animations, hovered_index) -> None:
         animations (dict): Loaded animations for characters.
         hovered_index (int): Index of the currently hovered character.
     """
-
     hovered_character = CHARACTERS[hovered_index]["name"]
     animate_character(
         screen,
@@ -211,7 +208,9 @@ def draw_hovered_character(screen, animations, hovered_index) -> None:
     draw_character_stats(screen, hovered_index)
 
 
-def animate_character(screen, animations, name: str, scale: float) -> None:
+def animate_character(
+    screen: pygame.Surface, animations: dict, name: str, scale: float
+) -> None:
     """
     Animates the character on the screen based on the provided animation data.
 
@@ -221,7 +220,6 @@ def animate_character(screen, animations, name: str, scale: float) -> None:
         name (str): Name of the character to animate.
         scale (float): Scaling factor for the animation.
     """
-
     current_animation = animations[name.lower()]["idle"]
     current_frame = current_animation.get_current_frame(scale=scale)
 
@@ -235,7 +233,7 @@ def animate_character(screen, animations, name: str, scale: float) -> None:
     screen.blit(current_frame, (x_pos, y_pos))
 
 
-def draw_character_stats(screen, index) -> None:
+def draw_character_stats(screen: pygame.Surface, index: int) -> None:
     """
     Draws the character stats on the screen.
 
@@ -243,7 +241,6 @@ def draw_character_stats(screen, index) -> None:
         screen (pygame.Surface): Surface to draw on.
         index (int): Index of the character to draw stats for.
     """
-
     hp = HealthBar(140, 10, CHARACTERS[index]["max_hp"], 130)
     atk = HealthBar(140, 10, CHARACTERS[index]["attack"], 30)
 
@@ -293,7 +290,7 @@ def draw_character_stats(screen, index) -> None:
 
     draw_text(
         screen,
-        text="Critial hit:  " + str(CHARACTERS[index]["critical_chance"]) + "%",
+        text="Critical hit:  " + str(CHARACTERS[index]["critical_chance"]) + "%",
         x=WIDTH * 0.62,
         y=310,
         colour="white",
