@@ -32,7 +32,7 @@ class Fighter:
 
         self.alive: bool = True
         self.action: Action = Action.IDLE
-        self.delayed_damage = 0
+        self.delayed_damage: int = 0
 
         self.x_pos: int = x_pos
         self.y_pos: int = y_pos
@@ -53,7 +53,7 @@ class Fighter:
             damage (int): Amount of damage to be taken.
         """
         self.delayed_damage = damage
-        self.active = self.hp > 0
+        self.alive = self.hp > 0
         self.delay_counter = 10
 
     def attack(self) -> int:
@@ -69,9 +69,7 @@ class Fighter:
 
         if random() < self.crit_chance / 100:
             damage *= 1.5
-            display_action_text(
-                target=self, text='Critical hit!', colour=(0, 0, 255)
-            )
+            display_action_text(target=self, text="Critical hit!", colour=(0, 0, 255))
 
         return math.floor(damage)
 
