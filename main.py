@@ -3,14 +3,13 @@ from constants import SCREEN, HEIGHT, WIDTH, PLAY, TUTORIAL, QUIT, BACK
 from button import Button
 from utils import draw_text
 from character_selection import character_selection_screen
-from game import play_game
+from game import main
 
 
 def start_menu() -> None:
     """
     Displays the start menu where players can choose to play the game, view the tutorial, or quit.
     """
-
     play_button = Button(
         SCREEN,
         x=WIDTH // 2,
@@ -56,7 +55,7 @@ def start_menu() -> None:
                 elif play_button.rect.collidepoint(event.pos):
                     selected_char = character_selection_screen()
                     if selected_char != -1:
-                        game(selected_char=selected_char)
+                        main(selected_char=selected_char, on_exit=start_menu)
                 elif tutorial_button.rect.collidepoint(event.pos):
                     tutorial()
 
@@ -76,6 +75,54 @@ def tutorial() -> None:
         SCREEN.fill("black")
         draw_text(SCREEN, text="TUTORIAL", x=WIDTH // 2, y=100, size="lg")
 
+        draw_text(SCREEN, text="STATS", x=WIDTH // 2, y=170, size="md")
+        draw_text(
+            SCREEN,
+            text="1. Critical hit: Chance to deal 200% damage.",
+            x=WIDTH // 2,
+            y=200,
+            size="sm",
+        )
+        draw_text(
+            SCREEN,
+            text="2. Double hit: Chance to strike twice in one attack.",
+            x=WIDTH // 2,
+            y=225,
+            size="sm",
+        )
+        
+        draw_text(SCREEN, text="POTIONS", x=WIDTH // 2, y=280, size="md")
+        draw_text(
+            SCREEN,
+            text="Potions are used to heal HP. All defeated enemies have a chance to drop potions",
+            x=WIDTH // 2,
+            y=310,
+            size="sm",
+        )
+        
+        draw_text(SCREEN, text="BATTLE", x=WIDTH // 2, y=365, size="md")
+        draw_text(
+            SCREEN,
+            text="1. All players take turns attacking.",
+            x=WIDTH // 2,
+            y=395,
+            size="sm",
+        )
+        draw_text(
+            SCREEN,
+            text="2. Click the enemy to attack or potion button to heal.",
+            x=WIDTH // 2,
+            y=425,
+            size="sm",
+        )
+        draw_text(
+            SCREEN,
+            text="3. Once all enemies are defeat in the level, the boss appears so prepare well!.",
+            x=WIDTH // 2,
+            y=455,
+            size="sm",
+        )
+
         back_button.draw()
 
         for event in pygame.event.get():
@@ -88,17 +135,6 @@ def tutorial() -> None:
                     start_menu()
 
         pygame.display.update()
-
-
-def game(selected_char: int) -> None:
-    """
-    Starts the game with the selected character.
-
-    Args:
-        selected_char (int): The index of the selected character.
-    """
-
-    play_game(selected_char)
 
 
 if __name__ == "__main__":

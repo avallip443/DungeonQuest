@@ -11,6 +11,7 @@ ENEMY_COOLDOWN = 25
 damage_text_group = pygame.sprite.Group()
 heal_text_group = pygame.sprite.Group()
 potion_text_group = pygame.sprite.Group()
+crit_text_group = pygame.sprite.Group()
 
 
 def handle_actions(
@@ -187,5 +188,9 @@ def display_action_text(
     """
     x, y = target.x_pos, target.y_pos - 210
     delay = 10 if "Potion" in str(text) else 0
+    
+    if str(text).find('Critical'):
+        text_group = crit_text_group
+    
     action_text = ActionText(x, y, str(text), colour, delay=delay)
     text_group.add(action_text)

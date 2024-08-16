@@ -9,11 +9,13 @@ class Enemy(Fighter):
         max_hp: int,
         strength: int,
         crit_chance: int,
+        type: str,
         x_pos: int = 800,
         y_pos: int = 0,
     ):
         super().__init__(name, max_hp, strength, crit_chance, x_pos, y_pos)
         self.hitbox = pygame.Rect(0, 0, 100, 120)
+        self.type = type
 
     def walk(self, target_x: int) -> None:
         """
@@ -40,11 +42,21 @@ class Enemy(Fighter):
                 if self.x_pos <= target_x:
                     self.action = Action.IDLE
 
-    def update_hitbox(self) -> None:
+    def update_hitbox(
+        self, x_pos: int, y_pos: int, width: int = 100, height: int = 120
+    ) -> None:
         """
-        Update the position of the enemy's hitbox to match the enemy's position.
+        Update the position of the enemy's hitbox.
+
+        Args:
+            x_pos (int): X-coordinate of the hitbox.
+            y_pos (int): Y-coordinate of the hitbox.
+            width (int): Width of the hitbox (default 100).
+            height (int): Height of the hitbox (default 120).
         """
-        self.hitbox.topleft = (self.x_pos, self.y_pos)
+        if self.type == "boss":
+            self.hitbox = pygame.Rect(0, 0, width, height)
+        self.hitbox.topleft = (x_pos, y_pos)
 
 
 def create_enemy(index: int) -> Enemy:
@@ -61,9 +73,9 @@ def create_enemy(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     enemies = [
-        ("Golem", 1, 1, 10),
-        ("Wizard2", 1, 1, 2),
-        ("Fireworm", 1, 1, 2),
+        ("Golem", 1, 1, 10, "enemy"),
+        ("Wizard2", 1, 1, 2, "enemy"),
+        ("Fireworm", 1, 1, 2, "enemy"),
     ]
 
     if 0 <= index < len(enemies):
@@ -86,9 +98,9 @@ def create_boss(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     bosses = [
-        ("Bringer of Death", 100, 20, 2),
-        ("Wizard1", 75, 30, 5),
-        ("Oldking", 1, 1, 1,)
+        ("Bringer", 100, 20, 2, "boss"),
+        ("Wizard1", 75, 30, 5, "boss"),
+        ("Oldking", 75, 30, 5, "boss"),
     ]
 
     if 0 <= index < len(bosses):
@@ -97,7 +109,9 @@ def create_boss(index: int) -> Enemy:
         raise ValueError(f"Invalid boss index: {index}")
 
 
-def animate_enemy(screen, enemy: Enemy, animations, scale: float) -> None:
+def animate_enemy(
+    screen: pygame.Surface, enemy: Enemy, animations: dict, scale: float
+) -> None:
     """
     Render the enemy's current animation frame to the screen.
 
@@ -107,13 +121,9 @@ def animate_enemy(screen, enemy: Enemy, animations, scale: float) -> None:
         animations (dict): The dictionary containing animations.
         scale (float): Scaling factor for the animation.
     """
+    name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name.lower()
 
-    name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name
-
-    change_scale = enemy.name in ["boss1", "boss2"]
-    scale = scale - 0.5 if change_scale else scale
-
-    current_animation = animations[name.lower()][enemy.action.value]
+    current_animation = animations[name][enemy.action.value]
 
     if enemy.death_animation_done:
         current_frame = current_animation.get_last_death_frame(scale=scale)

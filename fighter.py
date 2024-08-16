@@ -69,6 +69,9 @@ class Fighter:
 
         if random() < self.crit_chance / 100:
             damage *= 1.5
+            display_action_text(
+                target=self, text='Critical hit!', colour=(0, 0, 255)
+            )
 
         return math.floor(damage)
 
