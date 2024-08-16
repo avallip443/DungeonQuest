@@ -137,6 +137,13 @@ def load_character_animations():
             "idle": generate_frame_names(8),
             "walk": generate_frame_names(8),
         },
+        "oldking": {
+            "attack": generate_frame_names(4, reverse=True),
+            "death": generate_frame_names(6, reverse=True),
+            "hurt": generate_frame_names(4, reverse=True),
+            "idle": generate_frame_names(8, reverse=True),
+            "walk": generate_frame_names(8, reverse=True),
+        },
     }
 
     for name, frames in character_animations.items():
