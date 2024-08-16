@@ -9,8 +9,10 @@ class Enemy(Fighter):
         max_hp: int,
         strength: int,
         crit_chance: int,
+        x_pos: int = 800,
+        y_pos: int = 0,
     ):
-        super().__init__(name, max_hp, strength, crit_chance, x_pos=800, y_pos=0)
+        super().__init__(name, max_hp, strength, crit_chance, x_pos, y_pos)
         self.hitbox = pygame.Rect(0, 0, 100, 120)
 
     def walk(self, target_x: int) -> None:
@@ -32,46 +34,39 @@ class Enemy(Fighter):
             target_x (int): Target x position to reach.
             speed (int): Speed of movement.
         """
-
         if self.action == Action.WALK:
             if self.x_pos > target_x:
                 self.x_pos = max(self.x_pos - speed, target_x)
                 if self.x_pos <= target_x:
                     self.action = Action.IDLE
 
-    def update_hitbox(self, x_pos: int, y_pos: int) -> None:
+    def update_hitbox(self) -> None:
         """
-        Update the position of the enemy's hitbox.
-
-        Args:
-            x_pos (int): x-coordinate of the hitbox.
-            y_pos (int): y-coordinate of the hitbox.
+        Update the position of the enemy's hitbox to match the enemy's position.
         """
-
-        self.hitbox.topleft = (x_pos, y_pos)
+        self.hitbox.topleft = (self.x_pos, self.y_pos)
 
 
 def create_enemy(index: int) -> Enemy:
     """
-    Create an enemy instance based on a predefined list in game.py.
+    Create an enemy instance based on a predefined list.
 
     Args:
         index (int): Index of the enemy to create.
 
     Returns:
-        Enemy: ANew enemy instance.
+        Enemy: New enemy instance.
 
     Raises:
         ValueError: If the provided index is out of range.
     """
-
     enemies = [
         ("Golem", 1, 1, 10),
         ("Wizard2", 1, 1, 2),
         ("Fireworm", 1, 1, 2),
     ]
 
-    if 0 <= index <= len(enemies):
+    if 0 <= index < len(enemies):
         return Enemy(*enemies[index])
     else:
         raise ValueError(f"Invalid enemy index: {index}")
@@ -90,16 +85,16 @@ def create_boss(index: int) -> Enemy:
     Raises:
         ValueError: If the provided index is out of range.
     """
-
     bosses = [
-        ("Bringer of Death", 100, 20, 2, 3),
-        ("Wizard1", 75, 30, 5, 3),
+        ("Bringer of Death", 100, 20, 2),
+        ("Wizard1", 75, 30, 5),
+        ("Oldking", 1, 1, 1,)
     ]
 
-    if 0 <= index <= len(bosses):
+    if 0 <= index < len(bosses):
         return Enemy(*bosses[index])
     else:
-        raise ValueError(f"Invalid enemy index: {index}")
+        raise ValueError(f"Invalid boss index: {index}")
 
 
 def animate_enemy(screen, enemy: Enemy, animations, scale: float) -> None:
