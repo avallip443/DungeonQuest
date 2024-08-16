@@ -98,7 +98,7 @@ class Game:
             self.player_walk_in()
 
             if total_level_enemies <= 1:
-                enemies = [create_boss(self.current_level - 1)]
+                enemies = [create_boss(2)]
                 total_level_enemies = 0
                 current_round_enemies = 1
             else:
