@@ -51,7 +51,7 @@ def handle_actions(
 def execute_turn(
     screen: pygame.Surface,
     clicked: bool,
-    current_figher: int,
+    current_fighter: int,
     player,
     enemies,
     potion_button,
@@ -68,19 +68,19 @@ def execute_turn(
         potion_button (PotionButton): Potion button object.
 
     Returns:
-        Tuple[int, int]: Updated current_fighter index and action_cooldown.
+        tuple[int, int]: Updated current_fighter index and action_cooldown.
     """
-    if current_figher == 0:  # player turn
+    if current_fighter == 0:  # player's turn
         if player_turn(screen, clicked, player, enemies, potion_button):
             return 1, PLAYER_COOLDOWN
-    elif current_figher == 1:  # 1st enemy turn
+    elif current_fighter == 1:  # first enemy's turn
         enemy_turn(enemies[0], player)
         return (2, ENEMY_COOLDOWN) if len(enemies) == 2 else (0, ENEMY_COOLDOWN - 10)
-    elif current_figher == 2:  # 2nd enemy turn
+    elif current_fighter == 2:  # second enemy's turn
         enemy_turn(enemies[1], player)
         return 0, ENEMY_COOLDOWN - 10
 
-    return current_figher, 0
+    return current_fighter, 0
 
 
 def player_turn(
@@ -94,7 +94,7 @@ def player_turn(
         clicked (bool): Whether the mouse was clicked.
         player (Player): Player object.
         enemies (List[Enemy]): List of enemy objects.
-        potion_button: Potion button object.
+        potion_button (PotionButton): Potion button object.
 
     Returns:
         bool: True if the player's turn is done, False otherwise.
@@ -107,7 +107,7 @@ def player_turn(
             pygame.mouse.set_visible(False)
             screen.blit(SWORD, pos)
 
-            if enemy.alive and clicked:
+            if clicked and enemy.alive:
                 perform_attack(player, enemy)
                 turn_done = True
 
@@ -127,7 +127,7 @@ def use_potion_if_possible(player) -> bool:
     Returns:
         bool: True if the potion was used, False otherwise.
     """
-    if player.potions > 0 and player.max_hp > player.hp:
+    if player.potions > 0 and player.hp < player.max_hp:
         heal = player.heal()
         display_action_text(
             target=player, text_group=heal_text_group, text=heal, colour=(0, 255, 0)
@@ -144,7 +144,6 @@ def enemy_turn(enemy, player) -> None:
         enemy (Enemy): Enemy taking the turn.
         player (Player): Player being attacked.
     """
-
     if enemy.alive:
         perform_attack(enemy, player)
 
@@ -154,16 +153,16 @@ def perform_attack(attacker, target) -> None:
     Performs an attack from the attacker to the target.
 
     Args:
-        attacker (Enemy/Player): Attacking fighter.
-        target (Enemy/Player): Target fighter being attacked.
+        attacker (Fighter): Attacking fighter.
+        target (Fighter): Target fighter being attacked.
     """
-    from player import Player
+    from player import Player  # avoid circular import
 
     damage = attacker.attack()
     target.take_damage(damage)
     target.update_animation()
 
-    if target.hp - damage <= 0 and isinstance(attacker, Player):
+    if target.hp - damage <= 0 and isinstance(attacker, Player):  # accounts for delayed damage
         potion_received = attacker.get_potion()
         if potion_received:
             display_action_text(
@@ -178,17 +177,15 @@ def display_action_text(
     target, text: int, colour, text_group=damage_text_group
 ) -> None:
     """
-    Displays damage text on the screen for a given target.
+    Displays action text on the screen for a given target.
 
     Args:
-        target (Fighter): Target receiving damage.
-        text (str): Action text being displayed.
-        color (Tuple[int, int, int]): RGB color for the damage text.
-        text-group (sprite.Group): Sprite group action is associated with.
+        target (Fighter): Target receiving action text.
+        text (str): Action text to be displayed.
+        colour (tuple[int, int, int]): RGB color for the text.
+        text_group (pygame.sprite.Group): Sprite group to which the text belongs.
     """
-
     x, y = target.x_pos, target.y_pos - 210
-    delay = 10 if str(text).find("Potion") != -1 else 0
+    delay = 10 if "Potion" in str(text) else 0
     action_text = ActionText(x, y, str(text), colour, delay=delay)
     text_group.add(action_text)
-
