@@ -138,4 +138,4 @@ def tutorial() -> None:
 
 
 if __name__ == "__main__":
-    tutorial()
+    start_menu()

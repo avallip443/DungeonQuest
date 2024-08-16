@@ -23,8 +23,9 @@ SCALE_ENEMY = 2.5
 SCALE_BOSS_SMALL = 4
 SCALE_BOSS_LARGE = 3.2
 
-BOSS_HITBOX = [(140, 220), (100, 190)]
-BOSS_HITBOX_OFFSET = [(-65, 260), (70, 230)]  # bringer, wizard1
+BOSS_HITBOX = [(140, 220), (100, 190), (100, 210)]
+BOSS_HITBOX_OFFSET = [(-65, 260), (70, 230), (80, 260)]  # bringer, wizard1
+BOSS_SCALE = [4, 3.2, 4.3]  # x, wizard, oldking
 
 
 def draw_bg(screen, background_img) -> None:
@@ -100,7 +101,7 @@ def draw_health_bar(screen, hp, max_hp, x, y):
     health_bar.draw(screen, hp=hp, x=x, y=y)
 
 
-def draw_characters(screen, player, enemies, animations, current_level: int = 0):
+def draw_characters(screen, player, enemies, animations, current_level):
     player.y_pos = PLAYER_Y_POS
 
     animate_player(screen, player, animations, scale=SCALE_PLAYER)
@@ -116,7 +117,7 @@ def draw_characters(screen, player, enemies, animations, current_level: int = 0)
                 width=width,
                 height=height,
             )
-            scale = SCALE_BOSS_SMALL if enemy.name == "Bringer" else SCALE_BOSS_LARGE
+            scale = BOSS_SCALE[current_level - 1]
         else:
             enemy.y_pos = ENEMY_Y_POS
             enemy.update_hitbox(enemy.x_pos - 50, ENEMY_Y_POS - 140)

@@ -73,7 +73,7 @@ class Game:
         self.player = create_character(selected_char)
         self.animations = load_character_animations()
         self.round: int = 1
-        self.current_level: int = 1
+        self.current_level: int = 2
         self.backgrounds = [FOREST1, CASTLE3, CASTLE2]
         self.player_target_position = 100
         self.enemy_start_position: int = WIDTH + 10
@@ -98,13 +98,13 @@ class Game:
             self.player_walk_in()
 
             if total_level_enemies <= 1:
-                enemies = [create_boss(2)]
+                enemies = [create_boss(self.current_level - 1)]
                 total_level_enemies = 0
                 current_round_enemies = 1
             else:
                 current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
                 enemies = [
-                    create_enemy(randint(0, 1)) for _ in range(current_round_enemies)
+                    create_enemy(randint(0, 2)) for _ in range(current_round_enemies)
                 ]
 
             total_level_enemies -= current_round_enemies
@@ -147,7 +147,7 @@ class Game:
 
             if self.player.hp <= 0:
                 if display_round_over:
-                    self.display_round_over_message(is_success=True)
+                    self.display_round_over_message(is_success=False)
                 else:
                     round_display_duration = 25
                     display_round_over = True
@@ -155,13 +155,13 @@ class Game:
 
             if all(enemy.hp <= 0 for enemy in enemies):
                 if display_round_over:
-                    self.display_round_over_message(is_success=False)
+                    self.display_round_over_message(is_success=True)
                 else:
                     round_display_duration = 25
                     display_round_over = True
 
                     self.game_state = GameState.NOT_RUNNING
-                    if enemies[0].type == "boss" and self.current_level == 1:
+                    if enemies[0].type == "boss" and self.current_level == 3:
                         self.game_state = GameState.GAME_OVER_PLAYER_WIN
 
             pygame.display.update()
@@ -342,7 +342,7 @@ class Game:
             self.player.update_walk_pos(target_x=self.player_target_position)
             self.player.update_animation()
 
-            draw_characters(SCREEN, self.player, {}, self.animations)
+            draw_characters(SCREEN, self.player, {}, self.animations, self.current_level)
             pygame.display.update()
             CLOCK.tick(FPS)
 
@@ -362,7 +362,7 @@ class Game:
 
             SCREEN.fill((0, 0, 0))
             draw_characters(
-                SCREEN, player=self.player, enemies=[], animations=self.animations
+                SCREEN, player=self.player, enemies=[], animations=self.animations, current_level=self.current_level
             )
             if is_boss:
                 draw_text(
@@ -427,7 +427,7 @@ class Game:
                 size="lg",
                 position="center",
             )
-            draw_characters(SCREEN, self.player, enemies, self.animations)
+            draw_characters(SCREEN, self.player, enemies, self.animations, self.current_level)
             pygame.display.update()
             CLOCK.tick(FPS)
 
@@ -492,7 +492,3 @@ class Game:
         Update the display.
         """
         pygame.display.update()
-
-
-if __name__ == "__main__":
-    main()

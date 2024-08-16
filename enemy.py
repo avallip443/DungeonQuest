@@ -66,9 +66,9 @@ def create_enemy(index: int) -> Enemy:
     """
 
     enemies = [
-        ("Golem", 1, 1, 10),
-        ("Wizard2", 1, 1, 2),
-        ("Fireworm", 1, 1, 2),
+        ("Golem", 1, 1, 10, "enemy"),
+        ("Wizard2", 1, 1, 2, "enemy"),
+        ("Fireworm", 1, 1, 2, "enemy"),
     ]
 
     if 0 <= index <= len(enemies):
@@ -113,11 +113,7 @@ def animate_enemy(screen, enemy: Enemy, animations, scale: float) -> None:
         animations (dict): The dictionary containing animations.
         scale (float): Scaling factor for the animation.
     """
-
     name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name
-
-    change_scale = enemy.name in ["boss1", "boss2"]
-    scale = scale - 0.5 if change_scale else scale
 
     current_animation = animations[name.lower()][enemy.action.value]
 
