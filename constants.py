@@ -2,56 +2,45 @@ import pygame
 
 pygame.init()
 
-
-# colours
+# colors
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-
 
 # screen dimensions
 WIDTH = 800
 HEIGHT = 550
 PANEL_HEIGHT = 150
 
-
-# graphics settings
+# fonts
 FONT_SM = pygame.font.SysFont("Times New Roman", 18)
 FONT = pygame.font.SysFont("Times New Roman", 26)
 FONT_LG = pygame.font.SysFont("Times New Roman", 36)
 
-
-# settings
-FPS = 60
-CLOCK = pygame.time.Clock()
-
-
 # game settings
+FPS = 60
 ACTION_WAIT_TIME = 90
 POTION_EFFECT = 15
+CLOCK = pygame.time.Clock()
 
-
-#  initalize pygame
+# Pygame screen initialization
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("DungeonQUEST")
 
-
-# BACKGROUNDS
+# backgrounds
 FOREST1 = pygame.image.load("graphics/backgrounds/forest1.png").convert_alpha()
 FOREST2 = pygame.image.load("graphics/backgrounds/forest2.png").convert_alpha()
 CASTLE1 = pygame.image.load("graphics/backgrounds/castle1.jpg").convert_alpha()
 CASTLE2 = pygame.image.load("graphics/backgrounds/castle2.jpg").convert_alpha()
 CASTLE3 = pygame.image.load("graphics/backgrounds/castle3.jpg").convert_alpha()
 
-
-# ICONS
+# icons
 PANEL = pygame.image.load("graphics/icons/panel.png").convert_alpha()
 SWORD = pygame.image.load("graphics/icons/sword.png").convert_alpha()
 POTION = pygame.image.load("graphics/icons/potion.png").convert_alpha()
 VICTORY = pygame.image.load("graphics/icons/victory.png").convert_alpha()
 DEFEAT = pygame.image.load("graphics/icons/defeat.png").convert_alpha()
 
-
-# BUTTONS
+# buttons
 RESTART = pygame.image.load("graphics/icons/restart.png").convert_alpha()
 PLAY = pygame.image.load("graphics/buttons/play.png").convert_alpha()
 CONTINUE = pygame.image.load("graphics/buttons/continue.png").convert_alpha()
@@ -60,8 +49,7 @@ BACK = pygame.image.load("graphics/buttons/back.png").convert_alpha()
 EXIT = pygame.image.load("graphics/buttons/exit.png").convert_alpha()
 QUIT = pygame.image.load("graphics/buttons/quit.png").convert_alpha()
 
-
-# STATS
+# character stats
 CHARACTERS = [
     {
         "name": "Warrior",
@@ -85,7 +73,7 @@ CHARACTERS = [
     },
     {
         "name": "Berserker",
-        "description": "Powerful and reckless, but \nlacks armour.",
+        "description": "Powerful and reckless, but \nlacks armor.",
         "max_hp": 75,
         "attack": 30,
         "critical_chance": 5,
