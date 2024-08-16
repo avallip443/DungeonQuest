@@ -10,29 +10,34 @@ def start_menu() -> None:
     """
     Displays the start menu where players can choose to play the game, view the tutorial, or quit.
     """
+    # button 
+    button_scale = 2
+    button_width = 92 * button_scale
+    button_height = 28 * button_scale
+
     play_button = Button(
         SCREEN,
         x=WIDTH // 2,
         y=HEIGHT // 2 - 50,
         image=PLAY,
-        width=92 * 2,
-        height=28 * 2,
+        width=button_width,
+        height=button_height,
     )
     tutorial_button = Button(
         SCREEN,
         x=WIDTH // 2,
         y=HEIGHT // 2 + 30,
         image=TUTORIAL,
-        width=92 * 2,
-        height=28 * 2,
+        width=button_width,
+        height=button_height,
     )
     quit_button = Button(
         SCREEN,
         x=WIDTH // 2,
         y=HEIGHT // 2 + 110,
         image=QUIT,
-        width=92 * 2,
-        height=28 * 2,
+        width=button_width,
+        height=button_height,
     )
 
     while True:
@@ -66,9 +71,18 @@ def tutorial() -> None:
     """
     Displays the tutorial screen with instructions on how to play the game.
     """
+    # Scaling factor for the back button
+    back_button_scale = 1.5
+    back_button_width = 31 * back_button_scale
+    back_button_height = 35 * back_button_scale
 
     back_button = Button(
-        SCREEN, x=50, y=50, image=BACK, width=31 * 1.5, height=35 * 1.5
+        SCREEN,
+        x=50,
+        y=50,
+        image=BACK,
+        width=back_button_width,
+        height=back_button_height,
     )
 
     while True:
@@ -90,16 +104,16 @@ def tutorial() -> None:
             y=225,
             size="sm",
         )
-        
+
         draw_text(SCREEN, text="POTIONS", x=WIDTH // 2, y=280, size="md")
         draw_text(
             SCREEN,
-            text="Potions are used to heal HP. All defeated enemies have a chance to drop potions",
+            text="Potions are used to heal HP. All defeated enemies have a chance to drop potions.",
             x=WIDTH // 2,
             y=310,
             size="sm",
         )
-        
+
         draw_text(SCREEN, text="BATTLE", x=WIDTH // 2, y=365, size="md")
         draw_text(
             SCREEN,
@@ -117,7 +131,7 @@ def tutorial() -> None:
         )
         draw_text(
             SCREEN,
-            text="3. Once all enemies are defeat in the level, the boss appears so prepare well!.",
+            text="3. Once all enemies are defeated in the level, the boss appears. Prepare well!",
             x=WIDTH // 2,
             y=455,
             size="sm",
