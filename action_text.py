@@ -17,17 +17,18 @@ class ActionText(pygame.sprite.Sprite):
         super().__init__()
         self.image = FONT.render(action_text, True, colour)
         self.rect = self.image.get_rect(center=(x, y))
-        self.counter = -delay  # start at negative
-        self.delay = delay
-        self.action_text = action_text
-        self.can_render = False
+        self.counter: int = -delay  # start at negative counter to use the delay
+        self.delay: int = delay
 
-    def update(self) -> bool:        
+    def update(self) -> None:
+        """
+        Updates the position of the action text; moves it upwards then removes it after a set time.
+        """
         self.counter += 1
         if self.counter >= 0:
             self.rect.y -= 2
         
-        if self.counter > 15 + max(0, -self.counter):
+        if self.counter > 15:
             self.kill()
         
         
