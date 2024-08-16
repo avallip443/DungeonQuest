@@ -116,6 +116,13 @@ def load_character_animations():
             "idle": generate_frame_names(10, reverse=True),
             "walk": generate_frame_names(8, reverse=True),
         },
+        "fireworm": {
+            "attack": generate_frame_names(16, reverse=True),
+            "death": generate_frame_names(8, reverse=True),
+            "hurt": generate_frame_names(3, reverse=True),
+            "idle": generate_frame_names(9, reverse=True),
+            "walk": generate_frame_names(9, reverse=True),
+        },
         "golem": {
             "attack": generate_frame_names(11, reverse=True),
             "death": generate_frame_names(13, reverse=True),
@@ -129,6 +136,13 @@ def load_character_animations():
             "hurt": generate_frame_names(3),
             "idle": generate_frame_names(8),
             "walk": generate_frame_names(8),
+        },
+        "oldking": {
+            "attack": generate_frame_names(4, reverse=True),
+            "death": generate_frame_names(6, reverse=True),
+            "hurt": generate_frame_names(4, reverse=True),
+            "idle": generate_frame_names(8, reverse=True),
+            "walk": generate_frame_names(8, reverse=True),
         },
     }
 

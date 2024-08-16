@@ -66,8 +66,9 @@ def create_enemy(index: int) -> Enemy:
     """
 
     enemies = [
-        ("Golem", 1, 1, 10, "enemy"),
-        ("Wizard2", 1, 1, 2, "enemy"),
+        ("Golem", 1, 1, 10),
+        ("Wizard2", 1, 1, 2),
+        ("Fireworm", 1, 1, 2),
     ]
 
     if 0 <= index <= len(enemies):
@@ -93,6 +94,7 @@ def create_boss(index: int) -> Enemy:
     bosses = [
         ("Bringer", 100, 20, 2, "boss"),
         ("Wizard1", 75, 30, 5, "boss"),
+        ("Oldking", 75, 30, 5, "boss"),
     ]
 
     if 0 <= index <= len(bosses):
