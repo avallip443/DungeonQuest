@@ -6,6 +6,7 @@ Welcome to WarriorQuest! Immerse yourself in this single-player, 2D turn-based R
 
 - [Game Overview](#game-overview)
 - [Character Classes](#character-classes)
+- [Installation](#installation)
 - [How to Play](#how-to-play)
 
 ## Game Overview
@@ -23,6 +24,16 @@ Player can choose from the following character classes:
 5. **Huntress:**: Precise ranged attacker, often \nlands multiple hits.
 
 Each class has a unique stat for maximum hitpoints, attack strength, critical hit chance, double hit chance, and potion drop chance from slain enemies.
+
+## Installation
+1. Clone this repository and run:
+```sh
+python3 -m pip install -U pygame --user
+```
+2. Run the game:
+```sh
+python main.py
+```
 
 ## How to Play
 
