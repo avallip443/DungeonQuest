@@ -68,21 +68,22 @@ def draw_panel(screen, panel_img, player, enemies, potion_button) -> None:
     # draw enemy stats
     panel_offsets = [(90, 110), (20, 40)] if len(enemies) == 2 else [(30, 50)]
 
-    for i, (text_offset, bar_offset) in enumerate(panel_offsets):
-        x = WIDTH * 0.75
-        text_y = HEIGHT - PANEL_HEIGHT + text_offset
-        bar_y = HEIGHT - PANEL_HEIGHT + bar_offset
+    if enemies:
+        for i, (text_offset, bar_offset) in enumerate(panel_offsets):
+            x = WIDTH * 0.75
+            text_y = HEIGHT - PANEL_HEIGHT + text_offset
+            bar_y = HEIGHT - PANEL_HEIGHT + bar_offset
 
-        draw_text(
-            screen,
-            f"{enemies[i].display_name}",
-            x=x,
-            y=text_y,
-            colour="white",
-        )
-        draw_health_bar(
-            screen, enemies[i].hp, enemies[i].max_hp, x - HEALTHBAR_WIDTH // 2, bar_y
-        )
+            draw_text(
+                screen,
+                f"{enemies[i].display_name}",
+                x=x,
+                y=text_y,
+                colour="white",
+            )
+            draw_health_bar(
+                screen, enemies[i].hp, enemies[i].max_hp, x - HEALTHBAR_WIDTH // 2, bar_y
+            )
 
 
 def draw_text(
