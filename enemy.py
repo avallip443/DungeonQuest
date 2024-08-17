@@ -75,9 +75,9 @@ def create_enemy(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     enemies = [
-        ("Golem", "Crystal Golem", 1, 1, 10, "enemy"),
-        ("Witch", "Great Witch", 1, 1, 2, "enemy"),
-        ("Fireworm", "Fireworm", 1, 1, 2, "enemy"),
+        ("Golem", "Crystal Golem", 28, 4, 3, "enemy"),
+        ("Witch", "Great Witch", 22, 3, 5, "enemy"),
+        ("Fireworm", "Fireworm", 18, 2, 3, "enemy"),
     ]
 
     if 0 <= index < len(enemies):
@@ -100,9 +100,9 @@ def create_boss(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     bosses = [
-        ("Bringer", "Bringer of Death", 1, 1, 2, "boss"),
-        ("Mage", "Dark Mage", 1, 1, 5, "boss"),
-        ("Oldking", "Old King", 1, 1, 5, "boss"),
+        ("Bringer", "Bringer of Death", 40, 8, 2, "boss"),
+        ("Mage", "Dark Mage", 30, 6, 5, "boss"),
+        ("Oldking", "Old King", 50, 9, 5, "boss"),
     ]
 
     if 0 <= index < len(bosses):
