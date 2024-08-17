@@ -165,7 +165,7 @@ def load_character_animations() -> dict[str, dict[str, Animation]]:
             "special": generate_frame_names(6),
             "walk": generate_frame_names(8),
         },
-        "rouge": {
+        "rogue": {
             "attack": generate_frame_names(4),
             "death": generate_frame_names(6),
             "hurt": generate_frame_names(4),
@@ -229,7 +229,7 @@ def load_character_animations() -> dict[str, dict[str, Animation]]:
     for name, frames in character_animations.items():
         folder = (
             "characters"
-            if name in ["berserker", "brute", "huntress", "rouge", "warrior"]
+            if name in ["berserker", "brute", "huntress", "rogue", "warrior"]
             else "enemies"
         )
         animations[name] = create_animation_dict(name, frames)

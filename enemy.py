@@ -100,9 +100,9 @@ def create_boss(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     bosses = [
-        ("Bringer", "Bringer of Death", 100, 20, 2, "boss"),
-        ("Mage", "Dark Mage", 75, 30, 5, "boss"),
-        ("Oldking", "Old King", 75, 30, 5, "boss"),
+        ("Bringer", "Bringer of Death", 1, 1, 2, "boss"),
+        ("Mage", "Dark Mage", 1, 1, 5, "boss"),
+        ("Oldking", "Old King", 1, 1, 5, "boss"),
     ]
 
     if 0 <= index < len(bosses):

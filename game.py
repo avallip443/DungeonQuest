@@ -92,7 +92,7 @@ class Game:
         """
         Play a single level of the game, managing rounds and enemies.
         """
-        total_level_enemies = self.round + randint(0, 0)
+        total_level_enemies = self.round + randint(1, 1)
 
         while total_level_enemies >= 0:
             self.player_walk_in()
@@ -102,7 +102,7 @@ class Game:
                 total_level_enemies = 0
                 current_round_enemies = 1
             else:
-                current_round_enemies = min(randint(1, 2), total_level_enemies - 1)
+                current_round_enemies = min(randint(0, 2), total_level_enemies - 1)
                 enemies = [
                     create_enemy(randint(0, 2)) for _ in range(current_round_enemies)
                 ]

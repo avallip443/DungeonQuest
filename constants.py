@@ -62,7 +62,7 @@ CHARACTERS = [
         "potions": 3,
     },
     {
-        "name": "Rouge",
+        "name": "Rogue",
         "description": "Quick and nimble, effective \nat landing critical attacks.",
         "max_hp": 85,
         "attack": 15,
