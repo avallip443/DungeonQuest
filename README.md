@@ -1,6 +1,6 @@
 ## WarriorQuest: A Text-Based Adventure Game
 
-Welcome to WarriorQuest! Immerse yourself in this single-player, 2D turn-based RPG where you battle as one of five unique fighter characters, facing off against powerful enemies to become the ultimate warrior!
+Welcome to [WarriorQuest](https://avallip.itch.io/warriorquest)! Immerse yourself in this single-player, 2D turn-based RPG where you battle as one of five unique fighter characters, facing off against powerful enemies to become the ultimate warrior!
 
 ## Table of Contents
 
