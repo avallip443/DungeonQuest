@@ -113,6 +113,7 @@ class Game:
             self.round += 1
 
         self.current_level += 1
+        self.round = 1
 
     def play_round(self, enemies) -> None:
         """
@@ -377,7 +378,7 @@ class Game:
             else:
                 draw_text(
                     SCREEN,
-                    text="SUCCESS! ENEMIES DEFEATED",
+                    text="...BUT WE MUST MOVE FORWARD!",
                     x=WIDTH // 2,
                     y=100,
                     colour="white",
@@ -394,27 +395,28 @@ class Game:
         Args:
             enemies (list): List of enemy instances.
         """
+        walk_targets = []
+
         for i, enemy in enumerate(enemies):
             enemy.x_pos = self.enemy_start_position + (1 - i) * 130
+            
             walk_target = (
                 540
                 if enemy.name == "Bringer"
-                else self.enemy_target_position - (1 - i) * 130
+                else self.enemy_target_position - i * 130 
             )
-            target_x = (
-                walk_target
-                if enemy.name == "Bringer"
-                else self.enemy_target_position - i * 130
-            )
+            print(f'i {i} walk_target {walk_target}')
             enemy.walk(target_x=walk_target)
+            walk_targets.append(walk_target)
 
         enemies_moving = True
         while enemies_moving:
             enemies_moving = False
+            
             for i, enemy in enumerate(enemies):
-                enemy.update_walk_pos(target_x=target_x, speed=20)
+                enemy.update_walk_pos(target_x=walk_targets[i], speed=20)
                 enemy.update_animation()
-                if enemy.x_pos > target_x:
+                if enemy.x_pos > walk_targets[i]:
                     enemies_moving = True
 
             SCREEN.fill((0, 0, 0))
