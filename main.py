@@ -42,7 +42,7 @@ def start_menu() -> None:
 
     while True:
         SCREEN.fill((0, 0, 0))
-        draw_text(SCREEN, text="DUNGEON QUEST", x=WIDTH // 2, y=100, size="lg")
+        draw_text(SCREEN, text="WARRIOR QUEST", x=WIDTH // 2, y=100, size="lg")
 
         play_button.draw()
         tutorial_button.draw()
