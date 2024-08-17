@@ -1,0 +1,100 @@
+{"frames": {
+
+"1.png":
+{
+	"frame": {"x":1,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"2.png":
+{
+	"frame": {"x":90,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"3.png":
+{
+	"frame": {"x":181,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"4.png":
+{
+	"frame": {"x":271,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"5.png":
+{
+	"frame": {"x":361,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"6.png":
+{
+	"frame": {"x":451,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"7.png":
+{
+	"frame": {"x":541,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"8.png":
+{
+	"frame": {"x":631,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"9.png":
+{
+	"frame": {"x":721,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"10.png":
+{
+	"frame": {"x":811,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+},
+"11.png":
+{
+	"frame": {"x":901,"y":1,"w":90,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":46},
+	"sourceSize": {"w":90,"h":46}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "golem_attack.png",
+	"format": "RGBA8888",
+	"size": {"w":990,"h":46},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d28ac0b7501a5529d4fb7e6446af8ab1:9baa5314d68a3adb51408e50596929c6:b0ad5120fa5d71ceb5167809dad98e22$"
+}
+}

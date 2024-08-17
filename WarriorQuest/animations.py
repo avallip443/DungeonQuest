@@ -223,7 +223,6 @@ def load_character_animations() -> dict[str, dict[str, Animation]]:
             "death": generate_frame_names(7, reverse=True),
             "hurt": generate_frame_names(3, reverse=True),
             "idle": generate_frame_names(8, reverse=True),
-            "walk": generate_frame_names(8, reverse=True),
         },
     }
 
