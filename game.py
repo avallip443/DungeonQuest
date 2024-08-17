@@ -160,7 +160,7 @@ class Game:
                     round_display_duration = 25
                     display_round_over = True
 
-                    self.game_state = GameState.NOT_RUNNING
+                    self.game_state = GameState.PLAYER_WIN
                     if enemies[0].type == "boss" and self.current_level == 3:
                         self.game_state = GameState.GAME_OVER_PLAYER_WIN
 
@@ -169,7 +169,7 @@ class Game:
 
         self.display_game_over_message()
 
-        if self.game_state == GameState.PLAYER_WIN:
+        if self.game_state == GameState.PLAYER_WIN :
             self.player_walk_out(speed=20, is_boss=enemies[0].type == "boss")
 
     def display_game_over_message(self) -> None:

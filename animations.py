@@ -181,7 +181,8 @@ def load_character_animations() -> dict[str, dict[str, Animation]]:
             "special": generate_frame_names(5),
             "walk": generate_frame_names(6),
         },
-        "wizard2": {
+        # enemies
+        "witch": {
             "attack": generate_frame_names(13, reverse=True),
             "death": generate_frame_names(18, reverse=True),
             "hurt": generate_frame_names(3, reverse=True),
@@ -217,7 +218,7 @@ def load_character_animations() -> dict[str, dict[str, Animation]]:
             "idle": generate_frame_names(8, reverse=True),
             "walk": generate_frame_names(8, reverse=True),
         },
-        "wizard1": {
+        "mage": {
             "attack": generate_frame_names(8, reverse=True),
             "death": generate_frame_names(7, reverse=True),
             "hurt": generate_frame_names(3, reverse=True),

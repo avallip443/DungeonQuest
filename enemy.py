@@ -76,7 +76,7 @@ def create_enemy(index: int) -> Enemy:
     """
     enemies = [
         ("Golem", "Crystal Golem", 1, 1, 10, "enemy"),
-        ("Wizard2", "Great Mage", 1, 1, 2, "enemy"),
+        ("Witch", "Great Witch", 1, 1, 2, "enemy"),
         ("Fireworm", "Fireworm", 1, 1, 2, "enemy"),
     ]
 
@@ -101,7 +101,7 @@ def create_boss(index: int) -> Enemy:
     """
     bosses = [
         ("Bringer", "Bringer of Death", 100, 20, 2, "boss"),
-        ("Wizard1", "Dark Mage", 75, 30, 5, "boss"),
+        ("Mage", "Dark Mage", 75, 30, 5, "boss"),
         ("Oldking", "Old King", 75, 30, 5, "boss"),
     ]
 

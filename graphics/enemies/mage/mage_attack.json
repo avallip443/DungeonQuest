@@ -67,7 +67,7 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "wizard1_attack.png",
+	"image": "mage_attack.png",
 	"format": "RGBA8888",
 	"size": {"w":2000,"h":143},
 	"scale": "1",

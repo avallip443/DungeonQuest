@@ -27,7 +27,7 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "wizard1_hurt.png",
+	"image": "mage_hurt.png",
 	"format": "RGBA8888",
 	"size": {"w":750,"h":87},
 	"scale": "1",
