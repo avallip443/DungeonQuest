@@ -22,18 +22,16 @@ def character_selection_screen() -> int:
     play_button = Button(
         SCREEN, x=WIDTH // 2, y=HEIGHT * 0.85, image=PLAY, width=184, height=56
     )
-    back_button = Button(
-        SCREEN, x=50, y=50, image=BACK, width=46.5, height=52.5
-    )
+    back_button = Button(SCREEN, x=50, y=50, image=BACK, width=46.5, height=52.5)
 
     while True:
         selected_index, play_clicked = handle_events(
             play_button, back_button, hovered_index, selected_index, start_menu
         )
-        
+
         if play_clicked:
             return selected_index
-        
+
         mouse_pos = pygame.mouse.get_pos()
         hovered_index = get_hovered_index(mouse_pos)
 
@@ -51,8 +49,11 @@ def character_selection_screen() -> int:
 
 
 def handle_events(
-    play_button: Button, back_button: Button, hovered_index: int, 
-    selected_index: int, start_menu
+    play_button: Button,
+    back_button: Button,
+    hovered_index: int,
+    selected_index: int,
+    start_menu,
 ) -> tuple[int, bool]:
     """
     Handles events such as quitting, clicking buttons, and selecting characters.
@@ -161,8 +162,11 @@ def draw_character_options(
 
 
 def draw_selected_character(
-    screen: pygame.Surface, animations: dict, selected_index: int, 
-    hovered_index: int, play_button: Button
+    screen: pygame.Surface,
+    animations: dict,
+    selected_index: int,
+    hovered_index: int,
+    play_button: Button,
 ) -> None:
     """
     Draws the selected character's animation and stats on the screen.
@@ -241,8 +245,20 @@ def draw_character_stats(screen: pygame.Surface, index: int) -> None:
         screen (pygame.Surface): Surface to draw on.
         index (int): Index of the character to draw stats for.
     """
-    hp = HealthBar(140, 10, CHARACTERS[index]["max_hp"], 130)
-    atk = HealthBar(140, 10, CHARACTERS[index]["attack"], 30)
+    hp = HealthBar(
+        width=140,
+        height=10,
+        max_hp=130,
+        base_colour="blue",
+        secondary_colour="white",
+    )
+    atk = HealthBar(
+        width=140,
+        height=10,
+        max_hp=30,
+        base_colour="blue",
+        secondary_colour="white",
+    )
 
     draw_text(
         screen,
@@ -263,9 +279,7 @@ def draw_character_stats(screen: pygame.Surface, index: int) -> None:
     )
     hp.draw(
         screen,
-        CHARACTERS[index]["max_hp"],
-        base="blue",
-        secondary="white",
+        hp=CHARACTERS[index]["max_hp"],
         x=WIDTH * 0.69,
         y=255,
     )
@@ -281,9 +295,7 @@ def draw_character_stats(screen: pygame.Surface, index: int) -> None:
     )
     atk.draw(
         screen,
-        CHARACTERS[index]["attack"],
-        base="blue",
-        secondary="white",
+        hp=CHARACTERS[index]["attack"],
         x=WIDTH * 0.69,
         y=285,
     )

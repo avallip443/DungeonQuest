@@ -73,7 +73,7 @@ class Game:
         self.player = create_character(selected_char)
         self.animations = load_character_animations()
         self.round: int = 1
-        self.current_level: int = 2
+        self.current_level: int = 1
         self.backgrounds = [FOREST1, CASTLE3, CASTLE2]
         self.player_target_position = 100
         self.enemy_start_position: int = WIDTH + 10

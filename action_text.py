@@ -11,7 +11,7 @@ class ActionText(pygame.sprite.Sprite):
             x (int): X-coordinate for the center of the text.
             y (int): Y-coordinate for the center of the text.
             action_text (str): Text to display.
-            colour (Tuple[int, int, int]): RGB color for the text.
+            colour (Tuple[int, int, int]): RGB colour for the text.
             delay (int): Number of frames to delay before displaying the text.
         """
         super().__init__()

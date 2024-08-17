@@ -75,7 +75,7 @@ def draw_panel(screen, panel_img, player, enemies, potion_button) -> None:
 
         draw_text(
             screen,
-            f"{enemies[i].name}",
+            f"{enemies[i].display_name}",
             x=x,
             y=text_y,
             colour="white",
@@ -129,7 +129,7 @@ def draw_health_bar(screen, hp: int, max_hp: int, x: int, y: int) -> None:
         y (int): Y-coordinate for the health bar position.
     """
     health_bar = HealthBar(
-        width=HEALTHBAR_WIDTH, height=HEALTHBAR_HEIGHT, hp=hp, max_hp=max_hp
+        width=HEALTHBAR_WIDTH, height=HEALTHBAR_HEIGHT, max_hp=max_hp
     )
     health_bar.draw(screen, hp=hp, x=x, y=y)
 

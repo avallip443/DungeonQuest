@@ -6,6 +6,7 @@ class Enemy(Fighter):
     def __init__(
         self,
         name: str,
+        display_name: str,
         max_hp: int,
         strength: int,
         crit_chance: int,
@@ -16,6 +17,7 @@ class Enemy(Fighter):
         super().__init__(name, max_hp, strength, crit_chance, x_pos, y_pos)
         self.hitbox = pygame.Rect(0, 0, 100, 120)
         self.type = type
+        self.display_name = display_name
 
     def walk(self, target_x: int) -> None:
         """
@@ -73,9 +75,9 @@ def create_enemy(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     enemies = [
-        ("Golem", 1, 1, 10, "enemy"),
-        ("Wizard2", 1, 1, 2, "enemy"),
-        ("Fireworm", 1, 1, 2, "enemy"),
+        ("Golem", "Crystal Golem", 1, 1, 10, "enemy"),
+        ("Wizard2", "Great Mage", 1, 1, 2, "enemy"),
+        ("Fireworm", "Fireworm", 1, 1, 2, "enemy"),
     ]
 
     if 0 <= index < len(enemies):
@@ -98,9 +100,9 @@ def create_boss(index: int) -> Enemy:
         ValueError: If the provided index is out of range.
     """
     bosses = [
-        ("Bringer", 100, 20, 2, "boss"),
-        ("Wizard1", 75, 30, 5, "boss"),
-        ("Oldking", 75, 30, 5, "boss"),
+        ("Bringer", "Bringer of Death", 100, 20, 2, "boss"),
+        ("Wizard1", "Dark Mage", 75, 30, 5, "boss"),
+        ("Oldking", "Old King", 75, 30, 5, "boss"),
     ]
 
     if 0 <= index < len(bosses):
@@ -121,9 +123,7 @@ def animate_enemy(
         animations (dict): The dictionary containing animations.
         scale (float): Scaling factor for the animation.
     """
-    name = "Bringer" if enemy.name == "Bringer of Death" else enemy.name.lower()
-
-    current_animation = animations[name][enemy.action.value]
+    current_animation = animations[enemy.name.lower()][enemy.action.value]
 
     if enemy.death_animation_done:
         current_frame = current_animation.get_last_death_frame(scale=scale)

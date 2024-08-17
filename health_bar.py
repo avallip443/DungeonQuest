@@ -10,8 +10,8 @@ class HealthBar:
         width (int): Width of the health bar.
         height (int): Height of the health bar.
         max_hp (int): Maximum HP of the character.
-        base_color (tuple): RGB color used for the base (empty) health bar.
-        secondary_color (tuple): RGB color used for the current health bar.
+        base_colour (tuple): RGB colour used for the base (empty) health bar.
+        secondary_colour (tuple): RGB colour used for the current health bar.
     """
 
     def __init__(
@@ -19,24 +19,24 @@ class HealthBar:
         width: int,
         height: int,
         max_hp: int,
-        base_color=RED,
-        secondary_color=GREEN,
+        base_colour=RED,
+        secondary_colour=GREEN,
     ):
         """
-        Initialize the HealthBar with the given dimensions and colors.
+        Initialize the HealthBar with the given dimensions and colours.
 
         Args:
             width (int): Width of the health bar.
             height (int): Height of the health bar.
             max_hp (int): Maximum health points of the character.
-            base_color (tuple): Color for the base (empty) health bar. Default is RED.
-            secondary_color (tuple): Color for the current health bar. Default is GREEN.
+            base_colour (tuple): Color for the base (empty) health bar. Default is RED.
+            secondary_colour (tuple): Color for the current health bar. Default is GREEN.
         """
         self.width = width
         self.height = height
         self.max_hp = max_hp
-        self.base_color = base_color
-        self.secondary_color = secondary_color
+        self.base_colour = base_colour
+        self.secondary_colour = secondary_colour
 
     def draw(self, screen: pygame.Surface, hp: int, x: int, y: int) -> None:
         """
@@ -48,8 +48,8 @@ class HealthBar:
             x (int): X-coordinate for the top-left corner of the health bar.
             y (int): Y-coordinate for the top-left corner of the health bar.
         """
-        pygame.draw.rect(screen, self.base_color, (x, y, self.width, self.height))
+        pygame.draw.rect(screen, self.base_colour, (x, y, self.width, self.height))
         current_width = self.width * (hp / self.max_hp)
         pygame.draw.rect(
-            screen, self.secondary_color, (x, y, current_width, self.height)
+            screen, self.secondary_colour, (x, y, current_width, self.height)
         )

@@ -59,14 +59,14 @@ class Spritesheet:
         return fixed_size_sprite
 
     def add_outline(
-        self, image: pygame.Surface, outline_color=(0, 0, 0), outline_thickness=10
+        self, image: pygame.Surface, outline_colour=(0, 0, 0), outline_thickness=10
     ) -> pygame.Surface:
         """
         Adds an outline to the given sprite image.
 
         Args:
             image (pygame.Surface): Sprite image to outline.
-            outline_color (tuple): Colour of the outline. Defaults to black.
+            outline_colour (tuple): Colour of the outline. Defaults to black.
             outline_thickness (int): Thickness of the outline. Defaults to 10.
 
         Returns:
@@ -84,7 +84,7 @@ class Spritesheet:
         for point in outline:
             outline_image.set_at(
                 (point[0] + outline_thickness, point[1] + outline_thickness),
-                outline_color,
+                outline_colour,
             )
         outline_image.blit(image, (outline_thickness, outline_thickness))
         return outline_image

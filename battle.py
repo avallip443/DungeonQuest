@@ -183,7 +183,7 @@ def display_action_text(
     Args:
         target (Fighter): Target receiving action text.
         text (str): Action text to be displayed.
-        colour (tuple[int, int, int]): RGB color for the text.
+        colour (tuple[int, int, int]): RGB colour for the text.
         text_group (pygame.sprite.Group): Sprite group to which the text belongs.
     """
     x, y = target.x_pos, target.y_pos - 210
