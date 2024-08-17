@@ -39,5 +39,8 @@ python main.py
 
 To run the game, download all the files and run the main.py file in your terminal. 
 
-Before the game begins, players will be prompted to selected a character. Then, for each round, a randomly-generated number of enemies will appear for the player to battle. For each turn, the player can either attack or heal (there is no running away). The game will run until either the player defeats all the enemies in the dungeon or dies trying. 
+1. Players will first be prompted to selected a character.
+2. Then, for each round, a randomly-generated number of enemies will appear for the player to battle.
+3. For each turn, the player can either attack or heal (there is no running away).
+4. The game will run until either the player defeats all the enemies in the dungeon or dies trying. 
 
