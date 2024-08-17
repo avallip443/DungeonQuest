@@ -378,7 +378,7 @@ class Game:
             else:
                 draw_text(
                     SCREEN,
-                    text="...BUT WE MUST MOVE FORWARD!",
+                    text="...BUT THE BATTLE CONTINUES!",
                     x=WIDTH // 2,
                     y=100,
                     colour="white",
@@ -405,7 +405,7 @@ class Game:
                 if enemy.name == "Bringer"
                 else self.enemy_target_position - i * 130 
             )
-            print(f'i {i} walk_target {walk_target}')
+
             enemy.walk(target_x=walk_target)
             walk_targets.append(walk_target)
 
